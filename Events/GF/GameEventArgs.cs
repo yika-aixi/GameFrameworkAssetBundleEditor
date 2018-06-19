@@ -5,21 +5,13 @@
 // Feedback: mailto:jiangyin@gameframework.cn
 //------------------------------------------------------------
 
-namespace GameFramework.Resource
+namespace GameFramework.Event
 {
     /// <summary>
-    /// 资源模式。
+    /// 游戏逻辑事件基类。
     /// </summary>
-    public enum ResourceMode
+    public abstract class GameEventArgs : BaseEventArgs
     {
-        /// <summary>
-        /// 未指定。
-        /// </summary>
-        Unspecified = 0,
 
-        /// <summary>
-        /// 单机模式。
-        /// </summary>
-        Package,
     }
 }

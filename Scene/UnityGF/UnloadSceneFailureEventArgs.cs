@@ -10,17 +10,17 @@ using GameFramework.Event;
 namespace UnityGameFramework.Runtime
 {
     /// <summary>
-    /// 版本资源列表更新成功事件。
+    /// 卸载场景失败事件。
     /// </summary>
-    public sealed class VersionListUpdateSuccessEventArgs : GameEventArgs
+    public sealed class UnloadSceneFailureEventArgs : GameEventArgs
     {
         /// <summary>
-        /// 版本资源列表更新成功事件编号。
+        /// 加载场景失败事件编号。
         /// </summary>
-        public static readonly int EventId = typeof(VersionListUpdateSuccessEventArgs).GetHashCode();
+        public static readonly int EventId = typeof(UnloadSceneFailureEventArgs).GetHashCode();
 
         /// <summary>
-        /// 获取版本资源列表更新成功事件编号。
+        /// 获取加载场景失败事件编号。
         /// </summary>
         public override int Id
         {
@@ -31,41 +31,41 @@ namespace UnityGameFramework.Runtime
         }
 
         /// <summary>
-        /// 获取资源下载后存放路径。
+        /// 获取场景资源名称。
         /// </summary>
-        public string DownloadPath
+        public string SceneAssetName
         {
             get;
             private set;
         }
 
         /// <summary>
-        /// 获取下载地址。
+        /// 获取用户自定义数据。
         /// </summary>
-        public string DownloadUri
+        public object UserData
         {
             get;
             private set;
         }
 
         /// <summary>
-        /// 清理版本资源列表更新成功事件。
+        /// 清理卸载场景失败事件。
         /// </summary>
         public override void Clear()
         {
-            DownloadPath = default(string);
-            DownloadUri = default(string);
+            SceneAssetName = default(string);
+            UserData = default(object);
         }
 
         /// <summary>
-        /// 填充版本资源列表更新成功事件。
+        /// 填充卸载场景失败事件。
         /// </summary>
         /// <param name="e">内部事件。</param>
-        /// <returns>版本资源列表更新成功事件。</returns>
-        public VersionListUpdateSuccessEventArgs Fill(GameFramework.Resource.VersionListUpdateSuccessEventArgs e)
+        /// <returns>卸载场景失败事件。</returns>
+        public UnloadSceneFailureEventArgs Fill(GameFramework.Scene.UnloadSceneFailureEventArgs e)
         {
-            DownloadPath = e.DownloadPath;
-            DownloadUri = e.DownloadUri;
+            SceneAssetName = e.SceneAssetName;
+            UserData = e.UserData;
 
             return this;
         }

@@ -8,18 +8,13 @@
 namespace GameFramework.Resource
 {
     /// <summary>
-    /// 资源模式。
+    /// 资源相关常量。
     /// </summary>
-    public enum ResourceMode
+    internal static class Constant
     {
         /// <summary>
-        /// 未指定。
+        /// 默认资源加载优先级。
         /// </summary>
-        Unspecified = 0,
-
-        /// <summary>
-        /// 单机模式。
-        /// </summary>
-        Package,
+        internal const int DefaultPriority = 0;
     }
 }

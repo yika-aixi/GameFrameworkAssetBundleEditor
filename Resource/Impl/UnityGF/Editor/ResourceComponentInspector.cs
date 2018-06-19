@@ -190,34 +190,7 @@ namespace UnityGameFramework.Editor
                     }
                 }
 
-                if (m_ResourceModeIndex == 1)
-                {
-                    string updatePrefixUri = EditorGUILayout.DelayedTextField("Update Prefix Uri", m_UpdatePrefixUri.stringValue);
-                    if (updatePrefixUri != m_UpdatePrefixUri.stringValue)
-                    {
-                        if (EditorApplication.isPlaying)
-                        {
-                            t.UpdatePrefixUri = updatePrefixUri;
-                        }
-                        else
-                        {
-                            m_UpdatePrefixUri.stringValue = updatePrefixUri;
-                        }
-                    }
-
-                    int updateRetryCount = EditorGUILayout.DelayedIntField("Update Retry Count", m_UpdateRetryCount.intValue);
-                    if (updateRetryCount != m_UpdateRetryCount.intValue)
-                    {
-                        if (EditorApplication.isPlaying)
-                        {
-                            t.UpdateRetryCount = resourceCapacity;
-                        }
-                        else
-                        {
-                            m_UpdateRetryCount.intValue = resourceCapacity;
-                        }
-                    }
-                }
+               
             }
             EditorGUI.EndDisabledGroup();
 
@@ -241,11 +214,7 @@ namespace UnityGameFramework.Editor
                 EditorGUILayout.LabelField("Asset Count", isEditorResourceMode ? "N/A" : t.AssetCount.ToString());
                 EditorGUILayout.LabelField("Resource Count", isEditorResourceMode ? "N/A" : t.ResourceCount.ToString());
                 EditorGUILayout.LabelField("Resource Group Count", isEditorResourceMode ? "N/A" : t.ResourceGroupCount.ToString());
-                if (m_ResourceModeIndex == 1)
-                {
-                    EditorGUILayout.LabelField("Update Waiting Count", isEditorResourceMode ? "N/A" : t.UpdateWaitingCount.ToString());
-                    EditorGUILayout.LabelField("Updating Count", isEditorResourceMode ? "N/A" : t.UpdatingCount.ToString());
-                }
+                
                 EditorGUILayout.LabelField("Load Total Agent Count", isEditorResourceMode ? "N/A" : t.LoadTotalAgentCount.ToString());
                 EditorGUILayout.LabelField("Load Free Agent Count", isEditorResourceMode ? "N/A" : t.LoadFreeAgentCount.ToString());
                 EditorGUILayout.LabelField("Load Working Agent Count", isEditorResourceMode ? "N/A" : t.LoadWorkingAgentCount.ToString());

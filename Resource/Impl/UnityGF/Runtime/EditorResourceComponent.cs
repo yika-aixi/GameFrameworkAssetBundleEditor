@@ -6,7 +6,6 @@
 //------------------------------------------------------------
 
 using GameFramework;
-using GameFramework.Download;
 using GameFramework.ObjectPool;
 using GameFramework.Resource;
 using System;
@@ -361,46 +360,6 @@ namespace UnityGameFramework.Runtime
         /// </summary>
         public event EventHandler<GameFramework.Resource.ResourceInitCompleteEventArgs> ResourceInitComplete = null;
 
-        /// <summary>
-        /// 版本资源列表更新成功事件。
-        /// </summary>
-        public event EventHandler<GameFramework.Resource.VersionListUpdateSuccessEventArgs> VersionListUpdateSuccess = null;
-
-        /// <summary>
-        /// 版本资源列表更新失败事件。
-        /// </summary>
-        public event EventHandler<GameFramework.Resource.VersionListUpdateFailureEventArgs> VersionListUpdateFailure = null;
-
-        /// <summary>
-        /// 资源检查完成事件。
-        /// </summary>
-        public event EventHandler<GameFramework.Resource.ResourceCheckCompleteEventArgs> ResourceCheckComplete = null;
-
-        /// <summary>
-        /// 资源更新开始事件。
-        /// </summary>
-        public event EventHandler<GameFramework.Resource.ResourceUpdateStartEventArgs> ResourceUpdateStart = null;
-
-        /// <summary>
-        /// 资源更新改变事件。
-        /// </summary>
-        public event EventHandler<GameFramework.Resource.ResourceUpdateChangedEventArgs> ResourceUpdateChanged = null;
-
-        /// <summary>
-        /// 资源更新成功事件。
-        /// </summary>
-        public event EventHandler<GameFramework.Resource.ResourceUpdateSuccessEventArgs> ResourceUpdateSuccess = null;
-
-        /// <summary>
-        /// 资源更新失败事件。
-        /// </summary>
-        public event EventHandler<GameFramework.Resource.ResourceUpdateFailureEventArgs> ResourceUpdateFailure = null;
-
-        /// <summary>
-        /// 资源更新全部完成事件。
-        /// </summary>
-        public event EventHandler<GameFramework.Resource.ResourceUpdateAllCompleteEventArgs> ResourceUpdateAllComplete = null;
-
 #pragma warning restore 0067, 0414
 
         private void Awake()
@@ -410,23 +369,6 @@ namespace UnityGameFramework.Runtime
             m_LoadAssetInfos = new LinkedList<LoadAssetInfo>();
             m_LoadSceneInfos = new LinkedList<LoadSceneInfo>();
             m_UnloadSceneInfos = new LinkedList<UnloadSceneInfo>();
-
-            BaseComponent baseComponent = GetComponent<BaseComponent>();
-            if (baseComponent == null)
-            {
-                Log.Error("Can not find base component.");
-                return;
-            }
-
-            if (baseComponent.EditorResourceMode)
-            {
-                baseComponent.EditorResourceHelper = this;
-                enabled = true;
-            }
-            else
-            {
-                enabled = false;
-            }
         }
 
         private void Update()
@@ -613,16 +555,7 @@ namespace UnityGameFramework.Runtime
         {
             throw new NotSupportedException("SetObjectPoolManager");
         }
-
-        /// <summary>
-        /// 设置下载管理器。
-        /// </summary>
-        /// <param name="downloadManager">下载管理器。</param>
-        public void SetDownloadManager(IDownloadManager downloadManager)
-        {
-            throw new NotSupportedException("SetDownloadManager");
-        }
-
+        
         /// <summary>
         /// 设置解密资源回调函数。
         /// </summary>
@@ -658,45 +591,7 @@ namespace UnityGameFramework.Runtime
         {
             throw new NotSupportedException("InitResources");
         }
-
-        /// <summary>
-        /// 检查版本资源列表。
-        /// </summary>
-        /// <param name="latestInternalResourceVersion">最新的资源内部版本号。</param>
-        /// <returns>检查版本资源列表结果。</returns>
-        public CheckVersionListResult CheckVersionList(int latestInternalResourceVersion)
-        {
-            throw new NotSupportedException("CheckVersionList");
-        }
-
-        /// <summary>
-        /// 更新版本资源列表。
-        /// </summary>
-        /// <param name="versionListLength">版本资源列表大小。</param>
-        /// <param name="versionListHashCode">版本资源列表哈希值。</param>
-        /// <param name="versionListZipLength">版本资源列表压缩后大小。</param>
-        /// <param name="versionListZipHashCode">版本资源列表压缩后哈希值。</param>
-        public void UpdateVersionList(int versionListLength, int versionListHashCode, int versionListZipLength, int versionListZipHashCode)
-        {
-            throw new NotSupportedException("UpdateVersionList");
-        }
-
-        /// <summary>
-        /// 检查资源。
-        /// </summary>
-        public void CheckResources()
-        {
-            throw new NotSupportedException("CheckResources");
-        }
-
-        /// <summary>
-        /// 更新资源。
-        /// </summary>
-        public void UpdateResources()
-        {
-            throw new NotSupportedException("UpdateResources");
-        }
-
+       
         /// <summary>
         /// 检查资源是否存在。
         /// </summary>

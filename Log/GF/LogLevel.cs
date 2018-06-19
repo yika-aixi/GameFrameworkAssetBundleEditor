@@ -5,21 +5,36 @@
 // Feedback: mailto:jiangyin@gameframework.cn
 //------------------------------------------------------------
 
-namespace GameFramework.Resource
+namespace GameFramework
 {
     /// <summary>
-    /// 资源模式。
+    /// 日志等级。
     /// </summary>
-    public enum ResourceMode
+    public enum LogLevel
     {
         /// <summary>
-        /// 未指定。
+        /// 调试。
         /// </summary>
-        Unspecified = 0,
+        Debug,
 
         /// <summary>
-        /// 单机模式。
+        /// 信息。
         /// </summary>
-        Package,
+        Info,
+
+        /// <summary>
+        /// 警告。
+        /// </summary>
+        Warning,
+
+        /// <summary>
+        /// 错误。
+        /// </summary>
+        Error,
+
+        /// <summary>
+        /// 严重错误。
+        /// </summary>
+        Fatal
     }
 }

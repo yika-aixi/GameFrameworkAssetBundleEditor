@@ -5,9 +5,9 @@
 // Feedback: mailto:jiangyin@gameframework.cn
 //------------------------------------------------------------
 
-using GameFramework.Download;
 using GameFramework.ObjectPool;
 using System;
+using UnityGameFramework.Runtime;
 
 namespace GameFramework.Resource
 {
@@ -87,41 +87,7 @@ namespace GameFramework.Resource
         {
             get;
         }
-
-        /// <summary>
-        /// 获取或设置资源更新下载地址。
-        /// </summary>
-        string UpdatePrefixUri
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// 获取或设置资源更新重试次数。
-        /// </summary>
-        int UpdateRetryCount
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// 获取等待更新资源数量。
-        /// </summary>
-        int UpdateWaitingCount
-        {
-            get;
-        }
-
-        /// <summary>
-        /// 获取正在更新资源数量。
-        /// </summary>
-        int UpdatingCount
-        {
-            get;
-        }
-
+        
         /// <summary>
         /// 获取加载资源代理总数量。
         /// </summary>
@@ -229,48 +195,8 @@ namespace GameFramework.Resource
         /// <summary>
         /// 资源初始化完成事件。
         /// </summary>
-        event EventHandler<ResourceInitCompleteEventArgs> ResourceInitComplete;
-
-        /// <summary>
-        /// 版本资源列表更新成功事件。
-        /// </summary>
-        event EventHandler<VersionListUpdateSuccessEventArgs> VersionListUpdateSuccess;
-
-        /// <summary>
-        /// 版本资源列表更新失败事件。
-        /// </summary>
-        event EventHandler<VersionListUpdateFailureEventArgs> VersionListUpdateFailure;
-
-        /// <summary>
-        /// 资源检查完成事件。
-        /// </summary>
-        event EventHandler<ResourceCheckCompleteEventArgs> ResourceCheckComplete;
-
-        /// <summary>
-        /// 资源更新开始事件。
-        /// </summary>
-        event EventHandler<ResourceUpdateStartEventArgs> ResourceUpdateStart;
-
-        /// <summary>
-        /// 资源更新改变事件。
-        /// </summary>
-        event EventHandler<ResourceUpdateChangedEventArgs> ResourceUpdateChanged;
-
-        /// <summary>
-        /// 资源更新成功事件。
-        /// </summary>
-        event EventHandler<ResourceUpdateSuccessEventArgs> ResourceUpdateSuccess;
-
-        /// <summary>
-        /// 资源更新失败事件。
-        /// </summary>
-        event EventHandler<ResourceUpdateFailureEventArgs> ResourceUpdateFailure;
-
-        /// <summary>
-        /// 资源更新全部完成事件。
-        /// </summary>
-        event EventHandler<ResourceUpdateAllCompleteEventArgs> ResourceUpdateAllComplete;
-
+        event EventHandler<GameFramework.Resource.ResourceInitCompleteEventArgs> ResourceInitComplete;
+        
         /// <summary>
         /// 设置资源只读区路径。
         /// </summary>
@@ -300,13 +226,7 @@ namespace GameFramework.Resource
         /// </summary>
         /// <param name="objectPoolManager">对象池管理器。</param>
         void SetObjectPoolManager(IObjectPoolManager objectPoolManager);
-
-        /// <summary>
-        /// 设置下载管理器。
-        /// </summary>
-        /// <param name="downloadManager">下载管理器。</param>
-        void SetDownloadManager(IDownloadManager downloadManager);
-
+        
         /// <summary>
         /// 设置解密资源回调函数。
         /// </summary>
@@ -330,33 +250,7 @@ namespace GameFramework.Resource
         /// 使用单机模式并初始化资源。
         /// </summary>
         void InitResources();
-
-        /// <summary>
-        /// 使用可更新模式并检查版本资源列表。
-        /// </summary>
-        /// <param name="latestInternalResourceVersion">最新的资源内部版本号。</param>
-        /// <returns>检查版本资源列表结果。</returns>
-        CheckVersionListResult CheckVersionList(int latestInternalResourceVersion);
-
-        /// <summary>
-        /// 使用可更新模式并更新版本资源列表。
-        /// </summary>
-        /// <param name="versionListLength">版本资源列表大小。</param>
-        /// <param name="versionListHashCode">版本资源列表哈希值。</param>
-        /// <param name="versionListZipLength">版本资源列表压缩后大小。</param>
-        /// <param name="versionListZipHashCode">版本资源列表压缩后哈希值。</param>
-        void UpdateVersionList(int versionListLength, int versionListHashCode, int versionListZipLength, int versionListZipHashCode);
-
-        /// <summary>
-        /// 使用可更新模式并检查资源。
-        /// </summary>
-        void CheckResources();
-
-        /// <summary>
-        /// 使用可更新模式并更新资源。
-        /// </summary>
-        void UpdateResources();
-
+        
         /// <summary>
         /// 检查资源是否存在。
         /// </summary>

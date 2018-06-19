@@ -8,18 +8,9 @@
 namespace GameFramework.Resource
 {
     /// <summary>
-    /// 资源模式。
+    /// 卸载场景成功回调函数。
     /// </summary>
-    public enum ResourceMode
-    {
-        /// <summary>
-        /// 未指定。
-        /// </summary>
-        Unspecified = 0,
-
-        /// <summary>
-        /// 单机模式。
-        /// </summary>
-        Package,
-    }
+    /// <param name="sceneAssetName">要卸载的场景资源名称。</param>
+    /// <param name="userData">用户自定义数据。</param>
+    public delegate void UnloadSceneSuccessCallback(string sceneAssetName, object userData);
 }

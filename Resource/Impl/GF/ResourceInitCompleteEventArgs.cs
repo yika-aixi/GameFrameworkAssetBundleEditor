@@ -8,18 +8,16 @@
 namespace GameFramework.Resource
 {
     /// <summary>
-    /// 资源模式。
+    /// 资源初始化完成事件。
     /// </summary>
-    public enum ResourceMode
+    public sealed class ResourceInitCompleteEventArgs : GameFrameworkEventArgs
     {
         /// <summary>
-        /// 未指定。
+        /// 初始化资源初始化完成事件的新实例。
         /// </summary>
-        Unspecified = 0,
+        public ResourceInitCompleteEventArgs()
+        {
 
-        /// <summary>
-        /// 单机模式。
-        /// </summary>
-        Package,
+        }
     }
 }

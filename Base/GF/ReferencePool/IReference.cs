@@ -5,21 +5,16 @@
 // Feedback: mailto:jiangyin@gameframework.cn
 //------------------------------------------------------------
 
-namespace GameFramework.Resource
+namespace GameFramework
 {
     /// <summary>
-    /// 资源模式。
+    /// 引用接口。
     /// </summary>
-    public enum ResourceMode
+    public interface IReference
     {
         /// <summary>
-        /// 未指定。
+        /// 清理引用。
         /// </summary>
-        Unspecified = 0,
-
-        /// <summary>
-        /// 单机模式。
-        /// </summary>
-        Package,
+        void Clear();
     }
 }

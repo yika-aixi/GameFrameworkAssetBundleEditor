@@ -5,21 +5,35 @@
 // Feedback: mailto:jiangyin@gameframework.cn
 //------------------------------------------------------------
 
-namespace GameFramework.Resource
+namespace GameFramework
 {
     /// <summary>
-    /// 资源模式。
+    /// 任务接口。
     /// </summary>
-    public enum ResourceMode
+    internal interface ITask
     {
         /// <summary>
-        /// 未指定。
+        /// 获取任务的序列编号。
         /// </summary>
-        Unspecified = 0,
+        int SerialId
+        {
+            get;
+        }
 
         /// <summary>
-        /// 单机模式。
+        /// 获取任务的优先级。
         /// </summary>
-        Package,
+        int Priority
+        {
+            get;
+        }
+
+        /// <summary>
+        /// 获取任务是否完成。
+        /// </summary>
+        bool Done
+        {
+            get;
+        }
     }
 }

@@ -5,21 +5,24 @@
 // Feedback: mailto:jiangyin@gameframework.cn
 //------------------------------------------------------------
 
-namespace GameFramework.Resource
+namespace GameFramework
 {
     /// <summary>
-    /// 资源模式。
+    /// 事件基类。
     /// </summary>
-    public enum ResourceMode
+    public abstract class BaseEventArgs : GameFrameworkEventArgs, IReference
     {
         /// <summary>
-        /// 未指定。
+        /// 获取类型编号。
         /// </summary>
-        Unspecified = 0,
+        public abstract int Id
+        {
+            get;
+        }
 
         /// <summary>
-        /// 单机模式。
+        /// 清理引用。
         /// </summary>
-        Package,
+        public abstract void Clear();
     }
 }

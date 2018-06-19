@@ -6,7 +6,6 @@
 //------------------------------------------------------------
 
 using GameFramework;
-using GameFramework.Download;
 using GameFramework.ObjectPool;
 using GameFramework.Resource;
 using System;
@@ -19,12 +18,12 @@ namespace UnityGameFramework.Runtime
     /// </summary>
     [DisallowMultipleComponent]
     [AddComponentMenu("Game Framework/Resource")]
-    public sealed partial class ResourceComponent : GameFrameworkComponent
+    public sealed partial class ResourceComponent:MonoBehaviour
     {
         private const int DefaultPriority = 0;
 
         private IResourceManager m_ResourceManager = null;
-        private EventComponent m_EventComponent = null;
+        public EventComponent EventComponent = null;
         private bool m_EditorResourceMode = false;
         private bool m_ForceUnloadUnusedAssets = false;
         private bool m_PreorderUnloadUnusedAssets = false;
@@ -216,58 +215,6 @@ namespace UnityGameFramework.Runtime
         }
 
         /// <summary>
-        /// 获取或设置资源更新下载地址。
-        /// </summary>
-        public string UpdatePrefixUri
-        {
-            get
-            {
-                return m_ResourceManager.UpdatePrefixUri;
-            }
-            set
-            {
-                m_ResourceManager.UpdatePrefixUri = m_UpdatePrefixUri = value;
-            }
-        }
-
-        /// <summary>
-        /// 获取或设置资源更新重试次数。
-        /// </summary>
-        public int UpdateRetryCount
-        {
-            get
-            {
-                return m_ResourceManager.UpdateRetryCount;
-            }
-            set
-            {
-                m_ResourceManager.UpdateRetryCount = m_UpdateRetryCount = value;
-            }
-        }
-
-        /// <summary>
-        /// 获取等待更新资源数量。
-        /// </summary>
-        public int UpdateWaitingCount
-        {
-            get
-            {
-                return m_ResourceManager.UpdateWaitingCount;
-            }
-        }
-
-        /// <summary>
-        /// 获取正在更新资源数量。
-        /// </summary>
-        public int UpdatingCount
-        {
-            get
-            {
-                return m_ResourceManager.UpdatingCount;
-            }
-        }
-
-        /// <summary>
         /// 获取加载资源代理总数量。
         /// </summary>
         public int LoadTotalAgentCount
@@ -431,47 +378,15 @@ namespace UnityGameFramework.Runtime
             }
         }
 
-        /// <summary>
-        /// 游戏框架组件初始化。
-        /// </summary>
-        protected override void Awake()
-        {
-            base.Awake();
-        }
-
         private void Start()
         {
-            BaseComponent baseComponent = GameEntry.GetComponent<BaseComponent>();
-            if (baseComponent == null)
-            {
-                Log.Fatal("Base component is invalid.");
-                return;
-            }
-
-            m_EventComponent = GameEntry.GetComponent<EventComponent>();
-            if (m_EventComponent == null)
+            if (EventComponent == null)
             {
                 Log.Fatal("Event component is invalid.");
                 return;
             }
 
-            m_EditorResourceMode = baseComponent.EditorResourceMode;
-            m_ResourceManager = m_EditorResourceMode ? baseComponent.EditorResourceHelper : GameFrameworkEntry.GetModule<IResourceManager>();
-            if (m_ResourceManager == null)
-            {
-                Log.Fatal("Resource manager is invalid.");
-                return;
-            }
-
             m_ResourceManager.ResourceInitComplete += OnResourceInitComplete;
-            m_ResourceManager.VersionListUpdateSuccess += OnVersionListUpdateSuccess;
-            m_ResourceManager.VersionListUpdateFailure += OnVersionListUpdateFailure;
-            m_ResourceManager.ResourceCheckComplete += OnResourceCheckComplete;
-            m_ResourceManager.ResourceUpdateStart += OnResourceUpdateStart;
-            m_ResourceManager.ResourceUpdateChanged += OnResourceUpdateChanged;
-            m_ResourceManager.ResourceUpdateSuccess += OnResourceUpdateSuccess;
-            m_ResourceManager.ResourceUpdateFailure += OnResourceUpdateFailure;
-            m_ResourceManager.ResourceUpdateAllComplete += OnResourceUpdateAllComplete;
 
             m_ResourceManager.SetReadOnlyPath(Application.streamingAssetsPath);
             if (m_ReadWritePathType == ReadWritePathType.TemporaryCache)
@@ -494,7 +409,6 @@ namespace UnityGameFramework.Runtime
             }
 
             SetResourceMode(m_ResourceMode);
-            m_ResourceManager.SetDownloadManager(GameFrameworkEntry.GetModule<IDownloadManager>());
             m_ResourceManager.SetObjectPoolManager(GameFrameworkEntry.GetModule<IObjectPoolManager>());
             m_ResourceManager.AssetAutoReleaseInterval = m_AssetAutoReleaseInterval;
             m_ResourceManager.AssetCapacity = m_AssetCapacity;
@@ -504,12 +418,7 @@ namespace UnityGameFramework.Runtime
             m_ResourceManager.ResourceCapacity = m_ResourceCapacity;
             m_ResourceManager.ResourceExpireTime = m_ResourceExpireTime;
             m_ResourceManager.ResourcePriority = m_ResourcePriority;
-            if (m_ResourceMode == ResourceMode.Updatable)
-            {
-                m_ResourceManager.UpdatePrefixUri = m_UpdatePrefixUri;
-                m_ResourceManager.UpdateRetryCount = m_UpdateRetryCount;
-            }
-
+            
             m_ResourceHelper = Helper.CreateHelper(m_ResourceHelperTypeName, m_CustomResourceHelper);
             if (m_ResourceHelper == null)
             {
@@ -622,44 +531,7 @@ namespace UnityGameFramework.Runtime
         {
             m_ResourceManager.InitResources();
         }
-
-        /// <summary>
-        /// 使用可更新模式并检查版本资源列表。
-        /// </summary>
-        /// <param name="latestInternalResourceVersion">最新的资源内部版本号。</param>
-        /// <returns>检查版本资源列表结果。</returns>
-        public CheckVersionListResult CheckVersionList(int latestInternalResourceVersion)
-        {
-            return m_ResourceManager.CheckVersionList(latestInternalResourceVersion);
-        }
-
-        /// <summary>
-        /// 使用可更新模式并更新版本资源列表。
-        /// </summary>
-        /// <param name="versionListLength">版本资源列表大小。</param>
-        /// <param name="versionListHashCode">版本资源列表哈希值。</param>
-        /// <param name="versionListZipLength">版本资源列表压缩后大小。</param>
-        /// <param name="versionListZipHashCode">版本资源列表压缩后哈希值。</param>
-        public void UpdateVersionList(int versionListLength, int versionListHashCode, int versionListZipLength, int versionListZipHashCode)
-        {
-            m_ResourceManager.UpdateVersionList(versionListLength, versionListHashCode, versionListZipLength, versionListZipHashCode);
-        }
-
-        /// <summary>
-        /// 使用可更新模式并检查资源。
-        /// </summary>
-        public void CheckResources()
-        {
-            m_ResourceManager.CheckResources();
-        }
-
-        /// <summary>
-        /// 使用可更新模式并更新资源。
-        /// </summary>
-        public void UpdateResources()
-        {
-            m_ResourceManager.UpdateResources();
-        }
+        
 
         /// <summary>
         /// 异步加载资源。
@@ -839,47 +711,7 @@ namespace UnityGameFramework.Runtime
 
         private void OnResourceInitComplete(object sender, GameFramework.Resource.ResourceInitCompleteEventArgs e)
         {
-            m_EventComponent.Fire(this, ReferencePool.Acquire<ResourceInitCompleteEventArgs>().Fill(e));
-        }
-
-        private void OnVersionListUpdateSuccess(object sender, GameFramework.Resource.VersionListUpdateSuccessEventArgs e)
-        {
-            m_EventComponent.Fire(this, ReferencePool.Acquire<VersionListUpdateSuccessEventArgs>().Fill(e));
-        }
-
-        private void OnVersionListUpdateFailure(object sender, GameFramework.Resource.VersionListUpdateFailureEventArgs e)
-        {
-            m_EventComponent.Fire(this, ReferencePool.Acquire<VersionListUpdateFailureEventArgs>().Fill(e));
-        }
-
-        private void OnResourceCheckComplete(object sender, GameFramework.Resource.ResourceCheckCompleteEventArgs e)
-        {
-            m_EventComponent.Fire(this, ReferencePool.Acquire<ResourceCheckCompleteEventArgs>().Fill(e));
-        }
-
-        private void OnResourceUpdateStart(object sender, GameFramework.Resource.ResourceUpdateStartEventArgs e)
-        {
-            m_EventComponent.Fire(this, ReferencePool.Acquire<ResourceUpdateStartEventArgs>().Fill(e));
-        }
-
-        private void OnResourceUpdateChanged(object sender, GameFramework.Resource.ResourceUpdateChangedEventArgs e)
-        {
-            m_EventComponent.Fire(this, ReferencePool.Acquire<ResourceUpdateChangedEventArgs>().Fill(e));
-        }
-
-        private void OnResourceUpdateSuccess(object sender, GameFramework.Resource.ResourceUpdateSuccessEventArgs e)
-        {
-            m_EventComponent.Fire(this, ReferencePool.Acquire<ResourceUpdateSuccessEventArgs>().Fill(e));
-        }
-
-        private void OnResourceUpdateFailure(object sender, GameFramework.Resource.ResourceUpdateFailureEventArgs e)
-        {
-            m_EventComponent.Fire(this, ReferencePool.Acquire<ResourceUpdateFailureEventArgs>().Fill(e));
-        }
-
-        private void OnResourceUpdateAllComplete(object sender, GameFramework.Resource.ResourceUpdateAllCompleteEventArgs e)
-        {
-            m_EventComponent.Fire(this, ReferencePool.Acquire<ResourceUpdateAllCompleteEventArgs>().Fill(e));
+            EventComponent.Fire(this, ReferencePool.Acquire<ResourceInitCompleteEventArgs>().Fill(e));
         }
     }
 }
