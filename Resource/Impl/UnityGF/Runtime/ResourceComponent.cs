@@ -24,7 +24,6 @@ namespace UnityGameFramework.Runtime
         private const int DefaultPriority = 0;
 
         private IResourceManager m_ResourceManager = null;
-        [ReadOnly]
         [SerializeField]
         private EventComponent _eventComponent = null;
         private bool m_EditorResourceMode = false;
@@ -386,7 +385,6 @@ namespace UnityGameFramework.Runtime
             GameEntry.RegisterComponent(this);
         }
 
-        [ReadOnly]
         [SerializeField]
         private BaseComponent _baseComponent;
         private void Start()

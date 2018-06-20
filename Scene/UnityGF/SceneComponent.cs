@@ -26,7 +26,6 @@ namespace UnityGameFramework.Runtime
         private const int DefaultPriority = 0;
 
         private ISceneManager m_SceneManager = null;
-        [ReadOnly]
         [SerializeField]
         private EventComponent _eventComponent = null;
         private Camera m_MainCamera = null;
@@ -88,7 +87,6 @@ namespace UnityGameFramework.Runtime
                 return;
             }
         }
-        [ReadOnly]
         [SerializeField]
         private BaseComponent _baseComponent;
         private void Start()
