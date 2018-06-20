@@ -37,6 +37,7 @@ namespace UnityGameFramework.Runtime
         /// </summary>
         void Awake()
         {
+            GameEntry.RegisterComponent(this);
             m_EventManager = GameFrameworkEntry.GetModule<IEventManager>();
             if (m_EventManager == null)
             {

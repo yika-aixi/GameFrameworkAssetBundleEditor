@@ -29,8 +29,10 @@ namespace UnityGameFramework.Editor
             serializedObject.Update();
 
             SceneComponent t = (SceneComponent)target;
+            EditorGUI.BeginDisabledGroup(true);
             EditorGUILayout.PropertyField(_baseComponent);
             EditorGUILayout.PropertyField(_eventComponent);
+            EditorGUI.EndDisabledGroup();
             EditorGUILayout.PropertyField(m_EnableLoadSceneSuccessEvent);
             EditorGUILayout.PropertyField(m_EnableLoadSceneFailureEvent);
             EditorGUILayout.PropertyField(m_EnableLoadSceneUpdateEvent);

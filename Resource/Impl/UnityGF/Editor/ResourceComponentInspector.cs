@@ -51,8 +51,10 @@ namespace UnityGameFramework.Editor
             {
                 EditorGUILayout.HelpBox("Editor resource mode is enabled. Some options are disabled.", MessageType.Warning);
             }
+            EditorGUI.BeginDisabledGroup(true);
             EditorGUILayout.PropertyField(_baseComponent);
             EditorGUILayout.PropertyField(_eventComponent);
+            EditorGUI.EndDisabledGroup();
 
             EditorGUI.BeginDisabledGroup(EditorApplication.isPlayingOrWillChangePlaymode);
             {

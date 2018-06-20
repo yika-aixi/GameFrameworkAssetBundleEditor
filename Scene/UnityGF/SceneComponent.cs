@@ -8,6 +8,7 @@
 using GameFramework;
 using GameFramework.Resource;
 using GameFramework.Scene;
+using Unity.Collections;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -25,6 +26,7 @@ namespace UnityGameFramework.Runtime
         private const int DefaultPriority = 0;
 
         private ISceneManager m_SceneManager = null;
+        [ReadOnly]
         [SerializeField]
         private EventComponent _eventComponent = null;
         private Camera m_MainCamera = null;
@@ -64,7 +66,7 @@ namespace UnityGameFramework.Runtime
         /// </summary>
         void Awake()
         {
-
+            GameEntry.RegisterComponent(this);
             m_SceneManager = GameFrameworkEntry.GetModule<ISceneManager>();
             if (m_SceneManager == null)
             {
@@ -86,16 +88,18 @@ namespace UnityGameFramework.Runtime
                 return;
             }
         }
+        [ReadOnly]
         [SerializeField]
         private BaseComponent _baseComponent;
         private void Start()
         {
+            _baseComponent = GameEntry.GetComponent<BaseComponent>();
             if (_baseComponent == null)
             {
                 Log.Fatal("Base component is invalid.");
                 return;
             }
-
+            _eventComponent = GameEntry.GetComponent<EventComponent>();
             if (_eventComponent == null)
             {
                 Log.Fatal("Event component is invalid.");

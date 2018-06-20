@@ -9,6 +9,7 @@ using GameFramework;
 using GameFramework.ObjectPool;
 using GameFramework.Resource;
 using System;
+using Unity.Collections;
 using UnityEngine;
 
 namespace UnityGameFramework.Runtime
@@ -23,6 +24,7 @@ namespace UnityGameFramework.Runtime
         private const int DefaultPriority = 0;
 
         private IResourceManager m_ResourceManager = null;
+        [ReadOnly]
         [SerializeField]
         private EventComponent _eventComponent = null;
         private bool m_EditorResourceMode = false;
@@ -378,16 +380,24 @@ namespace UnityGameFramework.Runtime
                 m_ResourceManager.ResourcePriority = m_ResourcePriority = value;
             }
         }
+
+        void Awake()
+        {
+            GameEntry.RegisterComponent(this);
+        }
+
+        [ReadOnly]
         [SerializeField]
         private BaseComponent _baseComponent;
         private void Start()
         {
+            _baseComponent = GameEntry.GetComponent<BaseComponent>();
             if (_baseComponent == null)
             {
                 Log.Fatal("Base component is invalid.");
                 return;
             }
-            
+            _eventComponent = GameEntry.GetComponent<EventComponent>();
             if (_eventComponent == null)
             {
                 Log.Fatal("Event component is invalid.");
