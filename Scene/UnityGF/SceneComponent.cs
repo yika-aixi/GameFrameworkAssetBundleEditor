@@ -8,8 +8,6 @@
 using GameFramework;
 using GameFramework.Resource;
 using GameFramework.Scene;
-using Unity.Collections;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using SceneManager = UnityEngine.SceneManagement.SceneManager;
