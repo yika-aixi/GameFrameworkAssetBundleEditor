@@ -25,7 +25,8 @@ namespace UnityGameFramework.Runtime
         private const int DefaultPriority = 0;
 
         private ISceneManager m_SceneManager = null;
-        public EventComponent EventComponent = null;
+        [SerializeField]
+        private EventComponent _eventComponent = null;
         private Camera m_MainCamera = null;
         private Scene m_GameFrameworkScene = default(Scene);
 
@@ -85,24 +86,34 @@ namespace UnityGameFramework.Runtime
                 return;
             }
         }
-
-        public bool EditorResourceMode;
-        public IResourceManager EditorResourceHelper;
+        [SerializeField]
+        private BaseComponent _baseComponent;
         private void Start()
         {
-            if (EventComponent == null)
+            if (_baseComponent == null)
+            {
+                Log.Fatal("Base component is invalid.");
+                return;
+            }
+
+            if (_eventComponent == null)
             {
                 Log.Fatal("Event component is invalid.");
                 return;
             }
 
-            if (EditorResourceMode)
+            if (_baseComponent.EditorResourceMode)
             {
-                m_SceneManager.SetResourceManager(EditorResourceHelper);
+                m_SceneManager.SetResourceManager(_baseComponent.EditorResourceHelper);
             }
             else
             {
                 m_SceneManager.SetResourceManager(GameFrameworkEntry.GetModule<IResourceManager>());
+            }
+            if (m_SceneManager == null)
+            {
+                Log.Fatal("Resource manager is invalid.");
+                return;
             }
         }
 
@@ -269,7 +280,7 @@ namespace UnityGameFramework.Runtime
 
             if (m_EnableLoadSceneSuccessEvent)
             {
-                EventComponent.Fire(this, ReferencePool.Acquire<LoadSceneSuccessEventArgs>().Fill(e));
+                _eventComponent.Fire(this, ReferencePool.Acquire<LoadSceneSuccessEventArgs>().Fill(e));
             }
         }
 
@@ -278,7 +289,7 @@ namespace UnityGameFramework.Runtime
             Log.Warning("Load scene failure, scene asset name '{0}', error message '{1}'.", e.SceneAssetName, e.ErrorMessage);
             if (m_EnableLoadSceneFailureEvent)
             {
-                EventComponent.Fire(this, ReferencePool.Acquire<LoadSceneFailureEventArgs>().Fill(e));
+                _eventComponent.Fire(this, ReferencePool.Acquire<LoadSceneFailureEventArgs>().Fill(e));
             }
         }
 
@@ -286,7 +297,7 @@ namespace UnityGameFramework.Runtime
         {
             if (m_EnableLoadSceneUpdateEvent)
             {
-                EventComponent.Fire(this, ReferencePool.Acquire<LoadSceneUpdateEventArgs>().Fill(e));
+                _eventComponent.Fire(this, ReferencePool.Acquire<LoadSceneUpdateEventArgs>().Fill(e));
             }
         }
 
@@ -294,7 +305,7 @@ namespace UnityGameFramework.Runtime
         {
             if (m_EnableLoadSceneDependencyAssetEvent)
             {
-                EventComponent.Fire(this, ReferencePool.Acquire<LoadSceneDependencyAssetEventArgs>().Fill(e));
+                _eventComponent.Fire(this, ReferencePool.Acquire<LoadSceneDependencyAssetEventArgs>().Fill(e));
             }
         }
 
@@ -302,7 +313,7 @@ namespace UnityGameFramework.Runtime
         {
             if (m_EnableUnloadSceneSuccessEvent)
             {
-                EventComponent.Fire(this, ReferencePool.Acquire<UnloadSceneSuccessEventArgs>().Fill(e));
+                _eventComponent.Fire(this, ReferencePool.Acquire<UnloadSceneSuccessEventArgs>().Fill(e));
             }
         }
 
@@ -311,7 +322,7 @@ namespace UnityGameFramework.Runtime
             Log.Warning("Unload scene failure, scene asset name '{0}'.", e.SceneAssetName);
             if (m_EnableUnloadSceneFailureEvent)
             {
-                EventComponent.Fire(this, ReferencePool.Acquire<UnloadSceneFailureEventArgs>().Fill(e));
+                _eventComponent.Fire(this, ReferencePool.Acquire<UnloadSceneFailureEventArgs>().Fill(e));
             }
         }
     }

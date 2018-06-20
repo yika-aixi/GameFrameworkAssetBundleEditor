@@ -51,6 +51,8 @@ namespace UnityGameFramework.Editor
             {
                 EditorGUILayout.HelpBox("Editor resource mode is enabled. Some options are disabled.", MessageType.Warning);
             }
+            EditorGUILayout.PropertyField(_baseComponent);
+            EditorGUILayout.PropertyField(_eventComponent);
 
             EditorGUI.BeginDisabledGroup(EditorApplication.isPlayingOrWillChangePlaymode);
             {
@@ -232,9 +234,13 @@ namespace UnityGameFramework.Editor
 
             RefreshTypeNames();
         }
-
+        private SerializedProperty _baseComponent = null;
+        private SerializedProperty _eventComponent = null;
         private void OnEnable()
         {
+            _baseComponent = serializedObject.FindProperty("_baseComponent");
+            _eventComponent = serializedObject.FindProperty("_eventComponent");
+
             m_ResourceMode = serializedObject.FindProperty("m_ResourceMode");
             m_ReadWritePathType = serializedObject.FindProperty("m_ReadWritePathType");
             m_UnloadUnusedAssetsInterval = serializedObject.FindProperty("m_UnloadUnusedAssetsInterval");

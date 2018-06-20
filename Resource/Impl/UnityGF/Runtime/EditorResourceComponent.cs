@@ -138,58 +138,6 @@ namespace UnityGameFramework.Runtime
         }
 
         /// <summary>
-        /// 获取或设置资源更新下载地址。
-        /// </summary>
-        public string UpdatePrefixUri
-        {
-            get
-            {
-                throw new NotSupportedException("UpdatePrefixUri");
-            }
-            set
-            {
-                throw new NotSupportedException("UpdatePrefixUri");
-            }
-        }
-
-        /// <summary>
-        /// 获取或设置资源更新重试次数。
-        /// </summary>
-        public int UpdateRetryCount
-        {
-            get
-            {
-                throw new NotSupportedException("UpdateRetryCount");
-            }
-            set
-            {
-                throw new NotSupportedException("UpdateRetryCount");
-            }
-        }
-
-        /// <summary>
-        /// 获取等待更新资源个数。
-        /// </summary>
-        public int UpdateWaitingCount
-        {
-            get
-            {
-                throw new NotSupportedException("UpdateWaitingCount");
-            }
-        }
-
-        /// <summary>
-        /// 获取正在更新资源个数。
-        /// </summary>
-        public int UpdatingCount
-        {
-            get
-            {
-                throw new NotSupportedException("UpdatingCount");
-            }
-        }
-
-        /// <summary>
         /// 获取加载资源代理总个数。
         /// </summary>
         public int LoadTotalAgentCount
@@ -361,7 +309,7 @@ namespace UnityGameFramework.Runtime
         public event EventHandler<GameFramework.Resource.ResourceInitCompleteEventArgs> ResourceInitComplete = null;
 
 #pragma warning restore 0067, 0414
-
+        public BaseComponent BaseComponent;
         private void Awake()
         {
             m_ReadOnlyPath = null;
@@ -369,6 +317,22 @@ namespace UnityGameFramework.Runtime
             m_LoadAssetInfos = new LinkedList<LoadAssetInfo>();
             m_LoadSceneInfos = new LinkedList<LoadSceneInfo>();
             m_UnloadSceneInfos = new LinkedList<UnloadSceneInfo>();
+
+            if (BaseComponent == null)
+            {
+                Log.Error("Can not find base component.");
+                return;
+            }
+
+            if (BaseComponent.EditorResourceMode)
+            {
+                BaseComponent.EditorResourceHelper = this;
+                enabled = true;
+            }
+            else
+            {
+                enabled = false;
+            }
         }
 
         private void Update()

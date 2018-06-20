@@ -23,7 +23,8 @@ namespace UnityGameFramework.Runtime
         private const int DefaultPriority = 0;
 
         private IResourceManager m_ResourceManager = null;
-        public EventComponent EventComponent = null;
+        [SerializeField]
+        private EventComponent _eventComponent = null;
         private bool m_EditorResourceMode = false;
         private bool m_ForceUnloadUnusedAssets = false;
         private bool m_PreorderUnloadUnusedAssets = false;
@@ -377,18 +378,29 @@ namespace UnityGameFramework.Runtime
                 m_ResourceManager.ResourcePriority = m_ResourcePriority = value;
             }
         }
-        public bool EditorResourceMode;
-        public IResourceManager EditorResourceHelper;
+        [SerializeField]
+        private BaseComponent _baseComponent;
         private void Start()
         {
-            m_ResourceManager = EditorResourceMode ? EditorResourceHelper : GameFrameworkEntry.GetModule<IResourceManager>();
-
-            if (EventComponent == null)
+            if (_baseComponent == null)
+            {
+                Log.Fatal("Base component is invalid.");
+                return;
+            }
+            
+            if (_eventComponent == null)
             {
                 Log.Fatal("Event component is invalid.");
                 return;
             }
 
+            m_EditorResourceMode = _baseComponent.EditorResourceMode;
+            m_ResourceManager = m_EditorResourceMode ? _baseComponent.EditorResourceHelper : GameFrameworkEntry.GetModule<IResourceManager>();
+            if (m_ResourceManager == null)
+            {
+                Log.Fatal("Resource manager is invalid.");
+                return;
+            }
             m_ResourceManager.ResourceInitComplete += OnResourceInitComplete;
 
             m_ResourceManager.SetReadOnlyPath(Application.streamingAssetsPath);
@@ -714,7 +726,7 @@ namespace UnityGameFramework.Runtime
 
         private void OnResourceInitComplete(object sender, GameFramework.Resource.ResourceInitCompleteEventArgs e)
         {
-            EventComponent.Fire(this, ReferencePool.Acquire<ResourceInitCompleteEventArgs>().Fill(e));
+            _eventComponent.Fire(this, ReferencePool.Acquire<ResourceInitCompleteEventArgs>().Fill(e));
         }
     }
 }
