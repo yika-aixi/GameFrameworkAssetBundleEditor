@@ -240,6 +240,12 @@ namespace UnityGameFramework.Editor.AssetBundleTools
             set;
         }
 
+        public bool IsCopyStreamingAssets
+        {
+            get;
+            set;
+        }
+
         public string BuildEventHandlerTypeName
         {
             get;
@@ -1342,7 +1348,7 @@ namespace UnityGameFramework.Editor.AssetBundleTools
             return (!string.IsNullOrEmpty(assetBundleVariant) ? string.Format("{0}.{1}", assetBundleName, assetBundleVariant) : assetBundleName).ToLower();
         }
 
-        private string GetBuildTargetName(BuildTarget buildTarget)
+        public string GetBuildTargetName(BuildTarget buildTarget)
         {
             switch (buildTarget)
             {

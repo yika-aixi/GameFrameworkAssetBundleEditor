@@ -6,6 +6,7 @@
 //------------------------------------------------------------
 
 using System.IO;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -24,7 +25,7 @@ namespace UnityGameFramework.Editor.AssetBundleTools
         private static void Open()
         {
             AssetBundleBuilder window = GetWindow<AssetBundleBuilder>(true, "AssetBundle Builder", true);
-            window.minSize = window.maxSize = new Vector2(666f, 570f);
+            window.minSize = window.maxSize = new Vector2(666f, 600f);
         }
 
         private void OnEnable()
@@ -181,6 +182,12 @@ namespace UnityGameFramework.Editor.AssetBundleTools
                                 {
                                     m_Controller.UncompressedAssetBundleSelected = false;
                                 }
+                            }
+
+                            bool isCopyStreamingAssets = EditorGUILayout.ToggleLeft("Copy StreamingAssets", m_Controller.IsCopyStreamingAssets);
+                            if (m_Controller.IsCopyStreamingAssets != isCopyStreamingAssets)
+                            {
+                                m_Controller.IsCopyStreamingAssets = isCopyStreamingAssets;
                             }
                         }
                         EditorGUILayout.EndVertical();
@@ -458,7 +465,49 @@ namespace UnityGameFramework.Editor.AssetBundleTools
         private void OnProcessAssetBundleComplete(BuildTarget buildTarget, string versionListPath, int versionListLength, int versionListHashCode, int versionListZipLength, int versionListZipHashCode)
         {
             EditorUtility.ClearProgressBar();
+            _copy(buildTarget);
             Debug.Log(string.Format("Build AssetBundles for '{0}' complete, version list path is '{1}', length is '{2}', hash code is '{3}', zip length is '{4}', zip hash code is '{5}'.", buildTarget.ToString(), versionListPath, versionListLength.ToString(), versionListHashCode.ToString("X8"), versionListZipLength.ToString(), versionListZipHashCode.ToString("X8")));
+        }
+
+        private void _copy(BuildTarget target)
+        {
+            string buildTargetUrlName = m_Controller.GetBuildTargetName(target);
+            string outputPackagePath = string.Format("{0}{1}/", m_Controller.OutputPackagePath, buildTargetUrlName);
+            var files = Directory.GetFiles(outputPackagePath,"*",SearchOption.AllDirectories);
+            var version = string.Format("{0}_{1}", m_Controller.ApplicableGameVersion.Replace('.', '_'), m_Controller.InternalResourceVersion);
+            if (!Directory.Exists(Application.streamingAssetsPath))
+            {
+                Directory.CreateDirectory(Application.streamingAssetsPath);
+            }
+            foreach (var file in files)
+            {
+                var p = file.Split('/', '\\');
+                var fileName = p.Last();
+                var parentDirectory = p[p.Length - 2];
+                string newPath;
+                if (!parentDirectory.Equals(buildTargetUrlName))
+                {
+                    var dir = Path.Combine(Application.streamingAssetsPath, parentDirectory);
+                    if (!Directory.Exists(dir))
+                    {
+                        Directory.CreateDirectory(dir);
+                    }
+                    newPath = Path.Combine(dir, fileName);
+                }
+                else
+                {
+                    newPath = Path.Combine(Application.streamingAssetsPath, fileName);
+                }
+
+                if (File.Exists(newPath))
+                {
+                    File.Delete(newPath);
+                }
+
+                File.Copy(file, newPath);
+            }
+            AssetDatabase.Refresh();
+            Debug.Log("Copy Complete. Copy Version:"+ version);
         }
 
         private void OnBuildAssetBundlesError(string errorMessage)
