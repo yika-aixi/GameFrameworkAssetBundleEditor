@@ -377,9 +377,12 @@ namespace UnityGameFramework.Runtime
                 m_ResourceManager.ResourcePriority = m_ResourcePriority = value;
             }
         }
-
+        public bool EditorResourceMode;
+        public IResourceManager EditorResourceHelper;
         private void Start()
         {
+            m_ResourceManager = EditorResourceMode ? EditorResourceHelper : GameFrameworkEntry.GetModule<IResourceManager>();
+
             if (EventComponent == null)
             {
                 Log.Fatal("Event component is invalid.");
