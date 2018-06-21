@@ -4,10 +4,10 @@
 // Homepage: http://gameframework.cn/
 // Feedback: mailto:jiangyin@gameframework.cn
 //------------------------------------------------------------
+#define Icarus_GameFramework
 
 using System;
 using System.Collections.Generic;
-#define Icarus_GameFramework
 namespace GameFramework
 {
     /// <summary>
