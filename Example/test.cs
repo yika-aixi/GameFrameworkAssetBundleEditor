@@ -29,6 +29,7 @@ public class test : MonoBehaviour
             _resourceComponent.SetResourceMode(ResourceMode.Package);
             var eventArgs = ReferencePool.Acquire<UnityGameFramework.Runtime.ResourceInitCompleteEventArgs>();
             _eventComponent.Subscribe(eventArgs.Id, _loadAsset);
+            ReferencePool.Release(eventArgs);
             _resourceComponent.InitResources();
         }
         else
