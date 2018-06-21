@@ -7,7 +7,7 @@
 
 using System;
 using System.Collections.Generic;
-
+#define Icarus_GameFramework
 namespace GameFramework
 {
     /// <summary>
