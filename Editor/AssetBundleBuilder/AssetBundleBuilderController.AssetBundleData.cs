@@ -127,6 +127,15 @@ namespace UnityGameFramework.Editor.AssetBundleTools
             {
                 m_Codes.Add(new AssetBundleCode(buildTarget, length, hashCode, zipLength, zipHashCode));
             }
+
+            public override string ToString()
+            {
+                return string.Format("资源包名:{0}," +
+                                     "加载方式:{1}," +
+                                     "资源个数:{2}," +
+                                     "变体:{3}," +
+                                     "是否单机包:{4}", m_Name, m_LoadType, m_AssetDatas.Count, m_Variant, m_Packed);
+            }
         }
     }
 }

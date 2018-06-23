@@ -481,22 +481,12 @@ namespace UnityGameFramework.Editor.AssetBundleTools
             }
             foreach (var file in files)
             {
-                var p = file.Split('/', '\\');
-                var fileName = p.Last();
-                var parentDirectory = p[p.Length - 2];
-                string newPath;
-                if (!parentDirectory.Equals(buildTargetUrlName))
+                var newPath = file.Replace(outputPackagePath, Application.streamingAssetsPath+Path.DirectorySeparatorChar);
+                UnityEngine.Debug.Log(newPath);
+                var dir = Path.GetDirectoryName(newPath);
+                if (!Directory.Exists(dir))
                 {
-                    var dir = Path.Combine(Application.streamingAssetsPath, parentDirectory);
-                    if (!Directory.Exists(dir))
-                    {
-                        Directory.CreateDirectory(dir);
-                    }
-                    newPath = Path.Combine(dir, fileName);
-                }
-                else
-                {
-                    newPath = Path.Combine(Application.streamingAssetsPath, fileName);
+                    Directory.CreateDirectory(dir);
                 }
 
                 if (File.Exists(newPath))

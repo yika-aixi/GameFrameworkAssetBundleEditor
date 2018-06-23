@@ -449,6 +449,9 @@ namespace UnityGameFramework.Editor.AssetBundleTools
                         case "OutputDirectory":
                             OutputDirectory = xmlNode.InnerText;
                             break;
+                        case "CopyStreamingAssets":
+                            IsCopyStreamingAssets = bool.Parse(xmlNode.InnerText);
+                            break;
                     }
                 }
             }
@@ -529,6 +532,9 @@ namespace UnityGameFramework.Editor.AssetBundleTools
                 xmlSettings.AppendChild(xmlElement);
                 xmlElement = xmlDocument.CreateElement("OutputDirectory");
                 xmlElement.InnerText = OutputDirectory;
+                xmlSettings.AppendChild(xmlElement);
+                xmlElement = xmlDocument.CreateElement("CopyStreamingAssets");
+                xmlElement.InnerText = IsCopyStreamingAssets.ToString();
                 xmlSettings.AppendChild(xmlElement);
 
                 string configurationDirectoryName = Path.GetDirectoryName(m_ConfigurationPath);
@@ -944,6 +950,7 @@ namespace UnityGameFramework.Editor.AssetBundleTools
 
                     foreach (AssetBundleData assetBundleData in m_AssetBundleDatas.Values)
                     {
+                        UnityEngine.Debug.Log(assetBundleData);
                         byte[] nameBytes = GetXorBytes(Utility.Converter.GetBytes(assetBundleData.Name), encryptBytes);
                         if (nameBytes.Length > byte.MaxValue)
                         {

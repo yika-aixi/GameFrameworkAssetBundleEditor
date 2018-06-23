@@ -19,13 +19,12 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4027604371641998}
-  - component: {fileID: 114993822414064856}
-  - component: {fileID: 114009450585217794}
-  - component: {fileID: 114530825204154380}
-  - component: {fileID: 114251686505761908}
-  - component: {fileID: 114046904646527524}
-  - component: {fileID: 114420125198221150}
-  - component: {fileID: 114745065789270978}
+  - component: {fileID: 114507665798876038}
+  - component: {fileID: 114561011174882740}
+  - component: {fileID: 114630106275509266}
+  - component: {fileID: 114749139794575394}
+  - component: {fileID: 114634364747614022}
+  - component: {fileID: 114820236797778534}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -46,7 +45,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114009450585217794
+--- !u!114 &114507665798876038
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -54,13 +53,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1255507732598636}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c26ec20b78ec32048bfb6c0ff875d8cd, type: 3}
+  m_Script: {fileID: 11500000, guid: df1a0fecae25c5c4390b5723f3cead13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_MinLoadAssetRandomDelaySeconds: 0
-  m_MaxLoadAssetRandomDelaySeconds: 1
-  BaseComponent: {fileID: 114993822414064856}
---- !u!114 &114046904646527524
+  EditorResourceMode: 0
+--- !u!114 &114561011174882740
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -68,7 +65,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 1255507732598636}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7eff66e40586ec14d8a301d416f17f1e, type: 3}
+  m_Script: {fileID: 11500000, guid: dcc95ba40a021f14aafbf6b5de97cc09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114630106275509266
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1255507732598636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e867cb650f568df42bd7446a818f77fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _eventComponent: {fileID: 0}
@@ -92,7 +100,7 @@ MonoBehaviour:
   m_CustomLoadResourceAgentHelper: {fileID: 0}
   m_LoadResourceAgentHelperCount: 3
   _baseComponent: {fileID: 0}
---- !u!114 &114251686505761908
+--- !u!114 &114634364747614022
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -100,10 +108,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1255507732598636}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8724140abd358ba43b307e25549a64f2, type: 3}
+  m_Script: {fileID: 11500000, guid: a79ab51a97aacb44d94bdf609fc062db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114420125198221150
+  m_MinLoadAssetRandomDelaySeconds: 0
+  m_MaxLoadAssetRandomDelaySeconds: 1
+  BaseComponent: {fileID: 0}
+--- !u!114 &114749139794575394
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -111,18 +122,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1255507732598636}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b6242b052eb207b40b22e8fe77a315ba, type: 3}
+  m_Script: {fileID: 11500000, guid: db9eb89420434d24d9955ea3c8ad7cc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _eventComponent: {fileID: 0}
-  m_EnableLoadSceneSuccessEvent: 1
-  m_EnableLoadSceneFailureEvent: 1
-  m_EnableLoadSceneUpdateEvent: 1
-  m_EnableLoadSceneDependencyAssetEvent: 1
-  m_EnableUnloadSceneSuccessEvent: 1
-  m_EnableUnloadSceneFailureEvent: 1
-  _baseComponent: {fileID: 0}
---- !u!114 &114530825204154380
+--- !u!114 &114820236797778534
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -130,30 +133,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1255507732598636}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 129061d3d56976848affce67fc1f757f, type: 3}
+  m_Script: {fileID: 11500000, guid: 2fcf83b62a3a5c14a853a8d04977b8d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114745065789270978
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1255507732598636}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61c0497194ee20d4a801f08550b34d5b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AssetName: Assets/TestAset/Cube.prefab
---- !u!114 &114993822414064856
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1255507732598636}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 176b80de0457b294a84d37dee1aba640, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  EditorResourceMode: 0
+  AssetName: Assets\GameFrameworkAssetBundleEditor\Example\TestAset\Sphere.prefab
