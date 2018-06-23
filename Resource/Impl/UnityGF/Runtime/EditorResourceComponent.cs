@@ -309,7 +309,6 @@ namespace UnityGameFramework.Runtime
         public event EventHandler<GameFramework.Resource.ResourceInitCompleteEventArgs> ResourceInitComplete = null;
 
 #pragma warning restore 0067, 0414
-        public BaseComponent BaseComponent;
         private void Awake()
         {
             m_ReadOnlyPath = null;
@@ -317,16 +316,16 @@ namespace UnityGameFramework.Runtime
             m_LoadAssetInfos = new LinkedList<LoadAssetInfo>();
             m_LoadSceneInfos = new LinkedList<LoadSceneInfo>();
             m_UnloadSceneInfos = new LinkedList<UnloadSceneInfo>();
-
-            if (BaseComponent == null)
+            BaseComponent baseComponent = GameEntry.GetComponent<BaseComponent>();
+            if (baseComponent == null)
             {
                 Log.Error("Can not find base component.");
                 return;
             }
 
-            if (BaseComponent.EditorResourceMode)
+            if (baseComponent.EditorResourceMode)
             {
-                BaseComponent.EditorResourceHelper = this;
+                baseComponent.EditorResourceHelper = this;
                 enabled = true;
             }
             else
