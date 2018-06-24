@@ -7,7 +7,7 @@
 
 using System.Collections.Generic;
 
-namespace UnityGameFramework.Editor.AssetBundleTools
+namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
 {
     /// <summary>
     /// 资源包。

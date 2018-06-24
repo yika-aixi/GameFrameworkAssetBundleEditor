@@ -7,7 +7,7 @@
 
 using System;
 
-namespace GameFramework.Resource
+namespace Icarus.GameFramework.Resource
 {
     internal partial class ResourceManager
     {

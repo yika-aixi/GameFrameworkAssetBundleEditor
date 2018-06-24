@@ -5,7 +5,7 @@
 // Feedback: mailto:jiangyin@gameframework.cn
 //------------------------------------------------------------
 
-namespace GameFramework.Resource
+namespace Icarus.GameFramework.Resource
 {
     /// <summary>
     /// 资源相关常量。

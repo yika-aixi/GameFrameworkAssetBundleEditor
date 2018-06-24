@@ -7,7 +7,7 @@
 
 using UnityEditor;
 
-namespace UnityGameFramework.Editor.AssetBundleTools
+namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
 {
     /// <summary>
     /// 资源。

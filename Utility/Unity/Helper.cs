@@ -5,10 +5,10 @@
 // Feedback: mailto:jiangyin@gameframework.cn
 //------------------------------------------------------------
 
-using GameFramework;
+using Icarus.GameFramework;
 using UnityEngine;
 
-namespace UnityGameFramework.Runtime
+namespace Icarus.UnityGameFramework.Runtime
 {
     /// <summary>
     /// 辅助器创建器相关的实用函数。

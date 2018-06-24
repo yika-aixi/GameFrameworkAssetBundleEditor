@@ -7,9 +7,9 @@
 
 using System.Reflection;
 using UnityEditor;
-using UnityGameFramework.Runtime;
+using Icarus.UnityGameFramework.Runtime;
 
-namespace UnityGameFramework.Editor
+namespace Icarus.UnityGameFramework.Editor
 {
     [CustomEditor(typeof(ResourceComponent))]
     internal sealed class ResourceComponentInspector : GameFrameworkInspector

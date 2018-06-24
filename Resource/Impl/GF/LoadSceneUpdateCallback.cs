@@ -5,7 +5,7 @@
 // Feedback: mailto:jiangyin@gameframework.cn
 //------------------------------------------------------------
 
-namespace GameFramework.Resource
+namespace Icarus.GameFramework.Resource
 {
     /// <summary>
     /// 加载场景更新回调函数。

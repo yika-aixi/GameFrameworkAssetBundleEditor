@@ -5,9 +5,9 @@
 // Feedback: mailto:jiangyin@gameframework.cn
 //------------------------------------------------------------
 
-using GameFramework;
-using GameFramework.ObjectPool;
-using GameFramework.Resource;
+using Icarus.GameFramework;
+using Icarus.GameFramework.ObjectPool;
+using Icarus.GameFramework.Resource;
 using System;
 using System.Collections.Generic;
 #if UNITY_EDITOR
@@ -16,7 +16,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace UnityGameFramework.Runtime
+namespace Icarus.UnityGameFramework.Runtime
 {
     /// <summary>
     /// 编辑器资源组件。

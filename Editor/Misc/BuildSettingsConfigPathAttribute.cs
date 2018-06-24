@@ -5,7 +5,7 @@
 // Feedback: mailto:jiangyin@gameframework.cn
 //------------------------------------------------------------
 
-namespace UnityGameFramework.Editor
+namespace Icarus.UnityGameFramework.Editor
 {
     /// <summary>
     /// BuildSettings 配置路径属性。

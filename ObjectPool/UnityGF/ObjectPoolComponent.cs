@@ -5,12 +5,12 @@
 // Feedback: mailto:jiangyin@gameframework.cn
 //------------------------------------------------------------
 
-using GameFramework;
-using GameFramework.ObjectPool;
+using Icarus.GameFramework;
+using Icarus.GameFramework.ObjectPool;
 using System;
 using UnityEngine;
 
-namespace UnityGameFramework.Runtime
+namespace Icarus.UnityGameFramework.Runtime
 {
     /// <summary>
     /// 对象池组件。

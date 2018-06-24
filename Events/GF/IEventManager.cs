@@ -7,7 +7,7 @@
 
 using System;
 
-namespace GameFramework.Event
+namespace Icarus.GameFramework.Event
 {
     /// <summary>
     /// 事件管理器接口。

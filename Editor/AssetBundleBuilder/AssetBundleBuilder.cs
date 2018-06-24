@@ -10,7 +10,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace UnityGameFramework.Editor.AssetBundleTools
+namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
 {
     /// <summary>
     /// 资源包生成器。

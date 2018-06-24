@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace GameFramework
+namespace Icarus.GameFramework
 {
     /// <summary>
     /// 引用池。

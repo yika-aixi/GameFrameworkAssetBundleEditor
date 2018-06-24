@@ -5,11 +5,11 @@
 // Feedback: mailto:jiangyin@gameframework.cn
 //------------------------------------------------------------
 
-using GameFramework;
+using Icarus.GameFramework;
 using ICSharpCode.SharpZipLib.GZip;
 using System.IO;
 
-namespace UnityGameFramework.Runtime
+namespace Icarus.UnityGameFramework.Runtime
 {
     /// <summary>
     /// 压缩解压缩辅助器。

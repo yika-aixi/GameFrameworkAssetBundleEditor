@@ -5,14 +5,14 @@
 // Feedback: mailto:jiangyin@gameframework.cn
 //------------------------------------------------------------
 
-using GameFramework;
-using GameFramework.Resource;
-using GameFramework.Scene;
+using Icarus.GameFramework;
+using Icarus.GameFramework.Resource;
+using Icarus.GameFramework.Scene;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using SceneManager = UnityEngine.SceneManagement.SceneManager;
 
-namespace UnityGameFramework.Runtime
+namespace Icarus.UnityGameFramework.Runtime
 {
     /// <summary>
     /// 场景组件。

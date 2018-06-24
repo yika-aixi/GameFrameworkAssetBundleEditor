@@ -7,7 +7,7 @@
 
 using System.IO;
 
-namespace GameFramework
+namespace Icarus.GameFramework
 {
     public static partial class Utility
     {

@@ -7,7 +7,7 @@
 
 using System.Collections.Generic;
 
-namespace UnityGameFramework.Editor.AssetBundleTools
+namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
 {
     internal sealed class DependencyData
     {

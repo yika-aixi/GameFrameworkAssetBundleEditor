@@ -7,7 +7,7 @@
 
 using System;
 
-namespace GameFramework.ObjectPool
+namespace Icarus.GameFramework.ObjectPool
 {
     /// <summary>
     /// 对象池基类。

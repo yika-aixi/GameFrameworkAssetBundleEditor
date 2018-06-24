@@ -5,9 +5,9 @@
 // Feedback: mailto:jiangyin@gameframework.cn
 //------------------------------------------------------------
 
-using GameFramework.Event;
+using Icarus.GameFramework.Event;
 
-namespace UnityGameFramework.Runtime
+namespace Icarus.UnityGameFramework.Runtime
 {
     /// <summary>
     /// 加载场景时加载依赖资源事件。

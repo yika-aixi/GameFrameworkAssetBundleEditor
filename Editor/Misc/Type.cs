@@ -5,11 +5,11 @@
 // Feedback: mailto:jiangyin@gameframework.cn
 //------------------------------------------------------------
 
-using GameFramework;
+using Icarus.GameFramework;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace UnityGameFramework.Editor
+namespace Icarus.UnityGameFramework.Editor
 {
     /// <summary>
     /// 类型相关的实用函数。

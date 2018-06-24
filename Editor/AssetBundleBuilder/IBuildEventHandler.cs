@@ -7,7 +7,7 @@
 
 using UnityEditor;
 
-namespace UnityGameFramework.Editor.AssetBundleTools
+namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
 {
     /// <summary>
     /// 生成资源包事件处理函数。

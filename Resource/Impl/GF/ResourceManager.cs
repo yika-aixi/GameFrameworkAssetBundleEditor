@@ -5,12 +5,12 @@
 // Feedback: mailto:jiangyin@gameframework.cn
 //------------------------------------------------------------
 
-using GameFramework.ObjectPool;
+using Icarus.GameFramework.ObjectPool;
 using System;
 using System.Collections.Generic;
-using UnityGameFramework.Runtime;
+using Icarus.UnityGameFramework.Runtime;
 
-namespace GameFramework.Resource
+namespace Icarus.GameFramework.Resource
 {
     /// <summary>
     /// 资源管理器。

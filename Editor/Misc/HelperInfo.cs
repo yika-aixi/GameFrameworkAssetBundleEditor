@@ -5,12 +5,12 @@
 // Feedback: mailto:jiangyin@gameframework.cn
 //------------------------------------------------------------
 
-using GameFramework;
+using Icarus.GameFramework;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace UnityGameFramework.Editor
+namespace Icarus.UnityGameFramework.Editor
 {
     internal sealed class HelperInfo<T> where T : MonoBehaviour
     {

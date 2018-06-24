@@ -7,9 +7,9 @@
 
 using UnityEditor;
 using UnityEngine;
-using UnityGameFramework.Runtime;
+using Icarus.UnityGameFramework.Runtime;
 
-namespace UnityGameFramework.Editor
+namespace Icarus.UnityGameFramework.Editor
 {
     [CustomEditor(typeof(SceneComponent))]
     internal sealed class SceneComponentInspector : GameFrameworkInspector

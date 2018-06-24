@@ -1,10 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
-using GameFramework;
-using GameFramework.Event;
-using GameFramework.Resource;
+using Icarus.GameFramework;
+using Icarus.GameFramework.Event;
+using Icarus.GameFramework.Resource;
 using UnityEngine;
-using UnityGameFramework.Runtime;
+using Icarus.UnityGameFramework.Runtime;
 
 public class test : MonoBehaviour
 {
@@ -27,7 +27,7 @@ public class test : MonoBehaviour
         if (!_baseComponent.EditorResourceMode)
         {
             _resourceComponent.SetResourceMode(ResourceMode.Package);
-            var eventArgs = ReferencePool.Acquire<UnityGameFramework.Runtime.ResourceInitCompleteEventArgs>();
+            var eventArgs = ReferencePool.Acquire<Icarus.UnityGameFramework.Runtime.ResourceInitCompleteEventArgs>();
             _eventComponent.Subscribe(eventArgs.Id, _loadAsset);
             ReferencePool.Release(eventArgs);
             _resourceComponent.InitResources();

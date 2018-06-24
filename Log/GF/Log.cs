@@ -7,7 +7,7 @@
 
 using System.Diagnostics;
 
-namespace GameFramework
+namespace Icarus.GameFramework
 {
     /// <summary>
     /// 日志类。

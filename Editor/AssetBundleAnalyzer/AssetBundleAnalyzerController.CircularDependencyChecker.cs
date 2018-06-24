@@ -8,7 +8,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace UnityGameFramework.Editor.AssetBundleTools
+namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
 {
     internal sealed partial class AssetBundleAnalyzerController
     {

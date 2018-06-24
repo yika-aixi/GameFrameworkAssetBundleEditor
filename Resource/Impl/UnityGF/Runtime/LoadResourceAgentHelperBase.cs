@@ -5,11 +5,11 @@
 // Feedback: mailto:jiangyin@gameframework.cn
 //------------------------------------------------------------
 
-using GameFramework.Resource;
+using Icarus.GameFramework.Resource;
 using System;
 using UnityEngine;
 
-namespace UnityGameFramework.Runtime
+namespace Icarus.UnityGameFramework.Runtime
 {
     /// <summary>
     /// 加载资源代理辅助器基类。

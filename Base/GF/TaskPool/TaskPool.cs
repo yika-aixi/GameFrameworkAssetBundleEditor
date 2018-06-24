@@ -7,7 +7,7 @@
 
 using System.Collections.Generic;
 
-namespace GameFramework
+namespace Icarus.GameFramework
 {
     /// <summary>
     /// 任务池。

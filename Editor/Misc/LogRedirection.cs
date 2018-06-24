@@ -5,7 +5,7 @@
 // Feedback: mailto:jiangyin@gameframework.cn
 //------------------------------------------------------------
 
-using GameFramework;
+using Icarus.GameFramework;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using UnityEditor;
@@ -13,7 +13,7 @@ using UnityEditor.Callbacks;
 using UnityEditorInternal;
 using UnityEngine;
 
-namespace UnityGameFramework.Editor
+namespace Icarus.UnityGameFramework.Editor
 {
     /// <summary>
     /// 日志重定向相关的实用函数。

@@ -8,7 +8,7 @@
 using System.Collections.Generic;
 using UnityEditor;
 
-namespace UnityGameFramework.Editor.AssetBundleTools
+namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
 {
     internal partial class AssetBundleBuilderController
     {

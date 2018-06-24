@@ -7,7 +7,7 @@
 
 using System;
 
-namespace GameFramework
+namespace Icarus.GameFramework
 {
     /// <summary>
     /// 游戏框架中包含事件数据的类的基类。

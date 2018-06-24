@@ -5,7 +5,7 @@
 // Feedback: mailto:jiangyin@gameframework.cn
 //------------------------------------------------------------
 
-namespace GameFramework
+namespace Icarus.GameFramework
 {
     public static partial class Log
     {

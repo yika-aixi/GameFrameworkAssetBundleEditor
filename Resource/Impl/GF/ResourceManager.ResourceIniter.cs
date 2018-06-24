@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace GameFramework.Resource
+namespace Icarus.GameFramework.Resource
 {
     internal partial class ResourceManager
     {

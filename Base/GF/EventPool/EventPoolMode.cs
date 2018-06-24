@@ -7,7 +7,7 @@
 
 using System;
 
-namespace GameFramework
+namespace Icarus.GameFramework
 {
     /// <summary>
     /// 事件池模式。

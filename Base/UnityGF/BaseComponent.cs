@@ -1,10 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using GameFramework;
-using GameFramework.Resource;
+using Icarus.GameFramework;
+using Icarus.GameFramework.Resource;
 using UnityEngine;
 
-namespace UnityGameFramework.Runtime
+namespace Icarus.UnityGameFramework.Runtime
 {
     public class BaseComponent : MonoBehaviour
     {

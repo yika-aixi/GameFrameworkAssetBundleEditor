@@ -5,10 +5,10 @@
 // Feedback: mailto:jiangyin@gameframework.cn
 //------------------------------------------------------------
 
-using GameFramework.ObjectPool;
+using Icarus.GameFramework.ObjectPool;
 using System.Collections.Generic;
 
-namespace GameFramework.Resource
+namespace Icarus.GameFramework.Resource
 {
     internal partial class ResourceManager
     {

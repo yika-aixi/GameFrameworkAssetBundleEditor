@@ -8,7 +8,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace UnityGameFramework.Editor
+namespace Icarus.UnityGameFramework.Editor
 {
     /// <summary>
     /// 帮助相关的实用函数。

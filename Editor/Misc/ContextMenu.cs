@@ -7,7 +7,7 @@
 
 using UnityEditor;
 
-namespace UnityGameFramework.Editor
+namespace Icarus.UnityGameFramework.Editor
 {
     /// <summary>
     /// 上下文相关的实用函数。

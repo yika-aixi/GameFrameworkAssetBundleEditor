@@ -7,7 +7,7 @@
 
 using System;
 
-namespace GameFramework.Resource
+namespace Icarus.GameFramework.Resource
 {
     /// <summary>
     /// 加载资源代理辅助器接口。

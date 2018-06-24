@@ -5,7 +5,7 @@
 // Feedback: mailto:jiangyin@gameframework.cn
 //------------------------------------------------------------
 
-namespace GameFramework
+namespace Icarus.GameFramework
 {
     /// <summary>
     /// 游戏框架模块抽象类。

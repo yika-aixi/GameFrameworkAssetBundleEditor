@@ -5,10 +5,10 @@
 // Feedback: mailto:jiangyin@gameframework.cn
 //------------------------------------------------------------
 
-using GameFramework.Resource;
+using Icarus.GameFramework.Resource;
 using System;
 
-namespace GameFramework.Scene
+namespace Icarus.GameFramework.Scene
 {
     /// <summary>
     /// 场景管理器接口。

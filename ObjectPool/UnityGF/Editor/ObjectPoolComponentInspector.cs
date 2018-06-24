@@ -5,14 +5,14 @@
 // Feedback: mailto:jiangyin@gameframework.cn
 //------------------------------------------------------------
 
-using GameFramework;
-using GameFramework.ObjectPool;
+using Icarus.GameFramework;
+using Icarus.GameFramework.ObjectPool;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using UnityGameFramework.Runtime;
+using Icarus.UnityGameFramework.Runtime;
 
-namespace UnityGameFramework.Editor
+namespace Icarus.UnityGameFramework.Editor
 {
     [CustomEditor(typeof(ObjectPoolComponent))]
     internal sealed class ObjectPoolComponentInspector : GameFrameworkInspector

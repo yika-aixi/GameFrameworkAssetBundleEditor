@@ -8,7 +8,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace GameFramework.ObjectPool
+namespace Icarus.GameFramework.ObjectPool
 {
     /// <summary>
     /// 对象池管理器。

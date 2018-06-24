@@ -8,7 +8,7 @@
 using System;
 using System.Text;
 
-namespace GameFramework
+namespace Icarus.GameFramework
 {
     public static partial class Utility
     {

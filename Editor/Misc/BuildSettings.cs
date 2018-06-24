@@ -5,14 +5,14 @@
 // Feedback: mailto:jiangyin@gameframework.cn
 //------------------------------------------------------------
 
-using GameFramework;
+using Icarus.GameFramework;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using UnityEditor;
 using UnityEngine;
 
-namespace UnityGameFramework.Editor
+namespace Icarus.UnityGameFramework.Editor
 {
     /// <summary>
     /// 构建配置相关的实用函数。

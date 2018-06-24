@@ -7,7 +7,7 @@
 
 using System;
 
-namespace UnityGameFramework.Editor
+namespace Icarus.UnityGameFramework.Editor
 {
     /// <summary>
     /// 配置路径属性。

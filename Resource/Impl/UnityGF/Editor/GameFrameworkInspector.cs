@@ -7,7 +7,7 @@
 
 using UnityEditor;
 
-namespace UnityGameFramework.Editor
+namespace Icarus.UnityGameFramework.Editor
 {
     /// <summary>
     /// 游戏框架 Inspector 抽象类。

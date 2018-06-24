@@ -7,7 +7,7 @@
 
 using System;
 
-namespace GameFramework.ObjectPool
+namespace Icarus.GameFramework.ObjectPool
 {
     internal partial class ObjectPoolManager
     {

@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace GameFramework
+namespace Icarus.GameFramework
 {
     public static partial class Utility
     {

@@ -5,16 +5,16 @@
 // Feedback: mailto:jiangyin@gameframework.cn
 //------------------------------------------------------------
 
-using GameFramework;
+using Icarus.GameFramework;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using UnityEditor;
 using UnityEngine;
-using UnityGameFramework.Runtime;
+using Icarus.UnityGameFramework.Runtime;
 
-namespace UnityGameFramework.Editor.AssetBundleTools
+namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
 {
     internal sealed partial class AssetBundleBuilderController
     {

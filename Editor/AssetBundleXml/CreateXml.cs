@@ -6,10 +6,10 @@
 
 
 using System.IO;
+using Icarus.UnityGameFramework.Editor;
+using Icarus.UnityGameFramework.Editor.AssetBundleTools;
 using UnityEditor;
 using UnityEngine;
-using UnityGameFramework.Editor;
-using UnityGameFramework.Editor.AssetBundleTools;
 
 namespace Icarus.Asset.AssetBundlesBrowser.UnityGameFramework
 {

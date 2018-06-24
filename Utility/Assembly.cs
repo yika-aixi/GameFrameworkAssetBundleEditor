@@ -8,7 +8,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace GameFramework
+namespace Icarus.GameFramework
 {
     public static partial class Utility
     {

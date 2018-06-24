@@ -5,7 +5,7 @@
 // Feedback: mailto:jiangyin@gameframework.cn
 //------------------------------------------------------------
 
-namespace GameFramework.Scene
+namespace Icarus.GameFramework.Scene
 {
     /// <summary>
     /// 加载场景成功事件。

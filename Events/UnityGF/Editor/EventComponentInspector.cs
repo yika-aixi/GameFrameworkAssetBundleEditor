@@ -6,9 +6,9 @@
 //------------------------------------------------------------
 
 using UnityEditor;
-using UnityGameFramework.Runtime;
+using Icarus.UnityGameFramework.Runtime;
 
-namespace UnityGameFramework.Editor
+namespace Icarus.UnityGameFramework.Editor
 {
     [CustomEditor(typeof(EventComponent))]
     internal sealed class EventComponentInspector : GameFrameworkInspector

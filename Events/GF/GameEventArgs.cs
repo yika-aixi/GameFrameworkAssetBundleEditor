@@ -5,7 +5,7 @@
 // Feedback: mailto:jiangyin@gameframework.cn
 //------------------------------------------------------------
 
-namespace GameFramework.Event
+namespace Icarus.GameFramework.Event
 {
     /// <summary>
     /// 游戏逻辑事件基类。
