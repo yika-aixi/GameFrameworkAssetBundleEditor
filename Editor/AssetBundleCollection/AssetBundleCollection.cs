@@ -111,9 +111,9 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
                         int.TryParse(xmlNode.Attributes.GetNamedItem("LoadType").Value, out assetBundleLoadType);
                     }
                     bool assetBundlePacked = false;
-                    if (xmlNode.Attributes.GetNamedItem("Packed") != null)
+                    if (xmlNode.Attributes.GetNamedItem("Optional") != null)
                     {
-                        bool.TryParse(xmlNode.Attributes.GetNamedItem("Packed").Value, out assetBundlePacked);
+                        bool.TryParse(xmlNode.Attributes.GetNamedItem("Optional").Value, out assetBundlePacked);
                     }
 
                     if (!AddAssetBundle(assetBundleName, assetBundleVariant, (AssetBundleLoadType)assetBundleLoadType, assetBundlePacked))
@@ -206,8 +206,8 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
                     xmlAttribute = xmlDocument.CreateAttribute("LoadType");
                     xmlAttribute.Value = ((int)assetBundle.LoadType).ToString();
                     xmlElement.Attributes.SetNamedItem(xmlAttribute);
-                    xmlAttribute = xmlDocument.CreateAttribute("Packed");
-                    xmlAttribute.Value = assetBundle.Packed.ToString();
+                    xmlAttribute = xmlDocument.CreateAttribute("Optional");
+                    xmlAttribute.Value = assetBundle.Optional.ToString();
                     xmlElement.Attributes.SetNamedItem(xmlAttribute);
                     xmlAssetBundles.AppendChild(xmlElement);
                 }

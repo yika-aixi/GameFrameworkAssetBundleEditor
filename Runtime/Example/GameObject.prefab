@@ -94,9 +94,9 @@ MonoBehaviour:
   m_UpdatePrefixUri: 
   m_UpdateRetryCount: 3
   m_InstanceRoot: {fileID: 0}
-  m_ResourceHelperTypeName: UnityGameFramework.Runtime.DefaultResourceHelper
+  m_ResourceHelperTypeName: Icarus.UnityGameFramework.Runtime.DefaultResourceHelper
   m_CustomResourceHelper: {fileID: 0}
-  m_LoadResourceAgentHelperTypeName: UnityGameFramework.Runtime.DefaultLoadResourceAgentHelper
+  m_LoadResourceAgentHelperTypeName: Icarus.UnityGameFramework.Runtime.DefaultLoadResourceAgentHelper
   m_CustomLoadResourceAgentHelper: {fileID: 0}
   m_LoadResourceAgentHelperCount: 3
   _baseComponent: {fileID: 0}
@@ -113,7 +113,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_MinLoadAssetRandomDelaySeconds: 0
   m_MaxLoadAssetRandomDelaySeconds: 1
-  BaseComponent: {fileID: 0}
 --- !u!114 &114749139794575394
 MonoBehaviour:
   m_ObjectHideFlags: 1

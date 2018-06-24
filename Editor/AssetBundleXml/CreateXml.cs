@@ -39,7 +39,7 @@ namespace Icarus.Asset.AssetBundlesBrowser.UnityGameFramework
     </AssetBundleEditor>
 </UnityGameFramework>
 ";
-        [MenuItem("Game Framework/AssetBundle Tools/Xml 模板生成")]
+        [MenuItem("Icarus/Game Framework/AssetBundle Tools/Xml 模板生成")]
         public static void CreateDefaultXml()
         {
             var path = _getXmlPath();

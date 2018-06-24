@@ -43,7 +43,7 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
         private int m_CurrentAssetBundleRowOnDraw = 0;
         private int m_CurrentSourceRowOnDraw = 0;
 
-        [MenuItem("Game Framework/AssetBundle Tools/AssetBundle Editor", false, 32)]
+        [MenuItem("Icarus/Game Framework/AssetBundle Tools/AssetBundle Editor", false, 32)]
         private static void Open()
         {
             AssetBundleEditor window = GetWindow<AssetBundleEditor>(true, "AssetBundle Editor", true);
@@ -208,9 +208,9 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
             EditorGUILayout.BeginHorizontal();
             {
                 string title = assetBundleItem.Name;
-                if (assetBundleItem.AssetBundle.Packed)
+                if (assetBundleItem.AssetBundle.Optional)
                 {
-                    title = "[Packed] " + title;
+                    title = "[可选] " + title;
                 }
 
                 float emptySpace = position.width;
@@ -285,8 +285,8 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
                         SetAssetBundleLoadType(loadType);
                     }
                 }
-                bool packed = EditorGUILayout.ToggleLeft("Packed", m_SelectedAssetBundle != null && m_SelectedAssetBundle.Packed, GUILayout.Width(65f));
-                if (m_SelectedAssetBundle != null && packed != m_SelectedAssetBundle.Packed)
+                bool packed = EditorGUILayout.ToggleLeft("Optional", m_SelectedAssetBundle != null && m_SelectedAssetBundle.Optional, GUILayout.Width(65f));
+                if (m_SelectedAssetBundle != null && packed != m_SelectedAssetBundle.Optional)
                 {
                     SetAssetBundlePacked(packed);
                 }
@@ -713,16 +713,16 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
             }
         }
 
-        private void SetAssetBundlePacked(bool pack)
+        private void SetAssetBundlePacked(bool optional)
         {
             string assetBundleFullName = m_SelectedAssetBundle.FullName;
-            if (m_Controller.SetAssetBundlePacked(m_SelectedAssetBundle.Name, m_SelectedAssetBundle.Variant, pack))
+            if (m_Controller.SetAssetBundlePacked(m_SelectedAssetBundle.Name, m_SelectedAssetBundle.Variant, optional))
             {
-                Debug.Log(string.Format("{1} AssetBundle '{0}' success.", assetBundleFullName, pack ? "Pack" : "Unpack"));
+                Debug.Log(string.Format("{1} AssetBundle '{0}' success.", assetBundleFullName, optional ? "可选包" : "必须包"));
             }
             else
             {
-                Debug.LogWarning(string.Format("{1} AssetBundle '{0}' failure.", assetBundleFullName, pack ? "Pack" : "Unpack"));
+                Debug.LogWarning(string.Format("{1} AssetBundle '{0}' failure.", assetBundleFullName, optional ? "可选包" : "必须包"));
             }
         }
 

@@ -9,6 +9,8 @@ using Icarus.GameFramework;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text;
 using System.Xml;
 using UnityEditor;
 using UnityEngine;
@@ -922,35 +924,44 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
 
             assetBundleData.AddCode(buildTarget, length, hashCode, zipLength, zipHashCode);
         }
-
+        //todo 修改的函数
         private void ProcessPackageList(string outputPackagePath, BuildTarget buildTarget)
         {
             byte[] encryptBytes = new byte[4];
             Utility.Random.GetRandomBytes(encryptBytes);
 
-            string packageListPath = Utility.Path.GetCombinePath(outputPackagePath, VersionListFileName);
-            using (FileStream fileStream = new FileStream(packageListPath, FileMode.CreateNew, FileAccess.Write))
+            if (m_AssetBundleDatas.Count > ushort.MaxValue)
             {
-                using (BinaryWriter binaryWriter = new BinaryWriter(fileStream))
+                throw new GameFrameworkException("Package list can only contains 65535 resources in version 0.");
+            }
+            string[] ABVersionNames = new string[m_AssetBundleDatas.Count];
+            int i = 0;
+            foreach (AssetBundleData assetBundleData in m_AssetBundleDatas.Values)
+            {
+                var abName = assetBundleData.Name.Split('/').Last();
+                string AbpackageListPath =
+                    Utility.Path.GetCombinePath(outputPackagePath,
+                        string.Format("{0}_{1}~{2}", abName, assetBundleData.Variant, VersionListFileName));
+                ABVersionNames[i] = AbpackageListPath.Split('/').Last();
+                i++;
+                using (FileStream fileStream = new FileStream(AbpackageListPath, FileMode.CreateNew, FileAccess.Write))
                 {
-                    binaryWriter.Write(PackageListHeader);
-                    binaryWriter.Write(PackageListVersion);
-                    binaryWriter.Write(encryptBytes);
-
-                    byte[] applicableGameVersionBytes = GetXorBytes(Utility.Converter.GetBytes(ApplicableGameVersion), encryptBytes);
-                    binaryWriter.Write((byte)applicableGameVersionBytes.Length);
-                    binaryWriter.Write(applicableGameVersionBytes);
-                    binaryWriter.Write(InternalResourceVersion);
-
-                    binaryWriter.Write(m_AssetBundleDatas.Count);
-                    if (m_AssetBundleDatas.Count > ushort.MaxValue)
+                    using (BinaryWriter binaryWriter = new BinaryWriter(fileStream))
                     {
-                        throw new GameFrameworkException("Package list can only contains 65535 resources in version 0.");
-                    }
+                        binaryWriter.Write(PackageListHeader);
+                        binaryWriter.Write(PackageListVersion);
+                        binaryWriter.Write(encryptBytes);
 
-                    foreach (AssetBundleData assetBundleData in m_AssetBundleDatas.Values)
-                    {
-                        UnityEngine.Debug.Log(assetBundleData);
+                        byte[] applicableGameVersionBytes = GetXorBytes(Utility.Converter.GetBytes(ApplicableGameVersion), encryptBytes);
+                        binaryWriter.Write((byte)applicableGameVersionBytes.Length);
+                        binaryWriter.Write(applicableGameVersionBytes);
+                        binaryWriter.Write(InternalResourceVersion);
+
+                        binaryWriter.Write(m_AssetBundleDatas.Count);
+                        if (m_AssetBundleDatas.Count > ushort.MaxValue)
+                        {
+                            throw new GameFrameworkException("Package list can only contains 65535 resources in version 0.");
+                        }
                         byte[] nameBytes = GetXorBytes(Utility.Converter.GetBytes(assetBundleData.Name), encryptBytes);
                         if (nameBytes.Length > byte.MaxValue)
                         {
@@ -1009,16 +1020,45 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
                                 binaryWriter.Write(dependencyAssetNameBytes);
                             }
                         }
+
+
+                        // TODO: Resource group.
+                        binaryWriter.Write(0);
+
+                        binaryWriter.Close();
+                    }
+                }
+
+                File.Move(AbpackageListPath, Utility.Path.GetResourceNameWithSuffix(AbpackageListPath));
+            }
+
+            string AbListPath =
+                    Utility.Path.GetCombinePath(outputPackagePath, VersionListFileName);
+
+            if (File.Exists(AbListPath))
+            {
+                File.Delete(AbListPath);
+            }
+
+            using (FileStream fileStream = new FileStream(AbListPath, FileMode.CreateNew, FileAccess.Write))
+            {
+                using (BinaryWriter binaryWriter = new BinaryWriter(fileStream))
+                {
+                    binaryWriter.Write(encryptBytes);
+                    StringBuilder sb = new StringBuilder();
+                    foreach (var versionName in ABVersionNames)
+                    {
+                        sb.Append(versionName + "|");
                     }
 
-                    // TODO: Resource group.
-                    binaryWriter.Write(0);
-
-                    binaryWriter.Close();
+                    sb.Remove(sb.Length - 1, 1);
+                    var by = GetXorBytes(Utility.Converter.GetBytes(sb.ToString()), encryptBytes);
+                    binaryWriter.Write(by);
                 }
             }
 
-            File.Move(packageListPath, Utility.Path.GetResourceNameWithSuffix(packageListPath));
+            File.Move(AbListPath, Utility.Path.GetResourceNameWithSuffix(AbListPath));
+
         }
 
         private VersionListData ProcessVersionList(string outputFullPath, BuildTarget buildTarget)
@@ -1287,7 +1327,7 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
             AssetBundle[] assetBundles = m_AssetBundleCollection.GetAssetBundles();
             foreach (AssetBundle assetBundle in assetBundles)
             {
-                m_AssetBundleDatas.Add(assetBundle.FullName.ToLower(), new AssetBundleData(assetBundle.Name.ToLower(), (assetBundle.Variant != null ? assetBundle.Variant.ToLower() : null), assetBundle.LoadType, assetBundle.Packed));
+                m_AssetBundleDatas.Add(assetBundle.FullName.ToLower(), new AssetBundleData(assetBundle.Name.ToLower(), (assetBundle.Variant != null ? assetBundle.Variant.ToLower() : null), assetBundle.LoadType, assetBundle.Optional));
             }
 
             Asset[] assets = m_AssetBundleCollection.GetAssets();

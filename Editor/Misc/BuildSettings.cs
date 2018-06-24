@@ -81,7 +81,7 @@ namespace Icarus.UnityGameFramework.Editor
         /// <summary>
         /// 将构建场景设置为默认。
         /// </summary>
-        [MenuItem("Game Framework/Scenes in Build Settings/Default Scenes", false, 20)]
+        [MenuItem("Icarus/Game Framework/Scenes in Build Settings/Default Scenes", false, 20)]
         private static void DefaultScenes()
         {
             HashSet<string> sceneNames = new HashSet<string>();
@@ -104,7 +104,7 @@ namespace Icarus.UnityGameFramework.Editor
         /// <summary>
         /// 将构建场景设置为所有。
         /// </summary>
-        [MenuItem("Game Framework/Scenes in Build Settings/All Scenes", false, 21)]
+        [MenuItem("Icarus/Game Framework/Scenes in Build Settings/All Scenes", false, 21)]
         private static void AllScenes()
         {
             HashSet<string> sceneNames = new HashSet<string>();

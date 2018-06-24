@@ -46,7 +46,7 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
         private string[][] m_CachedCircularDependencyDatas = null;
         private Vector2 m_CircularDependencyScroll = Vector2.zero;
 
-        [MenuItem("Game Framework/AssetBundle Tools/AssetBundle Analyzer", false, 33)]
+        [MenuItem("Icarus/Game Framework/AssetBundle Tools/AssetBundle Analyzer", false, 33)]
         private static void Open()
         {
             AssetBundleAnalyzer window = GetWindow<AssetBundleAnalyzer>(true, "AssetBundle Analyzer", true);

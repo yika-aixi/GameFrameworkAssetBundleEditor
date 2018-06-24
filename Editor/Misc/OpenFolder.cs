@@ -20,7 +20,7 @@ namespace Icarus.UnityGameFramework.Editor
         /// <summary>
         /// 打开 Temporary Cache Path 文件夹。
         /// </summary>
-        [MenuItem("Game Framework/Open Folder/Temporary Cache Path", false, 10)]
+        [MenuItem("Icarus/Game Framework/Open Folder/Temporary Cache Path", false, 10)]
         private static void OpenFolderTemporaryCachePath()
         {
             InternalOpenFolder(Application.temporaryCachePath);
@@ -29,7 +29,7 @@ namespace Icarus.UnityGameFramework.Editor
         /// <summary>
         /// 打开 Persistent Data Path 文件夹。
         /// </summary>
-        [MenuItem("Game Framework/Open Folder/Persistent Data Path", false, 11)]
+        [MenuItem("Icarus/Game Framework/Open Folder/Persistent Data Path", false, 11)]
         private static void OpenFolderPersistentDataPath()
         {
             InternalOpenFolder(Application.persistentDataPath);
@@ -38,7 +38,7 @@ namespace Icarus.UnityGameFramework.Editor
         /// <summary>
         /// 打开 Streaming Assets Path 文件夹。
         /// </summary>
-        [MenuItem("Game Framework/Open Folder/Streaming Assets Path", false, 12)]
+        [MenuItem("Icarus/Game Framework/Open Folder/Streaming Assets Path", false, 12)]
         private static void OpenFolderStreamingAssetsPath()
         {
             InternalOpenFolder(Application.streamingAssetsPath);
@@ -47,7 +47,7 @@ namespace Icarus.UnityGameFramework.Editor
         /// <summary>
         /// 打开 Data Path 文件夹。
         /// </summary>
-        [MenuItem("Game Framework/Open Folder/Data Path", false, 13)]
+        [MenuItem("Icarus/Game Framework/Open Folder/Data Path", false, 13)]
         private static void OpenFolderDataPath()
         {
             InternalOpenFolder(Application.dataPath);

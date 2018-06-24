@@ -20,13 +20,13 @@ namespace Icarus.UnityGameFramework.Editor
             ShowHelp(string.Format("http://gameframework.cn/archives/category/module/buildin/{0}/", componentName));
         }
 
-        [MenuItem("Game Framework/Documentation", false, 90)]
+        [MenuItem("Icarus/Game Framework/Documentation", false, 90)]
         private static void ShowDocumentation()
         {
             ShowHelp("http://gameframework.cn/");
         }
 
-        [MenuItem("Game Framework/API Reference", false, 91)]
+        [MenuItem("Icarus/Game Framework/API Reference", false, 91)]
         private static void ShowAPI()
         {
             ShowHelp("http://gameframework.cn/api/");

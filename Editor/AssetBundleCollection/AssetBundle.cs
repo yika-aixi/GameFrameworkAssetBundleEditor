@@ -24,7 +24,7 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
             Variant = variant;
             Type = AssetBundleType.Unknown;
             LoadType = loadType;
-            Packed = packed;
+            Optional = packed;
         }
 
         public string Name
@@ -59,7 +59,7 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
             private set;
         }
 
-        public bool Packed
+        public bool Optional
         {
             get;
             private set;
@@ -88,7 +88,7 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
 
         public void SetPacked(bool packed)
         {
-            Packed = packed;
+            Optional = packed;
         }
 
         public void AssignAsset(Asset asset, bool isScene)

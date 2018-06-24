@@ -55,9 +55,86 @@ namespace Icarus.GameFramework.Resource
                     throw new GameFrameworkException("Resource helper is invalid.");
                 }
 
-                m_ResourceManager.m_ResourceHelper.LoadBytes(Utility.Path.GetRemotePath(m_ResourceManager.m_ReadOnlyPath, Utility.Path.GetResourceNameWithSuffix(VersionListFileName)), ParsePackageList);
+                m_ResourceManager.m_ResourceHelper.
+                    LoadBytes(
+                        Utility.Path.GetRemotePath(m_ResourceManager.m_ReadOnlyPath,
+                            Utility.Path.GetResourceNameWithSuffix(VersionListFileName)),
+                        ParsePackageListVersion);
             }
 
+            private int _waitParsePackageList;
+            private void ParsePackageListVersion(string fileUri, byte[] bytes, string errorMessage)
+            {
+                if (bytes == null || bytes.Length <= 0)
+                {
+                    throw new GameFrameworkException(string.Format("Package list Version'{0}' is invalid, error message is '{1}'.", fileUri, string.IsNullOrEmpty(errorMessage) ? "<Empty>" : errorMessage));
+                }
+
+                _isPersistent = false;
+                _waitParsePackageList = 0;
+                MemoryStream memoryStream = null;
+                try
+                {
+                    memoryStream = new MemoryStream(bytes);
+                    using (BinaryReader binaryReader = new BinaryReader(memoryStream))
+                    {
+                        byte[] encryptBytes = binaryReader.ReadBytes(4);
+                        byte[] packVersionInfo = binaryReader.ReadBytes(bytes.Length - 4);
+                        string str = Utility.Converter.GetString(
+                            Utility.Encryption.GetXorBytes(packVersionInfo, encryptBytes));
+                        UnityEngine.Debug.Log("TT:"+str);
+                        var packs = str.Split('|');
+                        //todo 测试
+                        foreach (var pack in packs)
+                        {
+                            ++_waitParsePackageList;
+                            m_ResourceManager.m_ResourceHelper.
+                                LoadBytes(
+                                    Utility.Path.GetRemotePath(m_ResourceManager.m_ReadOnlyPath,
+                                        Utility.Path.GetResourceNameWithSuffix(pack)),
+                                    ParsePackageList);
+                        }
+                    }
+                }
+                catch (Exception exception)
+                {
+                    if (exception is GameFrameworkException)
+                    {
+                        throw;
+                    }
+
+                    throw new GameFrameworkException(string.Format("Parse package list version exception '{0}'.", exception.Message), exception);
+                }
+                finally
+                {
+                    if (memoryStream != null)
+                    {
+                        memoryStream.Dispose();
+                        memoryStream = null;
+                    }
+                }
+            }
+
+            private bool _isPersistent;
+            private void _initPersistentDataPath()
+            {
+                _waitParsePackageList = 0;
+                _isPersistent = true;
+                var files = Directory.GetFiles(Utility.UnityPath.GetPersistentDataPath(), "*~version.dat",
+                    SearchOption.AllDirectories);
+                foreach (var file in files)
+                {
+                    string name = Path.GetFileName(file);
+                    UnityEngine.Debug.Log(name);
+                    ++_waitParsePackageList;
+                    m_ResourceManager.m_ResourceHelper.
+                        LoadBytes(
+                            Utility.Path.GetRemotePath(m_ResourceManager.m_ReadWritePath, name),
+                            ParsePackageList);
+                }
+            }
+
+            //todo 问题会有很多,需要仔细查
             /// <summary>
             /// 解析资源包资源列表。
             /// </summary>
@@ -77,7 +154,6 @@ namespace Icarus.GameFramework.Resource
                     memoryStream = new MemoryStream(bytes);
                     using (BinaryReader binaryReader = new BinaryReader(memoryStream))
                     {
-                        memoryStream = null;
                         char[] header = binaryReader.ReadChars(3);
                         if (header[0] != PackageListHeader[0] || header[1] != PackageListHeader[1] || header[2] != PackageListHeader[2])
                         {
@@ -128,7 +204,14 @@ namespace Icarus.GameFramework.Resource
 
                                     if (variants[i] == null || variants[i] == m_CurrentVariant)
                                     {
-                                        dependencyAssetNamesCollection.Add(assetNames[j], dependencyAssetNames);
+                                        if (dependencyAssetNamesCollection.ContainsKey(assetNames[j]))
+                                        {
+                                            dependencyAssetNamesCollection[assetNames[j]] = dependencyAssetNames;
+                                        }
+                                        else
+                                        {
+                                            dependencyAssetNamesCollection.Add(assetNames[j], dependencyAssetNames);
+                                        }
                                     }
                                 }
 
@@ -172,7 +255,18 @@ namespace Icarus.GameFramework.Resource
                         }
                     }
 
-                    ResourceInitComplete();
+                    --_waitParsePackageList;
+                    if (_waitParsePackageList <= 0)
+                    {
+                        if (_isPersistent)
+                        {
+                            ResourceInitComplete();
+                        }
+                        else
+                        {
+                            _initPersistentDataPath();
+                        }
+                    }
                 }
                 catch (Exception exception)
                 {
@@ -197,7 +291,14 @@ namespace Icarus.GameFramework.Resource
             {
                 foreach (string assetName in assetNames)
                 {
-                    m_ResourceManager.m_AssetInfos.Add(assetName, new AssetInfo(assetName, resourceName));
+                    if (m_ResourceManager.m_AssetInfos.ContainsKey(assetName))
+                    {
+                        m_ResourceManager.m_AssetInfos[assetName] = new AssetInfo(assetName, resourceName);
+                    }
+                    else
+                    {
+                        m_ResourceManager.m_AssetInfos.Add(assetName, new AssetInfo(assetName, resourceName));
+                    }
                 }
             }
 
@@ -220,6 +321,12 @@ namespace Icarus.GameFramework.Resource
                         }
                     }
 
+                    if (m_ResourceManager.m_AssetDependencyInfos.ContainsKey(dependencyAssetNamesCollectionItem.Key))
+                    {
+                        m_ResourceManager.m_AssetDependencyInfos[dependencyAssetNamesCollectionItem.Key] =
+                            new AssetDependencyInfo(dependencyAssetNamesCollectionItem.Key,
+                                dependencyAssetNames.ToArray(), scatteredDependencyAssetNames.ToArray());
+                    }
                     m_ResourceManager.m_AssetDependencyInfos.Add(dependencyAssetNamesCollectionItem.Key, new AssetDependencyInfo(dependencyAssetNamesCollectionItem.Key, dependencyAssetNames.ToArray(), scatteredDependencyAssetNames.ToArray()));
                 }
             }
@@ -231,7 +338,16 @@ namespace Icarus.GameFramework.Resource
                     throw new GameFrameworkException(string.Format("Resource info '{0}' is already exist.", resourceName.FullName));
                 }
 
-                m_ResourceManager.m_ResourceInfos.Add(resourceName, new ResourceInfo(resourceName, loadType, length, hashCode, true));
+                if (m_ResourceManager.m_ResourceInfos.ContainsKey(resourceName))
+                {
+                    m_ResourceManager.m_ResourceInfos[resourceName] =
+                        new ResourceInfo(resourceName, loadType, length, hashCode, true);
+                }
+                else
+                {
+                    m_ResourceManager.m_ResourceInfos.Add(resourceName,
+                        new ResourceInfo(resourceName, loadType, length, hashCode, true));
+                }
             }
         }
     }
