@@ -584,12 +584,12 @@ namespace Icarus.GameFramework.Resource
                 if (m_ResourceManager.m_ResourceInfos.ContainsKey(resourceName))
                 {
                     m_ResourceManager.m_ResourceInfos[resourceName] =
-                        new ResourceInfo(resourceName, loadType, length, hashCode, true);
+                        new ResourceInfo(resourceName, loadType, length, hashCode, !_isPersistent);
                 }
                 else
                 {
                     m_ResourceManager.m_ResourceInfos.Add(resourceName,
-                        new ResourceInfo(resourceName, loadType, length, hashCode, true));
+                        new ResourceInfo(resourceName, loadType, length, hashCode, !_isPersistent));
                 }
             }
         }
