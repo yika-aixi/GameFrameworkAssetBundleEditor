@@ -5,13 +5,12 @@
 //Assembly-CSharp-Editor
 
 
-using System.IO;
-using Icarus.UnityGameFramework.Editor;
 using Icarus.UnityGameFramework.Editor.AssetBundleTools;
+using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-namespace Icarus.Asset.AssetBundlesBrowser.UnityGameFramework
+namespace Icarus.UnityGameFramework.Editor
 {
     public class CreateXml
     {

@@ -326,7 +326,7 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
                     return string.Empty;
                 }
 
-                return string.Format("{0}/Packed/{1}_{2}/", OutputDirectory, ApplicableGameVersion.Replace('.', '_'), InternalResourceVersion.ToString());
+                return string.Format("{0}/Optional/{1}_{2}/", OutputDirectory, ApplicableGameVersion.Replace('.', '_'), InternalResourceVersion.ToString());
             }
         }
 
@@ -856,7 +856,7 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
 
             m_BuildReport.LogInfo("Build AssetBundles for '{0}' success.", buildTarget.ToString());
         }
-
+        //todo 修改的函数
         private void ProcessAssetBundle(string workingPath, string outputPackagePath, string outputFullPath, string outputPackedPath, bool zip, BuildTarget buildTarget, string assetBundleName, string assetBundleVariant)
         {
             string assetBundleFullName = GetAssetBundleFullName(assetBundleName, assetBundleVariant);
@@ -887,8 +887,8 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
 
             File.WriteAllBytes(packageName, bytes);
 
-            // Packed AssetBundle
-            if (assetBundleData.Packed)
+            // Optional AssetBundle
+            if (assetBundleData.Optional)
             {
                 string packedName = Icarus.GameFramework.Utility.Path.GetResourceNameWithSuffix(Icarus.GameFramework.Utility.Path.GetCombinePath(outputPackedPath, assetBundleFullName));
                 string packedDirectoryName = Path.GetDirectoryName(packedName);
@@ -934,16 +934,12 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
             {
                 throw new GameFrameworkException("Package list can only contains 65535 resources in version 0.");
             }
-            string[] ABVersionNames = new string[m_AssetBundleDatas.Count];
-            int i = 0;
             foreach (AssetBundleData assetBundleData in m_AssetBundleDatas.Values)
             {
                 var abName = assetBundleData.Name.Split('/').Last();
                 string AbpackageListPath =
                     Icarus.GameFramework.Utility.Path.GetCombinePath(outputPackagePath,
                         string.Format("{0}_{1}~{2}", abName, assetBundleData.Variant, VersionListFileName));
-                ABVersionNames[i] = AbpackageListPath.Split('/').Last();
-                i++;
                 using (FileStream fileStream = new FileStream(AbpackageListPath, FileMode.CreateNew, FileAccess.Write))
                 {
                     using (BinaryWriter binaryWriter = new BinaryWriter(fileStream))
@@ -1035,34 +1031,6 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
 
                 File.Move(AbpackageListPath, Icarus.GameFramework.Utility.Path.GetResourceNameWithSuffix(AbpackageListPath));
             }
-
-            string AbListPath =
-                    Icarus.GameFramework.Utility.Path.GetCombinePath(outputPackagePath, VersionListFileName);
-
-            if (File.Exists(AbListPath))
-            {
-                File.Delete(AbListPath);
-            }
-
-            using (FileStream fileStream = new FileStream(AbListPath, FileMode.CreateNew, FileAccess.Write))
-            {
-                using (BinaryWriter binaryWriter = new BinaryWriter(fileStream))
-                {
-                    binaryWriter.Write(encryptBytes);
-                    StringBuilder sb = new StringBuilder();
-                    foreach (var versionName in ABVersionNames)
-                    {
-                        sb.Append(versionName + "|");
-                    }
-
-                    sb.Remove(sb.Length - 1, 1);
-                    var by = GetXorBytes(Icarus.GameFramework.Utility.Converter.GetBytes(sb.ToString()), encryptBytes);
-                    binaryWriter.Write(by);
-                }
-            }
-
-            File.Move(AbListPath, Icarus.GameFramework.Utility.Path.GetResourceNameWithSuffix(AbListPath));
-
         }
 
         private VersionListData ProcessVersionList(string outputFullPath, BuildTarget buildTarget)
@@ -1184,7 +1152,7 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
             List<AssetBundleData> packedAssetBundleDatas = new List<AssetBundleData>();
             foreach (AssetBundleData assetBundleData in m_AssetBundleDatas.Values)
             {
-                if (!assetBundleData.Packed)
+                if (!assetBundleData.Optional)
                 {
                     continue;
                 }
