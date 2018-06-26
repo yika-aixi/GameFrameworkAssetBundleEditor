@@ -163,8 +163,8 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
                     xmlAttribute = xmlDocument.CreateAttribute("LoadType");
                     xmlAttribute.Value = ((int)assetBundleData.LoadType).ToString();
                     xmlAssetBundle.Attributes.SetNamedItem(xmlAttribute);
-                    xmlAttribute = xmlDocument.CreateAttribute("Packed");
-                    xmlAttribute.Value = assetBundleData.Packed.ToString();
+                    xmlAttribute = xmlDocument.CreateAttribute("Optional");
+                    xmlAttribute.Value = assetBundleData.Optional.ToString();
                     xmlAssetBundle.Attributes.SetNamedItem(xmlAttribute);
                     xmlAssetBundles.AppendChild(xmlAssetBundle);
 

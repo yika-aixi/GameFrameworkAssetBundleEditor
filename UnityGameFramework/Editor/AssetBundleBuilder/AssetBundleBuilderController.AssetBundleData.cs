@@ -17,16 +17,16 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
             private readonly string m_Name;
             private readonly string m_Variant;
             private readonly AssetBundleLoadType m_LoadType;
-            private readonly bool m_Packed;
+            private readonly bool m_Optional;
             private readonly List<AssetData> m_AssetDatas;
             private readonly List<AssetBundleCode> m_Codes;
 
-            public AssetBundleData(string name, string variant, AssetBundleLoadType loadType, bool packed)
+            public AssetBundleData(string name, string variant, AssetBundleLoadType loadType, bool optional)
             {
                 m_Name = name;
                 m_Variant = variant;
                 m_LoadType = loadType;
-                m_Packed = packed;
+                m_Optional = optional;
                 m_AssetDatas = new List<AssetData>();
                 m_Codes = new List<AssetBundleCode>();
             }
@@ -55,11 +55,11 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
                 }
             }
 
-            public bool Packed
+            public bool Optional
             {
                 get
                 {
-                    return m_Packed;
+                    return m_Optional;
                 }
             }
 
@@ -134,7 +134,7 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
                                      "加载方式:{1}," +
                                      "资源个数:{2}," +
                                      "变体:{3}," +
-                                     "是否单机包:{4}", m_Name, m_LoadType, m_AssetDatas.Count, m_Variant, m_Packed);
+                                     "是否可选:{4}", m_Name, m_LoadType, m_AssetDatas.Count, m_Variant, m_Optional);
             }
         }
     }
