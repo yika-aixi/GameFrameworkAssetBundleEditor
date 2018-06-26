@@ -20,8 +20,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4027604371641998}
   - component: {fileID: 114507665798876038}
+  - component: {fileID: 114695020317095540}
   - component: {fileID: 114561011174882740}
-  - component: {fileID: 114630106275509266}
   - component: {fileID: 114749139794575394}
   - component: {fileID: 114634364747614022}
   - component: {fileID: 114820236797778534}
@@ -68,7 +68,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcc95ba40a021f14aafbf6b5de97cc09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114630106275509266
+--- !u!114 &114634364747614022
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1255507732598636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79ab51a97aacb44d94bdf609fc062db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_MinLoadAssetRandomDelaySeconds: 0
+  m_MaxLoadAssetRandomDelaySeconds: 1
+--- !u!114 &114695020317095540
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -100,19 +113,6 @@ MonoBehaviour:
   m_CustomLoadResourceAgentHelper: {fileID: 0}
   m_LoadResourceAgentHelperCount: 3
   _baseComponent: {fileID: 0}
---- !u!114 &114634364747614022
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1255507732598636}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a79ab51a97aacb44d94bdf609fc062db, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_MinLoadAssetRandomDelaySeconds: 0
-  m_MaxLoadAssetRandomDelaySeconds: 1
 --- !u!114 &114749139794575394
 MonoBehaviour:
   m_ObjectHideFlags: 1
