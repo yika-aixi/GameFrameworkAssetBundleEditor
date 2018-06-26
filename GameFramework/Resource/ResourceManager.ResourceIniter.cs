@@ -82,7 +82,7 @@ namespace Icarus.GameFramework.Resource
                         byte[] packVersionInfo = binaryReader.ReadBytes(bytes.Length - 4);
                         string str = Icarus.GameFramework.Utility.Converter.GetString(
                             Icarus.GameFramework.Utility.Encryption.GetXorBytes(packVersionInfo, encryptBytes));
-                        UnityEngine.Debug.Log("TT:"+str);
+                        UnityEngine.Debug.Log("TT:" + str);
                         var packs = str.Split('|');
                         //todo 测试
                         foreach (var pack in packs)
@@ -197,7 +197,7 @@ namespace Icarus.GameFramework.Resource
                             Dictionary<string, string[]> dependencyAssetNamesCollection = new Dictionary<string, string[]>();
                             for (int i = 0; i < resourceCount; i++)
                             {
-                                UnityEngine.Debug.Log(i+":"+ resourceCount);
+                                UnityEngine.Debug.Log(i + ":" + resourceCount);
                                 names[i] = Icarus.GameFramework.Utility.Converter.GetString(Icarus.GameFramework.Utility.Encryption.GetXorBytes(binaryReader.ReadBytes(binaryReader.ReadByte()), encryptBytes));
 
                                 variants[i] = null;
@@ -337,18 +337,18 @@ namespace Icarus.GameFramework.Resource
                     throw new GameFrameworkException(string.Format("Package list '{0}' is invalid, error message is '{1}'.", fileUri, string.IsNullOrEmpty(errorMessage) ? "<Empty>" : errorMessage));
                 }
 
-//                if (!_isCompolete)
-//                {
-//                    _parsePackageInfos.Enqueue(new ParsePackageInfo()
-//                    {
-//                        FileUri = fileUri,
-//                        Bytes = bytes,
-//                        ErrorMessage = errorMessage
-//                    });
-//                    return;
-//                }
+                //                if (!_isCompolete)
+                //                {
+                //                    _parsePackageInfos.Enqueue(new ParsePackageInfo()
+                //                    {
+                //                        FileUri = fileUri,
+                //                        Bytes = bytes,
+                //                        ErrorMessage = errorMessage
+                //                    });
+                //                    return;
+                //                }
                 UnityEngine.Debug.Log("fileUri:" + fileUri + "bytes Lenght:" + bytes.Length);
-//                _isCompolete = false;
+                //                _isCompolete = false;
                 MemoryStream memoryStream = null;
                 try
                 {
@@ -371,7 +371,7 @@ namespace Icarus.GameFramework.Resource
                             UnityEngine.Debug.Log("encryptBytes:" + encryptBytes);
                             var applicableGameVersionLenght = binaryReader.ReadByte();
                             UnityEngine.Debug.Log("applicableGameVersionLenght:" + applicableGameVersionLenght);
-                            m_ResourceManager.m_ApplicableGameVersion = 
+                            m_ResourceManager.m_ApplicableGameVersion =
                                 Icarus.GameFramework.Utility.Converter.GetString(Icarus.GameFramework.Utility.Encryption.GetXorBytes(binaryReader.ReadBytes(applicableGameVersionLenght), encryptBytes));
                             UnityEngine.Debug.Log("m_ResourceManager.m_ApplicableGameVersion:" + m_ResourceManager.m_ApplicableGameVersion);
                             m_ResourceManager.m_InternalResourceVersion = binaryReader.ReadInt32();
@@ -389,20 +389,20 @@ namespace Icarus.GameFramework.Resource
                             string variant = null;
                             int ABlength;
                             Dictionary<string, string[]> dependencyAssetNamesCollection = new Dictionary<string, string[]>();
-//                            for (int i = 0; i < resourceCount; i++)
-//                            {
-//                                var nameCount = binaryReader.ReadByte();
-//                                UnityEngine.Debug.Log(nameCount);
-//                                ABname = Icarus.GameFramework.Utility.Converter.GetString(Icarus.GameFramework.Utility.Encryption.GetXorBytes(binaryReader.ReadBytes(nameCount), encryptBytes));
-//                                UnityEngine.Debug.Log(ABname);
-                                byte variantLength = binaryReader.ReadByte();
+                            //                            for (int i = 0; i < resourceCount; i++)
+                            //                            {
+                            //                                var nameCount = binaryReader.ReadByte();
+                            //                                UnityEngine.Debug.Log(nameCount);
+                            //                                ABname = Icarus.GameFramework.Utility.Converter.GetString(Icarus.GameFramework.Utility.Encryption.GetXorBytes(binaryReader.ReadBytes(nameCount), encryptBytes));
+                            //                                UnityEngine.Debug.Log(ABname);
+                            byte variantLength = binaryReader.ReadByte();
                             UnityEngine.Debug.Log(variantLength);
                             if (variantLength > 0)
-                                {
-                                    variant = Icarus.GameFramework.Utility.Converter.GetString(Icarus.GameFramework.Utility.Encryption.GetXorBytes(binaryReader.ReadBytes(variantLength), encryptBytes));
-                                }
+                            {
+                                variant = Icarus.GameFramework.Utility.Converter.GetString(Icarus.GameFramework.Utility.Encryption.GetXorBytes(binaryReader.ReadBytes(variantLength), encryptBytes));
+                            }
 
-                                LoadType loadType = (LoadType)binaryReader.ReadByte();
+                            LoadType loadType = (LoadType)binaryReader.ReadByte();
                             UnityEngine.Debug.Log("loadType:" + loadType);
                             ABlength = binaryReader.ReadInt32();
                             UnityEngine.Debug.Log("ABlength:" + ABlength);
@@ -410,38 +410,38 @@ namespace Icarus.GameFramework.Resource
                             UnityEngine.Debug.Log("hashCode:" + hashCode);
                             int assetNamesCount = binaryReader.ReadInt32();
                             UnityEngine.Debug.Log("assetNamesCount:" + assetNamesCount);
-                                string[] assetNames = new string[assetNamesCount];
-                                for (int j = 0; j < assetNamesCount; j++)
+                            string[] assetNames = new string[assetNamesCount];
+                            for (int j = 0; j < assetNamesCount; j++)
+                            {
+                                assetNames[j] = Icarus.GameFramework.Utility.Converter.GetString(Icarus.GameFramework.Utility.Encryption.GetXorBytes(binaryReader.ReadBytes(binaryReader.ReadByte()), Icarus.GameFramework.Utility.Converter.GetBytes(hashCode)));
+                                UnityEngine.Debug.Log("assetNames[j]:" + assetNames[j]);
+                                int dependencyAssetNamesCount = binaryReader.ReadInt32();
+                                string[] dependencyAssetNames = new string[dependencyAssetNamesCount];
+                                for (int k = 0; k < dependencyAssetNamesCount; k++)
                                 {
-                                    assetNames[j] = Icarus.GameFramework.Utility.Converter.GetString(Icarus.GameFramework.Utility.Encryption.GetXorBytes(binaryReader.ReadBytes(binaryReader.ReadByte()), Icarus.GameFramework.Utility.Converter.GetBytes(hashCode)));
-
-                                    int dependencyAssetNamesCount = binaryReader.ReadInt32();
-                                    string[] dependencyAssetNames = new string[dependencyAssetNamesCount];
-                                    for (int k = 0; k < dependencyAssetNamesCount; k++)
-                                    {
-                                        dependencyAssetNames[k] = Icarus.GameFramework.Utility.Converter.GetString(Icarus.GameFramework.Utility.Encryption.GetXorBytes(binaryReader.ReadBytes(binaryReader.ReadByte()), Icarus.GameFramework.Utility.Converter.GetBytes(hashCode)));
-                                    }
-
-                                    if (variant == null || variant == m_CurrentVariant)
-                                    {
-                                        if (dependencyAssetNamesCollection.ContainsKey(assetNames[j]))
-                                        {
-                                            dependencyAssetNamesCollection[assetNames[j]] = dependencyAssetNames;
-                                        }
-                                        else
-                                        {
-                                            dependencyAssetNamesCollection.Add(assetNames[j], dependencyAssetNames);
-                                        }
-                                    }
+                                    dependencyAssetNames[k] = Icarus.GameFramework.Utility.Converter.GetString(Icarus.GameFramework.Utility.Encryption.GetXorBytes(binaryReader.ReadBytes(binaryReader.ReadByte()), Icarus.GameFramework.Utility.Converter.GetBytes(hashCode)));
                                 }
 
                                 if (variant == null || variant == m_CurrentVariant)
                                 {
-                                    ResourceName resourceName = new ResourceName(ABName, variant);
-                                    ProcessAssetInfo(resourceName, assetNames);
-                                    ProcessResourceInfo(resourceName, loadType, ABlength, hashCode);
+                                    if (dependencyAssetNamesCollection.ContainsKey(assetNames[j]))
+                                    {
+                                        dependencyAssetNamesCollection[assetNames[j]] = dependencyAssetNames;
+                                    }
+                                    else
+                                    {
+                                        dependencyAssetNamesCollection.Add(assetNames[j], dependencyAssetNames);
+                                    }
                                 }
-//                            }
+                            }
+
+                            if (variant == null || variant == m_CurrentVariant)
+                            {
+                                ResourceName resourceName = new ResourceName(ABName, variant);
+                                ProcessAssetInfo(resourceName, assetNames);
+                                ProcessResourceInfo(resourceName, loadType, ABlength, hashCode);
+                            }
+                            //                            }
 
                             ProcessAssetDependencyInfo(dependencyAssetNamesCollection);
 
@@ -453,30 +453,30 @@ namespace Icarus.GameFramework.Resource
                             //                            }
 
                             //todo 暂时没有资源组
-//                            int resourceGroupCount = binaryReader.ReadInt32();
-//                            for (int i = 0; i < resourceGroupCount; i++)
-//                            {
-//                                string groupName = Icarus.GameFramework.Utility.Converter.GetString(Icarus.GameFramework.Utility.Encryption.GetXorBytes(binaryReader.ReadBytes(binaryReader.ReadByte()), encryptBytes));
-//                                ResourceGroup resourceGroup = m_ResourceManager.GetResourceGroup(groupName);
-//                                int groupResourceCount = binaryReader.ReadInt32();
-//                                for (int j = 0; j < groupResourceCount; j++)
-//                                {
-//                                    ushort versionIndex = binaryReader.ReadUInt16();
-//                                    if (versionIndex >= resourceCount)
-//                                    {
-//                                        throw new GameFrameworkException(string.Format("Package index '{0}' is invalid, resource count is '{1}'.", versionIndex, resourceCount));
-//                                    }
-//
-//                                    resourceGroup.AddResource(names[versionIndex], variants[versionIndex], lengths[versionIndex]);
-//                                }
-//                            }
+                            //                            int resourceGroupCount = binaryReader.ReadInt32();
+                            //                            for (int i = 0; i < resourceGroupCount; i++)
+                            //                            {
+                            //                                string groupName = Icarus.GameFramework.Utility.Converter.GetString(Icarus.GameFramework.Utility.Encryption.GetXorBytes(binaryReader.ReadBytes(binaryReader.ReadByte()), encryptBytes));
+                            //                                ResourceGroup resourceGroup = m_ResourceManager.GetResourceGroup(groupName);
+                            //                                int groupResourceCount = binaryReader.ReadInt32();
+                            //                                for (int j = 0; j < groupResourceCount; j++)
+                            //                                {
+                            //                                    ushort versionIndex = binaryReader.ReadUInt16();
+                            //                                    if (versionIndex >= resourceCount)
+                            //                                    {
+                            //                                        throw new GameFrameworkException(string.Format("Package index '{0}' is invalid, resource count is '{1}'.", versionIndex, resourceCount));
+                            //                                    }
+                            //
+                            //                                    resourceGroup.AddResource(names[versionIndex], variants[versionIndex], lengths[versionIndex]);
+                            //                                }
+                            //                            }
                         }
                         else
                         {
                             throw new GameFrameworkException("Package list version is invalid.");
                         }
                     }
-//                    _isCompolete = true;
+                    //                    _isCompolete = true;
                     UnityEngine.Debug.Log("fileUri:" + fileUri + "完成.");
                     --_waitParsePackageList;
                     if (_waitParsePackageList <= 0)
@@ -494,16 +494,16 @@ namespace Icarus.GameFramework.Resource
                             }
                         }
                     }
-//                    else
-//                    {
-//                        if (_parsePackageInfos.Count == 0)
-//                        {
-//                            return;
-//                        }
-//                        var info = _parsePackageInfos.Dequeue();
-//                        
-//                        ParsePackageList(info.FileUri,info.Bytes,info.ErrorMessage);
-//                    }
+                    //                    else
+                    //                    {
+                    //                        if (_parsePackageInfos.Count == 0)
+                    //                        {
+                    //                            return;
+                    //                        }
+                    //                        var info = _parsePackageInfos.Dequeue();
+                    //                        
+                    //                        ParsePackageList(info.FileUri,info.Bytes,info.ErrorMessage);
+                    //                    }
                 }
                 catch (Exception exception)
                 {
@@ -565,16 +565,21 @@ namespace Icarus.GameFramework.Resource
                             new AssetDependencyInfo(dependencyAssetNamesCollectionItem.Key,
                                 dependencyAssetNames.ToArray(), scatteredDependencyAssetNames.ToArray());
                     }
-                    m_ResourceManager.m_AssetDependencyInfos.Add(dependencyAssetNamesCollectionItem.Key, new AssetDependencyInfo(dependencyAssetNamesCollectionItem.Key, dependencyAssetNames.ToArray(), scatteredDependencyAssetNames.ToArray()));
+                    else
+                    {
+                        m_ResourceManager.m_AssetDependencyInfos.Add(dependencyAssetNamesCollectionItem.Key,
+                            new AssetDependencyInfo(dependencyAssetNamesCollectionItem.Key,
+                                dependencyAssetNames.ToArray(), scatteredDependencyAssetNames.ToArray()));
+                    }
                 }
             }
 
             private void ProcessResourceInfo(ResourceName resourceName, LoadType loadType, int length, int hashCode)
             {
-                if (m_ResourceManager.m_ResourceInfos.ContainsKey(resourceName))
-                {
-                    throw new GameFrameworkException(string.Format("Resource info '{0}' is already exist.", resourceName.FullName));
-                }
+                //                if (m_ResourceManager.m_ResourceInfos.ContainsKey(resourceName))
+                //                {
+                //                    throw new GameFrameworkException(string.Format("Resource info '{0}' is already exist.", resourceName.FullName));
+                //                }
 
                 if (m_ResourceManager.m_ResourceInfos.ContainsKey(resourceName))
                 {
