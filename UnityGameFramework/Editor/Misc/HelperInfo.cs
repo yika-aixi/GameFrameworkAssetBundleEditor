@@ -5,7 +5,6 @@
 // Feedback: mailto:jiangyin@gameframework.cn
 //------------------------------------------------------------
 
-using Icarus.GameFramework;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;

@@ -19,7 +19,7 @@ namespace Icarus.UnityGameFramework.Editor
         private static readonly string[] AssemblyNames =
         {
 #if UNITY_2017_3_OR_NEWER
-            "UnityGameFramework.Runtime",
+            "Icarus.UnityGameFramework.Runtime",
 #endif
             "Assembly-CSharp"
         };
@@ -27,7 +27,7 @@ namespace Icarus.UnityGameFramework.Editor
         private static readonly string[] EditorAssemblyNames =
         {
 #if UNITY_2017_3_OR_NEWER
-            "UnityGameFramework.Editor",
+            "Icarus.UnityGameFramework.Editor",
 #endif
             "Assembly-CSharp-Editor"
         };

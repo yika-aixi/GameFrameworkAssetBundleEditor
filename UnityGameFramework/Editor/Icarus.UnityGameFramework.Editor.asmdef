@@ -5,7 +5,9 @@
         "Icarus.UnityGameFramework.Runtime"
     ],
     "optionalUnityReferences": [],
-    "includePlatforms": [],
+    "includePlatforms": [
+        "Editor"
+    ],
     "excludePlatforms": [],
     "allowUnsafeCode": false
 }

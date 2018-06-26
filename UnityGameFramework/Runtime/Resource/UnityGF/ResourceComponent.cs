@@ -74,13 +74,11 @@ namespace Icarus.UnityGameFramework.Runtime
 
         [SerializeField]
         private Transform m_InstanceRoot = null;
-
         [SerializeField]
         private string m_ResourceHelperTypeName = "Icarus.UnityGameFramework.Runtime.DefaultResourceHelper";
 
         [SerializeField]
         private ResourceHelperBase m_CustomResourceHelper = null;
-
         [SerializeField]
         private string m_LoadResourceAgentHelperTypeName = "Icarus.UnityGameFramework.Runtime.DefaultLoadResourceAgentHelper";
 
