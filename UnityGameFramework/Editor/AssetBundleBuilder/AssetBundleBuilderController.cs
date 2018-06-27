@@ -330,6 +330,19 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
             }
         }
 
+        public string OutputZipPath
+        {
+            get
+            {
+                if (!IsValidOutputDirectory)
+                {
+                    return string.Empty;
+                }
+
+                return string.Format("{0}/Zip/{1}_{2}/", OutputDirectory, ApplicableGameVersion.Replace('.', '_'), InternalResourceVersion.ToString());
+            }
+        }
+
         public string BuildReportPath
         {
             get
@@ -633,6 +646,13 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
 
             Directory.CreateDirectory(BuildReportPath);
 
+            if (Directory.Exists(OutputZipPath))
+            {
+                Directory.Delete(OutputZipPath, true);
+            }
+
+            Directory.CreateDirectory(OutputZipPath);
+
             BuildAssetBundleOptions buildAssetBundleOptions = GetBuildAssetBundleOptions();
             m_BuildReport.Initialize(BuildReportPath, ProductName, CompanyName, GameIdentifier, ApplicableGameVersion, InternalResourceVersion, UnityVersion,
                 WindowsSelected, MacOSXSelected, IOSSelected, AndroidSelected, WindowsStoreSelected, ZipSelected, RecordScatteredDependencyAssetsSelected, (int)buildAssetBundleOptions, m_AssetBundleDatas);
@@ -727,6 +747,8 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
                     BuildAssetBundlesError(exception.Message);
                 }
 
+                throw exception;
+
                 return false;
             }
         }
@@ -751,6 +773,10 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
             string outputPackedPath = string.Format("{0}{1}/", OutputPackedPath, buildTargetUrlName);
             Directory.CreateDirectory(outputPackedPath);
             m_BuildReport.LogInfo("Output packed path is '{0}'.", outputPackedPath);
+
+            string outputZipPath = string.Format("{0}{1}/", OutputZipPath, buildTargetUrlName);
+            Directory.CreateDirectory(outputZipPath);
+            m_BuildReport.LogInfo("output Zip Path is '{0}'.", outputZipPath);
 
             // Clean working path
             List<string> validNames = new List<string>();
@@ -827,7 +853,7 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
 
                 m_BuildReport.LogInfo("Start process '{0}' for '{1}'...", assetBundleFullName, buildTarget.ToString());
 
-                ProcessAssetBundle(workingPath, outputPackagePath, outputFullPath, outputPackedPath, zip, buildTarget, buildMap[i].assetBundleName, buildMap[i].assetBundleVariant);
+                ProcessAssetBundle(workingPath, outputPackagePath, outputZipPath, outputPackedPath, zip, buildTarget, buildMap[i].assetBundleName, buildMap[i].assetBundleVariant);
 
                 m_BuildReport.LogInfo("Process '{0}' for '{1}' complete.", assetBundleFullName, buildTarget.ToString());
             }
@@ -835,13 +861,13 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
             ProcessPackageList(outputPackagePath, buildTarget);
             m_BuildReport.LogInfo("Process package list for '{0}' complete.", buildTarget.ToString());
 
-            VersionListData versionListData = ProcessVersionList(outputFullPath, buildTarget);
-            m_BuildReport.LogInfo("Process version list for '{0}' complete.", buildTarget.ToString());
+//            VersionListData versionListData = ProcessVersionList(outputFullPath, buildTarget);
+//            m_BuildReport.LogInfo("Process version list for '{0}' complete.", buildTarget.ToString());
 
-            ProcessReadOnlyList(outputPackedPath, buildTarget);
-            m_BuildReport.LogInfo("Process readonly list for '{0}' complete.", buildTarget.ToString());
+//            ProcessReadOnlyList(outputPackedPath, buildTarget);
+//            m_BuildReport.LogInfo("Process readonly list for '{0}' complete.", buildTarget.ToString());
 
-            m_VersionListDatas.Add(buildTarget, versionListData);
+//            m_VersionListDatas.Add(buildTarget, versionListData);
 
             if (m_BuildEventHandler != null)
             {
@@ -851,7 +877,7 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
 
             if (ProcessAssetBundleComplete != null)
             {
-                ProcessAssetBundleComplete(buildTarget, versionListData.Path, versionListData.Length, versionListData.HashCode, versionListData.ZipLength, versionListData.ZipHashCode);
+                ProcessAssetBundleComplete(buildTarget, "", 0, 0,0, 0);
             }
 
             m_BuildReport.LogInfo("Build AssetBundles for '{0}' success.", buildTarget.ToString());
@@ -884,43 +910,55 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
             {
                 Directory.CreateDirectory(packageDirectoryName);
             }
-
+            Debug.Log(packageName);
             File.WriteAllBytes(packageName, bytes);
 
+            #region Zip
+
+            var zipFilePath = Path.Combine(outputFullPath, assetBundleFullName + ".zip");
+            ZipUtil.CreateZip(zipFilePath, outputPackagePath,new string[]{ packageName });
+            
+
+            #endregion
             // Optional AssetBundle
             if (assetBundleData.Optional)
             {
-                string packedName = Icarus.GameFramework.Utility.Path.GetResourceNameWithSuffix(Icarus.GameFramework.Utility.Path.GetCombinePath(outputPackedPath, assetBundleFullName));
-                string packedDirectoryName = Path.GetDirectoryName(packedName);
-                if (!Directory.Exists(packedDirectoryName))
-                {
-                    Directory.CreateDirectory(packedDirectoryName);
-                }
-
-                File.Copy(packageName, packedName);
-            }
-
-            // Compress AssetBundle
-            string fullName = Icarus.GameFramework.Utility.Path.GetResourceNameWithCrc32AndSuffix(Icarus.GameFramework.Utility.Path.GetCombinePath(outputFullPath, assetBundleFullName), hashCode);
-            string fullDirectoryName = Path.GetDirectoryName(fullName);
-            if (!Directory.Exists(fullDirectoryName))
-            {
-                Directory.CreateDirectory(fullDirectoryName);
-            }
-
-            int zipLength = length;
-            int zipHashCode = hashCode;
-            if (zip)
-            {
-                byte[] zipBytes = Icarus.GameFramework.Utility.Zip.Compress(bytes);
-                zipLength = zipBytes.Length;
-                zipHashCode = Icarus.GameFramework.Utility.Converter.GetInt32(Icarus.GameFramework.Utility.Verifier.GetCrc32(zipBytes));
-                File.WriteAllBytes(fullName, zipBytes);
+                //todo 执行版本文件生成时的另外一条线路,这个ab包时可选的
+//                string packedName = Icarus.GameFramework.Utility.Path.GetResourceNameWithSuffix(Icarus.GameFramework.Utility.Path.GetCombinePath(outputPackedPath, assetBundleFullName));
+//                string packedDirectoryName = Path.GetDirectoryName(packedName);
+//                if (!Directory.Exists(packedDirectoryName))
+//                {
+//                    Directory.CreateDirectory(packedDirectoryName);
+//                }
+//
+//                File.Copy(packageName, packedName);
             }
             else
             {
-                File.WriteAllBytes(fullName, bytes);
+                //todo 执行版本文件生成时的另外一条线路,这个ab包时可选的
             }
+
+            // Compress AssetBundle
+//            string fullName = Icarus.GameFramework.Utility.Path.GetResourceNameWithCrc32AndSuffix(Icarus.GameFramework.Utility.Path.GetCombinePath(outputFullPath, assetBundleFullName), hashCode);
+//            string fullDirectoryName = Path.GetDirectoryName(fullName);
+//            if (!Directory.Exists(fullDirectoryName))
+//            {
+//                Directory.CreateDirectory(fullDirectoryName);
+//            }
+
+            int zipLength = length;
+            int zipHashCode = hashCode;
+//            if (zip)
+//            {
+//                byte[] zipBytes = Icarus.GameFramework.Utility.Zip.Compress(bytes);
+//                zipLength = zipBytes.Length;
+//                zipHashCode = Icarus.GameFramework.Utility.Converter.GetInt32(Icarus.GameFramework.Utility.Verifier.GetCrc32(zipBytes));
+//                File.WriteAllBytes(fullName, zipBytes);
+//            }
+//            else
+//            {
+//                File.WriteAllBytes(fullName, bytes);
+//            }
 
             assetBundleData.AddCode(buildTarget, length, hashCode, zipLength, zipHashCode);
         }
@@ -936,6 +974,7 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
             }
             foreach (AssetBundleData assetBundleData in m_AssetBundleDatas.Values)
             {
+                Debug.Log("assetBundleDataName:"+ assetBundleData.Name);
                 var abName = assetBundleData.Name.Split('/').Last();
                 string AbpackageListPath =
                     Icarus.GameFramework.Utility.Path.GetCombinePath(outputPackagePath,
@@ -1029,7 +1068,20 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
                     }
                 }
 
-                File.Move(AbpackageListPath, Icarus.GameFramework.Utility.Path.GetResourceNameWithSuffix(AbpackageListPath));
+                var abVersionPath = Icarus.GameFramework.Utility.Path.GetResourceNameWithSuffix(AbpackageListPath);
+                File.Move(AbpackageListPath, abVersionPath);
+
+                #region Zip
+
+                var zipPath = outputPackagePath.Replace(OutputPackagePath, OutputZipPath);
+                Debug.Log("zipPath: " + zipPath);
+                var zipFilePath = Path.Combine(zipPath, assetBundleData.Name + ".zip");
+                Debug.Log("zipFilePath: " + zipFilePath);
+                ZipUtil.UpdateZipAdd(zipFilePath, outputPackagePath,new []
+                {
+                    abVersionPath,
+                });
+                #endregion
             }
         }
 
