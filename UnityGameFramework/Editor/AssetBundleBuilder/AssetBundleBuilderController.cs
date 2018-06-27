@@ -6,15 +6,14 @@
 //------------------------------------------------------------
 
 using Icarus.GameFramework;
+using Icarus.UnityGameFramework.Runtime;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Xml;
 using UnityEditor;
 using UnityEngine;
-using Icarus.UnityGameFramework.Runtime;
 
 namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
 {
@@ -916,7 +915,7 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
             #region Zip
 
             var zipFilePath = Path.Combine(outputFullPath, assetBundleFullName + ".zip");
-            ZipUtil.CreateZip(zipFilePath, outputPackagePath,new string[]{ packageName });
+            Runtime.Utility.ZipUtil.CreateZip(zipFilePath, outputPackagePath,new string[]{ packageName });
             
 
             #endregion
@@ -1077,7 +1076,7 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
                 Debug.Log("zipPath: " + zipPath);
                 var zipFilePath = Path.Combine(zipPath, assetBundleData.Name + ".zip");
                 Debug.Log("zipFilePath: " + zipFilePath);
-                ZipUtil.UpdateZipAdd(zipFilePath, outputPackagePath,new []
+                Runtime.Utility.ZipUtil.UpdateZipAdd(zipFilePath, outputPackagePath,new []
                 {
                     abVersionPath,
                 });
