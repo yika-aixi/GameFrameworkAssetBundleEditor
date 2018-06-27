@@ -1074,7 +1074,8 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
 
                 var zipPath = outputPackagePath.Replace(OutputPackagePath, OutputZipPath);
                 Debug.Log("zipPath: " + zipPath);
-                var zipFilePath = Path.Combine(zipPath, assetBundleData.Name + ".zip");
+                var abFullName = GetAssetBundleFullName(assetBundleData.Name, assetBundleData.Variant);
+                var zipFilePath = Path.Combine(zipPath, abFullName + ".zip");
                 Debug.Log("zipFilePath: " + zipFilePath);
                 Runtime.Utility.ZipUtil.UpdateZipAdd(zipFilePath, outputPackagePath,new []
                 {
