@@ -41,7 +41,7 @@
 		public string MinAppVersion;
 		//当前app中所有的资源包信息:持久化目录及StreamingAssets目录中所有的ab包信息
 		//并集 -> 以持久化为主
-		public IEnumerable<string> AssetBundleInfos;
+		public IEnumerable<AssetBundleInfo> AssetBundleInfos;
 	}
 		
 ```
