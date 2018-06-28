@@ -610,6 +610,9 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
 
         public bool BuildAssetBundles()
         {
+            //初始化版本文件信息
+            _initVersion(string.Format("{0}({1})", ApplicableGameVersion, InternalResourceVersion));
+
             if (!IsValidOutputDirectory)
             {
                 return false;
@@ -655,7 +658,7 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
             BuildAssetBundleOptions buildAssetBundleOptions = GetBuildAssetBundleOptions();
             m_BuildReport.Initialize(BuildReportPath, ProductName, CompanyName, GameIdentifier, ApplicableGameVersion, InternalResourceVersion, UnityVersion,
                 WindowsSelected, MacOSXSelected, IOSSelected, AndroidSelected, WindowsStoreSelected, ZipSelected, RecordScatteredDependencyAssetsSelected, (int)buildAssetBundleOptions, m_AssetBundleDatas);
-
+            
             try
             {
                 m_VersionListDatas.Clear();
@@ -857,6 +860,9 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
                 m_BuildReport.LogInfo("Process '{0}' for '{1}' complete.", assetBundleFullName, buildTarget.ToString());
             }
 
+            //写入version.info
+            _writeVersionInfoFile(outputZipPath);
+
             ProcessPackageList(outputPackagePath, buildTarget);
             m_BuildReport.LogInfo("Process package list for '{0}' complete.", buildTarget.ToString());
 
@@ -916,26 +922,27 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
 
             var zipFilePath = Path.Combine(outputFullPath, assetBundleFullName + ".zip");
             Runtime.Utility.ZipUtil.CreateZip(zipFilePath, outputPackagePath,new string[]{ packageName });
-            
+            //更新或加入资源包信息
+            _addOrUpdateAsssetBundle(outputPackagePath,assetBundleData);
 
             #endregion
             // Optional AssetBundle
-            if (assetBundleData.Optional)
-            {
-                //todo 执行版本文件生成时的另外一条线路,这个ab包时可选的
-//                string packedName = Icarus.GameFramework.Utility.Path.GetResourceNameWithSuffix(Icarus.GameFramework.Utility.Path.GetCombinePath(outputPackedPath, assetBundleFullName));
-//                string packedDirectoryName = Path.GetDirectoryName(packedName);
-//                if (!Directory.Exists(packedDirectoryName))
-//                {
-//                    Directory.CreateDirectory(packedDirectoryName);
-//                }
-//
-//                File.Copy(packageName, packedName);
-            }
-            else
-            {
-                //todo 执行版本文件生成时的另外一条线路,这个ab包时可选的
-            }
+//            if (assetBundleData.Optional)
+//            {
+//                //todo 执行版本文件生成时的另外一条线路,这个ab包时可选的
+////                string packedName = Icarus.GameFramework.Utility.Path.GetResourceNameWithSuffix(Icarus.GameFramework.Utility.Path.GetCombinePath(outputPackedPath, assetBundleFullName));
+////                string packedDirectoryName = Path.GetDirectoryName(packedName);
+////                if (!Directory.Exists(packedDirectoryName))
+////                {
+////                    Directory.CreateDirectory(packedDirectoryName);
+////                }
+////
+////                File.Copy(packageName, packedName);
+//            }
+//            else
+//            {
+//                //todo 执行版本文件生成时的另外一条线路,这个ab包时可选的
+//            }
 
             // Compress AssetBundle
 //            string fullName = Icarus.GameFramework.Utility.Path.GetResourceNameWithCrc32AndSuffix(Icarus.GameFramework.Utility.Path.GetCombinePath(outputFullPath, assetBundleFullName), hashCode);
