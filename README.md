@@ -16,35 +16,11 @@
 	目前的规划是:将Zip下对应平台文件夹下所有文件夹及文件复制到远程,然后游戏中会进行资源包对比是否需要更新,可选的资源如果本地version.info中
 	没有存在就不下载,存在才会进行比较是否需要更新
 	
-	Version.info文件的实体结构:
-```	
-	public class AssetBundleInfo
-	{
-		//所属资源组
-		public string GroupTag;
-		//资源包名 : xxx.dat 或 xx.xx.dat
-		public string PackName;
-		//资源包相对路径 : xxx/xxxx
-		public string PackPath;
-		//资源包路径 : PackPath + "/" + PackName
-		public string PackFullName;
-		//资源包MD5
-		public string MD5;
-		//是否可选,false的话就会一定被下载,true的话可以在游戏中让玩家决定是否下载
-		public bool Optional;
-	}
-	
-	public class VersionInfo
-	{
-		//Version.info 的版本
-		public string Version;
-		//当前app中所有的资源包信息:持久化目录及StreamingAssets目录中所有的ab包信息
-		//并集 -> 以持久化为主
-		public IEnumerable<AssetBundleInfo> AssetBundleInfos;
-	}
-		
-```
-我先写出来测测看=-
+目前已经完成,使用非常简单,打包完成后,只需将Zip文件夹中对应平台文件下的所有文件复制到服务器中就好了,然后:
+DefaultVersionCheckComPontent.Url = "服务器的version.info地址";
+DefaultVersionCheckComPontent.Check()
+DefaultUpdateAssetBundle.UpdateAssetBundle()
+结束
 
 
 框架地址:https://github.com/EllanJiang/UnityGameFramework

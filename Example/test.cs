@@ -38,7 +38,6 @@ public class test : MonoBehaviour
             }
 
             versionCheck.Url = Info.AssetBundleUrl+"/"+ConstTable.VersionFileName;
-            Debug.Log(versionCheck.Url);
             versionCheck.Check((x,y) =>
             {
                 foreach (var info in x)
@@ -47,7 +46,10 @@ public class test : MonoBehaviour
                 }
 
                 DefaultUpdateAssetBundle update = GameEntry.GetComponent<DefaultUpdateAssetBundle>();
-                update.UpdateAssetBundle(Info, x,y, x1 =>
+                update.UpdateAssetBundle(Info, x,y, (pro, str) =>
+                {
+                    Debug.Log($"下载进度：{pro.Progress}，下载速度：{pro.Speed},下载描述：{str}");
+                }, x1 =>
                 {
                     Debug.Log("更新完成：" + y);
                 }, _loadAsset, ex =>

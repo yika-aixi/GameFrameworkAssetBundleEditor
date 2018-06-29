@@ -21,8 +21,10 @@ namespace Icarus.UnityGameFramework.Runtime
         public CoroutineManager Coroutine;
         private string VersionInfoFileName = "version.info";
         public void UpdateAssetBundle(UpdateInfo updateInfo, IEnumerable<AssetBundleInfo> assetBundleifInfos, VersionInfo localVersionInfo,
-            GameFrameworkAction<AssetBundleInfo> anyCompleteHandle,
-            GameFrameworkAction allCompleteHandle, GameFrameworkAction<string> errorHandle)
+            GameFrameworkAction<DownloadProgressInfo, string> progressHandle = null,
+            GameFrameworkAction<AssetBundleInfo> anyCompleteHandle = null,
+            GameFrameworkAction allCompleteHandle = null,
+            GameFrameworkAction<string> errorHandle = null)
         {
             int version = -1;
 
@@ -60,6 +62,7 @@ namespace Icarus.UnityGameFramework.Runtime
                         GameFramework.Utility.FileUtil.DeleteFile(x);
                     },
                     ErrorHandle = errorHandle.Invoke,
+                    DownloadProgressHandle = progressHandle.Invoke,
                     FileName = assetBundleInfo.PackName.Replace("dat", "zip"),
                     SavePath = Path.Combine(Application.persistentDataPath,assetBundleInfo.PackPath),
                     Url = updateInfo.AssetBundleUrl+"/"+ assetBundleInfo.PackFullName.Replace("dat","zip"),
