@@ -32,10 +32,7 @@ namespace Icarus.UnityGameFramework.Runtime
         private AsyncOperation m_AsyncOperation = null;
         private float m_LastOperationElapse = 0f;
         private ResourceHelperBase m_ResourceHelper = null;
-
-        [SerializeField]
-        private ResourceMode m_ResourceMode = ResourceMode.Package;
-
+        
         [SerializeField]
         private ReadWritePathType m_ReadWritePathType = ReadWritePathType.Unspecified;
 
@@ -109,18 +106,7 @@ namespace Icarus.UnityGameFramework.Runtime
                 return m_ResourceManager.ReadWritePath;
             }
         }
-
-        /// <summary>
-        /// 获取资源模式。
-        /// </summary>
-        public ResourceMode ResourceMode
-        {
-            get
-            {
-                return m_ResourceManager.ResourceMode;
-            }
-        }
-
+        
         /// <summary>
         /// 获取资源读写路径类型。
         /// </summary>
@@ -201,18 +187,7 @@ namespace Icarus.UnityGameFramework.Runtime
                 return m_ResourceManager.ResourceCount;
             }
         }
-
-        /// <summary>
-        /// 获取资源组数量。
-        /// </summary>
-        public int ResourceGroupCount
-        {
-            get
-            {
-                return m_ResourceManager.ResourceGroupCount;
-            }
-        }
-
+        
         /// <summary>
         /// 获取加载资源代理总数量。
         /// </summary>
@@ -428,7 +403,6 @@ namespace Icarus.UnityGameFramework.Runtime
                 return;
             }
 
-            SetResourceMode(m_ResourceMode);
             m_ResourceManager.SetObjectPoolManager(GameFrameworkEntry.GetModule<IObjectPoolManager>());
             m_ResourceManager.AssetAutoReleaseInterval = m_AssetAutoReleaseInterval;
             m_ResourceManager.AssetCapacity = m_AssetCapacity;
@@ -489,16 +463,7 @@ namespace Icarus.UnityGameFramework.Runtime
                 }
             }
         }
-
-        /// <summary>
-        /// 设置资源模式。
-        /// </summary>
-        /// <param name="resourceMode">资源模式。</param>
-        public void SetResourceMode(ResourceMode resourceMode)
-        {
-            m_ResourceManager.SetResourceMode(resourceMode);
-        }
-
+        
         /// <summary>
         /// 设置当前变体。
         /// </summary>
@@ -653,61 +618,7 @@ namespace Icarus.UnityGameFramework.Runtime
         {
             m_ResourceManager.UnloadAsset(asset);
         }
-
-        /// <summary>
-        /// 获取资源组是否准备完毕。
-        /// </summary>
-        /// <param name="resourceGroupName">要检查的资源组名称。</param>
-        public bool GetResourceGroupReady(string resourceGroupName)
-        {
-            return m_ResourceManager.GetResourceGroupReady(resourceGroupName);
-        }
-
-        /// <summary>
-        /// 获取资源组资源数量。
-        /// </summary>
-        /// <param name="resourceGroupName">要检查的资源组名称。</param>
-        public int GetResourceGroupResourceCount(string resourceGroupName)
-        {
-            return m_ResourceManager.GetResourceGroupResourceCount(resourceGroupName);
-        }
-
-        /// <summary>
-        /// 获取资源组已准备完成资源数量。
-        /// </summary>
-        /// <param name="resourceGroupName">要检查的资源组名称。</param>
-        public int GetResourceGroupReadyResourceCount(string resourceGroupName)
-        {
-            return m_ResourceManager.GetResourceGroupReadyResourceCount(resourceGroupName);
-        }
-
-        /// <summary>
-        /// 获取资源组总大小。
-        /// </summary>
-        /// <param name="resourceGroupName">要检查的资源组名称。</param>
-        public int GetResourceGroupTotalLength(string resourceGroupName)
-        {
-            return m_ResourceManager.GetResourceGroupTotalLength(resourceGroupName);
-        }
-
-        /// <summary>
-        /// 获取资源组已准备完成总大小。
-        /// </summary>
-        /// <param name="resourceGroupName">要检查的资源组名称。</param>
-        public int GetResourceGroupTotalReadyLength(string resourceGroupName)
-        {
-            return m_ResourceManager.GetResourceGroupTotalReadyLength(resourceGroupName);
-        }
-
-        /// <summary>
-        /// 获取资源组准备进度。
-        /// </summary>
-        /// <param name="resourceGroupName">要检查的资源组名称。</param>
-        public float GetResourceGroupProgress(string resourceGroupName)
-        {
-            return m_ResourceManager.GetResourceGroupProgress(resourceGroupName);
-        }
-
+        
         /// <summary>
         /// 增加加载资源代理辅助器。
         /// </summary>

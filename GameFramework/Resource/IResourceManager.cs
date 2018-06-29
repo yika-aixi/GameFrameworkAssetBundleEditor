@@ -32,14 +32,6 @@ namespace Icarus.GameFramework.Resource
         }
 
         /// <summary>
-        /// 获取资源模式。
-        /// </summary>
-        ResourceMode ResourceMode
-        {
-            get;
-        }
-
-        /// <summary>
         /// 获取当前变体。
         /// </summary>
         string CurrentVariant
@@ -75,14 +67,6 @@ namespace Icarus.GameFramework.Resource
         /// 获取已准备完毕资源数量。
         /// </summary>
         int ResourceCount
-        {
-            get;
-        }
-
-        /// <summary>
-        /// 获取资源组数量。
-        /// </summary>
-        int ResourceGroupCount
         {
             get;
         }
@@ -207,12 +191,6 @@ namespace Icarus.GameFramework.Resource
         /// </summary>
         /// <param name="readWritePath">资源读写区路径。</param>
         void SetReadWritePath(string readWritePath);
-
-        /// <summary>
-        /// 设置资源模式。
-        /// </summary>
-        /// <param name="resourceMode">资源模式。</param>
-        void SetResourceMode(ResourceMode resourceMode);
 
         /// <summary>
         /// 设置当前变体。
@@ -377,41 +355,5 @@ namespace Icarus.GameFramework.Resource
         /// <param name="unloadSceneCallbacks">卸载场景回调函数集。</param>
         /// <param name="userData">用户自定义数据。</param>
         void UnloadScene(string sceneAssetName, UnloadSceneCallbacks unloadSceneCallbacks, object userData);
-
-        /// <summary>
-        /// 获取资源组是否准备完毕。
-        /// </summary>
-        /// <param name="resourceGroupName">要检查的资源组名称。</param>
-        bool GetResourceGroupReady(string resourceGroupName);
-
-        /// <summary>
-        /// 获取资源组资源数量。
-        /// </summary>
-        /// <param name="resourceGroupName">要检查的资源组名称。</param>
-        int GetResourceGroupResourceCount(string resourceGroupName);
-
-        /// <summary>
-        /// 获取资源组已准备完成资源数量。
-        /// </summary>
-        /// <param name="resourceGroupName">要检查的资源组名称。</param>
-        int GetResourceGroupReadyResourceCount(string resourceGroupName);
-
-        /// <summary>
-        /// 获取资源组总大小。
-        /// </summary>
-        /// <param name="resourceGroupName">要检查的资源组名称。</param>
-        int GetResourceGroupTotalLength(string resourceGroupName);
-
-        /// <summary>
-        /// 获取资源组已准备完成总大小。
-        /// </summary>
-        /// <param name="resourceGroupName">要检查的资源组名称。</param>
-        int GetResourceGroupTotalReadyLength(string resourceGroupName);
-
-        /// <summary>
-        /// 获取资源组准备进度。
-        /// </summary>
-        /// <param name="resourceGroupName">要检查的资源组名称。</param>
-        float GetResourceGroupProgress(string resourceGroupName);
     }
 }

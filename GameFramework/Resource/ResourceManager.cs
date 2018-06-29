@@ -17,25 +17,17 @@ namespace Icarus.GameFramework.Resource
     internal sealed partial class ResourceManager : GameFrameworkModule, IResourceManager
     {
         private static readonly char[] PackageListHeader = new char[] { 'E', 'L', 'P' };
-        private static readonly char[] VersionListHeader = new char[] { 'E', 'L', 'V' };
-        private static readonly char[] ReadOnlyListHeader = new char[] { 'E', 'L', 'R' };
-        private static readonly char[] ReadWriteListHeader = new char[] { 'E', 'L', 'W' };
         private const string VersionListFileName = "version";
-        private const string ResourceListFileName = "list";
-        private const string BackupFileSuffixName = ".bak";
-        private const byte ReadWriteListVersionHeader = 0;
 
         private readonly Dictionary<string, AssetInfo> m_AssetInfos;
         private readonly Dictionary<string, AssetDependencyInfo> m_AssetDependencyInfos;
         private readonly Dictionary<ResourceName, ResourceInfo> m_ResourceInfos;
-        private readonly Dictionary<string, ResourceGroup> m_ResourceGroups;
         private readonly SortedDictionary<ResourceName, ReadWriteResourceInfo> m_ReadWriteResourceInfos;
         private ResourceIniter m_ResourceIniter;
         private ResourceLoader m_ResourceLoader;
         private IResourceHelper m_ResourceHelper;
         private string m_ReadOnlyPath;
         private string m_ReadWritePath;
-        private ResourceMode m_ResourceMode;
         private bool m_RefuseSetCurrentVariant;
         private string m_CurrentVariant;
         private string m_UpdatePrefixUri;
@@ -49,12 +41,10 @@ namespace Icarus.GameFramework.Resource
         /// </summary>
         public ResourceManager()
         {
-            ResourceNameComparer resourceNameComparer = new ResourceNameComparer();
             m_AssetInfos = new Dictionary<string, AssetInfo>();
             m_AssetDependencyInfos = new Dictionary<string, AssetDependencyInfo>();
-            m_ResourceInfos = new Dictionary<ResourceName, ResourceInfo>(resourceNameComparer);
-            m_ResourceGroups = new Dictionary<string, ResourceGroup>();
-            m_ReadWriteResourceInfos = new SortedDictionary<ResourceName, ReadWriteResourceInfo>(resourceNameComparer);
+            m_ResourceInfos = new Dictionary<ResourceName, ResourceInfo>();
+            m_ReadWriteResourceInfos = new SortedDictionary<ResourceName, ReadWriteResourceInfo>();
 
             m_ResourceIniter = null;
             m_ResourceLoader = new ResourceLoader(this);
@@ -62,7 +52,6 @@ namespace Icarus.GameFramework.Resource
             m_ResourceHelper = null;
             m_ReadOnlyPath = null;
             m_ReadWritePath = null;
-            m_ResourceMode = ResourceMode.Unspecified;
             m_RefuseSetCurrentVariant = false;
             m_CurrentVariant = null;
             m_UpdatePrefixUri = null;
@@ -106,18 +95,7 @@ namespace Icarus.GameFramework.Resource
                 return m_ReadWritePath;
             }
         }
-
-        /// <summary>
-        /// 获取资源模式。
-        /// </summary>
-        public ResourceMode ResourceMode
-        {
-            get
-            {
-                return m_ResourceMode;
-            }
-        }
-
+        
         /// <summary>
         /// 获取当前变体。
         /// </summary>
@@ -172,18 +150,6 @@ namespace Icarus.GameFramework.Resource
                 return m_ResourceInfos.Count;
             }
         }
-
-        /// <summary>
-        /// 获取资源组数量。
-        /// </summary>
-        public int ResourceGroupCount
-        {
-            get
-            {
-                return m_ResourceGroups.Count;
-            }
-        }
-      
        
         /// <summary>
         /// 获取加载资源代理总数量。
@@ -395,7 +361,6 @@ namespace Icarus.GameFramework.Resource
             m_AssetInfos.Clear();
             m_AssetDependencyInfos.Clear();
             m_ResourceInfos.Clear();
-            m_ResourceGroups.Clear();
             m_ReadWriteResourceInfos.Clear();
         }
 
@@ -435,33 +400,6 @@ namespace Icarus.GameFramework.Resource
             }
 
             m_ReadWritePath = readWritePath;
-        }
-
-        /// <summary>
-        /// 设置资源模式。
-        /// </summary>
-        /// <param name="resourceMode">资源模式。</param>
-        public void SetResourceMode(ResourceMode resourceMode)
-        {
-            if (resourceMode == ResourceMode.Unspecified)
-            {
-                throw new GameFrameworkException("Resource mode is invalid.");
-            }
-
-            if (m_ResourceMode == ResourceMode.Unspecified)
-            {
-                m_ResourceMode = resourceMode;
-
-                if (m_ResourceMode == ResourceMode.Package)
-                {
-                    m_ResourceIniter = new ResourceIniter(this);
-                    m_ResourceIniter.ResourceInitComplete += OnIniterResourceInitComplete;
-                }
-            }
-            else if (m_ResourceMode != resourceMode)
-            {
-                throw new GameFrameworkException("You can not change resource mode at this time.");
-            }
         }
 
         /// <summary>
@@ -541,21 +479,9 @@ namespace Icarus.GameFramework.Resource
         /// </summary>
         public void InitResources()
         {
-            if (m_ResourceMode == ResourceMode.Unspecified)
-            {
-                throw new GameFrameworkException("You must set resource mode first.");
-            }
-
-            if (m_ResourceMode != ResourceMode.Package)
-            {
-                throw new GameFrameworkException("You can not use InitResources without package resource mode.");
-            }
-
-            if (m_ResourceIniter == null)
-            {
-                throw new GameFrameworkException("You can not use InitResources at this time.");
-            }
-
+            m_ResourceIniter = new ResourceIniter(this);
+            m_ResourceIniter.ResourceInitComplete += OnIniterResourceInitComplete;
+            
             m_RefuseSetCurrentVariant = true;
             m_ResourceIniter.InitResources(m_CurrentVariant);
         }
@@ -891,96 +817,6 @@ namespace Icarus.GameFramework.Resource
             m_ResourceLoader.UnloadScene(sceneAssetName, unloadSceneCallbacks, userData);
         }
 
-        /// <summary>
-        /// 获取资源组是否准备完毕。
-        /// </summary>
-        /// <param name="resourceGroupName">要检查的资源组名称。</param>
-        public bool GetResourceGroupReady(string resourceGroupName)
-        {
-            ResourceGroup resourceGroup = FindResourceGroup(resourceGroupName);
-            if (resourceGroup == null)
-            {
-                throw new GameFrameworkException(string.Format("Can not find resource group '{0}'.", resourceGroupName));
-            }
-
-            return resourceGroup.Ready;
-        }
-
-        /// <summary>
-        /// 获取资源组资源数量。
-        /// </summary>
-        /// <param name="resourceGroupName">要检查的资源组名称。</param>
-        public int GetResourceGroupResourceCount(string resourceGroupName)
-        {
-            ResourceGroup resourceGroup = FindResourceGroup(resourceGroupName);
-            if (resourceGroup == null)
-            {
-                throw new GameFrameworkException(string.Format("Can not find resource group '{0}'.", resourceGroupName));
-            }
-
-            return resourceGroup.ResourceCount;
-        }
-
-        /// <summary>
-        /// 获取资源组已准备完成资源数量。
-        /// </summary>
-        /// <param name="resourceGroupName">要检查的资源组名称。</param>
-        public int GetResourceGroupReadyResourceCount(string resourceGroupName)
-        {
-            ResourceGroup resourceGroup = FindResourceGroup(resourceGroupName);
-            if (resourceGroup == null)
-            {
-                throw new GameFrameworkException(string.Format("Can not find resource group '{0}'.", resourceGroupName));
-            }
-
-            return resourceGroup.ReadyResourceCount;
-        }
-
-        /// <summary>
-        /// 获取资源组总大小。
-        /// </summary>
-        /// <param name="resourceGroupName">要检查的资源组名称。</param>
-        public int GetResourceGroupTotalLength(string resourceGroupName)
-        {
-            ResourceGroup resourceGroup = FindResourceGroup(resourceGroupName);
-            if (resourceGroup == null)
-            {
-                throw new GameFrameworkException(string.Format("Can not find resource group '{0}'.", resourceGroupName));
-            }
-
-            return resourceGroup.TotalLength;
-        }
-
-        /// <summary>
-        /// 获取资源组已准备完成总大小。
-        /// </summary>
-        /// <param name="resourceGroupName">要检查的资源组名称。</param>
-        public int GetResourceGroupTotalReadyLength(string resourceGroupName)
-        {
-            ResourceGroup resourceGroup = FindResourceGroup(resourceGroupName);
-            if (resourceGroup == null)
-            {
-                throw new GameFrameworkException(string.Format("Can not find resource group '{0}'.", resourceGroupName));
-            }
-
-            return resourceGroup.TotalReadyLength;
-        }
-
-        /// <summary>
-        /// 获取资源组准备进度。
-        /// </summary>
-        /// <param name="resourceGroupName">要检查的资源组名称。</param>
-        public float GetResourceGroupProgress(string resourceGroupName)
-        {
-            ResourceGroup resourceGroup = FindResourceGroup(resourceGroupName);
-            if (resourceGroup == null)
-            {
-                throw new GameFrameworkException(string.Format("Can not find resource group '{0}'.", resourceGroupName));
-            }
-
-            return resourceGroup.Progress;
-        }
-
         private AssetInfo? GetAssetInfo(string assetName)
         {
             if (string.IsNullOrEmpty(assetName))
@@ -1023,32 +859,7 @@ namespace Icarus.GameFramework.Resource
 
             return null;
         }
-
-        private ResourceGroup FindResourceGroup(string name)
-        {
-            ResourceGroup resourceGroup = null;
-            if (m_ResourceGroups.TryGetValue(name ?? string.Empty, out resourceGroup))
-            {
-                return resourceGroup;
-            }
-
-            return null;
-        }
-
-        private ResourceGroup GetResourceGroup(string name)
-        {
-            ResourceGroup resourceGroup = FindResourceGroup(name);
-            if (resourceGroup != null)
-            {
-                return resourceGroup;
-            }
-
-            resourceGroup = new ResourceGroup(m_ResourceInfos);
-            m_ResourceGroups.Add(name ?? string.Empty, resourceGroup);
-
-            return resourceGroup;
-        }
-
+        
         private void OnIniterResourceInitComplete()
         {
             m_ResourceIniter.ResourceInitComplete -= OnIniterResourceInitComplete;

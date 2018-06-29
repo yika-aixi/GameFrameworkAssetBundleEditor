@@ -59,18 +59,7 @@ namespace Icarus.UnityGameFramework.Runtime
                 return m_ReadWritePath;
             }
         }
-
-        /// <summary>
-        /// 获取资源模式。
-        /// </summary>
-        public ResourceMode ResourceMode
-        {
-            get
-            {
-                return ResourceMode.Unspecified;
-            }
-        }
-
+        
         /// <summary>
         /// 获取当前变体。
         /// </summary>
@@ -125,18 +114,6 @@ namespace Icarus.UnityGameFramework.Runtime
                 throw new NotSupportedException("ResourceCount");
             }
         }
-
-        /// <summary>
-        /// 获取资源组个数。
-        /// </summary>
-        public int ResourceGroupCount
-        {
-            get
-            {
-                throw new NotSupportedException("ResourceGroupCount");
-            }
-        }
-
         /// <summary>
         /// 获取加载资源代理总个数。
         /// </summary>
@@ -491,16 +468,7 @@ namespace Icarus.UnityGameFramework.Runtime
 
             m_ReadWritePath = readWritePath;
         }
-
-        /// <summary>
-        /// 设置资源模式。
-        /// </summary>
-        /// <param name="resourceMode">资源模式。</param>
-        public void SetResourceMode(ResourceMode resourceMode)
-        {
-            throw new NotSupportedException("SetResourceMode");
-        }
-
+        
         /// <summary>
         /// 设置当前变体。
         /// </summary>
@@ -803,61 +771,7 @@ namespace Icarus.UnityGameFramework.Runtime
             }
 #endif
         }
-
-        /// <summary>
-        /// 获取资源组是否准备完毕。
-        /// </summary>
-        /// <param name="resourceGroupName">要检查的资源组名称。</param>
-        public bool GetResourceGroupReady(string resourceGroupName)
-        {
-            throw new NotSupportedException("GetResourceGroupReady");
-        }
-
-        /// <summary>
-        /// 获取资源组资源个数。
-        /// </summary>
-        /// <param name="resourceGroupName">要检查的资源组名称。</param>
-        public int GetResourceGroupResourceCount(string resourceGroupName)
-        {
-            throw new NotSupportedException("GetResourceGroupResourceCount");
-        }
-
-        /// <summary>
-        /// 获取资源组已准备完成资源个数。
-        /// </summary>
-        /// <param name="resourceGroupName">要检查的资源组名称。</param>
-        public int GetResourceGroupReadyResourceCount(string resourceGroupName)
-        {
-            throw new NotSupportedException("GetResourceGroupReadyResourceCount");
-        }
-
-        /// <summary>
-        /// 获取资源组总大小。
-        /// </summary>
-        /// <param name="resourceGroupName">要检查的资源组名称。</param>
-        public int GetResourceGroupTotalLength(string resourceGroupName)
-        {
-            throw new NotSupportedException("GetResourceGroupTotalLength");
-        }
-
-        /// <summary>
-        /// 获取资源组已准备完成总大小。
-        /// </summary>
-        /// <param name="resourceGroupName">要检查的资源组名称。</param>
-        public int GetResourceGroupTotalReadyLength(string resourceGroupName)
-        {
-            throw new NotSupportedException("GetResourceGroupTotalReadyLength");
-        }
-
-        /// <summary>
-        /// 获取资源组准备进度。
-        /// </summary>
-        /// <param name="resourceGroupName">要检查的资源组名称。</param>
-        public float GetResourceGroupProgress(string resourceGroupName)
-        {
-            throw new NotSupportedException("GetResourceGroupProgress");
-        }
-
+      
         private sealed class LoadAssetInfo
         {
             private readonly string m_AssetName;

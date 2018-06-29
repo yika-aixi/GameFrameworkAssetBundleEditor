@@ -30,8 +30,6 @@ namespace Icarus.UnityGameFramework.Editor
 
         private FieldInfo m_EditorResourceModeFieldInfo = null;
 
-        private string[] m_ResourceModeNames = new string[] { "Package", "Updatable" };
-        private int m_ResourceModeIndex = 0;
         private HelperInfo<ResourceHelperBase> m_ResourceHelperInfo = new HelperInfo<ResourceHelperBase>("Resource");
         private HelperInfo<LoadResourceAgentHelperBase> m_LoadResourceAgentHelperInfo = new HelperInfo<LoadResourceAgentHelperBase>("LoadResourceAgent");
 
@@ -56,19 +54,19 @@ namespace Icarus.UnityGameFramework.Editor
 
             EditorGUI.BeginDisabledGroup(EditorApplication.isPlayingOrWillChangePlaymode);
             {
-                if (EditorApplication.isPlaying && PrefabUtility.GetPrefabType(t.gameObject) != PrefabType.Prefab)
-                {
-                    EditorGUILayout.EnumPopup("Resource Mode", t.ResourceMode);
-                }
-                else
-                {
-                    int selectedIndex = EditorGUILayout.Popup("Resource Mode", m_ResourceModeIndex, m_ResourceModeNames);
-                    if (selectedIndex != m_ResourceModeIndex)
-                    {
-                        m_ResourceModeIndex = selectedIndex;
-                        m_ResourceMode.enumValueIndex = selectedIndex + 1;
-                    }
-                }
+//                if (EditorApplication.isPlaying && PrefabUtility.GetPrefabType(t.gameObject) != PrefabType.Prefab)
+//                {
+//                    EditorGUILayout.EnumPopup("Resource Mode", t.ResourceMode);
+//                }
+//                else
+//                {
+//                    int selectedIndex = EditorGUILayout.Popup("Resource Mode", m_ResourceModeIndex, m_ResourceModeNames);
+//                    if (selectedIndex != m_ResourceModeIndex)
+//                    {
+//                        m_ResourceModeIndex = selectedIndex;
+//                        m_ResourceMode.enumValueIndex = selectedIndex + 1;
+//                    }
+//                }
 
                 m_ReadWritePathType.enumValueIndex = (int)(ReadWritePathType)EditorGUILayout.EnumPopup("Read Write Path Type", t.ReadWritePathType);
             }
@@ -215,7 +213,6 @@ namespace Icarus.UnityGameFramework.Editor
                 EditorGUILayout.LabelField("Internal Resource Version", isEditorResourceMode ? "N/A" : t.InternalResourceVersion.ToString());
                 EditorGUILayout.LabelField("Asset Count", isEditorResourceMode ? "N/A" : t.AssetCount.ToString());
                 EditorGUILayout.LabelField("Resource Count", isEditorResourceMode ? "N/A" : t.ResourceCount.ToString());
-                EditorGUILayout.LabelField("Resource Group Count", isEditorResourceMode ? "N/A" : t.ResourceGroupCount.ToString());
                 
                 EditorGUILayout.LabelField("Load Total Agent Count", isEditorResourceMode ? "N/A" : t.LoadTotalAgentCount.ToString());
                 EditorGUILayout.LabelField("Load Free Agent Count", isEditorResourceMode ? "N/A" : t.LoadFreeAgentCount.ToString());
@@ -260,13 +257,7 @@ namespace Icarus.UnityGameFramework.Editor
             m_ResourceHelperInfo.Init(serializedObject);
             m_LoadResourceAgentHelperInfo.Init(serializedObject);
 
-            RefreshModes();
             RefreshTypeNames();
-        }
-
-        private void RefreshModes()
-        {
-            m_ResourceModeIndex = (m_ResourceMode.enumValueIndex > 0 ? m_ResourceMode.enumValueIndex - 1 : 0);
         }
 
         private void RefreshTypeNames()

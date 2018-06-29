@@ -67,7 +67,6 @@ public class test : MonoBehaviour
 
     void _loadAsset()
     {
-        _resourceComponent.SetResourceMode(ResourceMode.Package);
         var eventArgs = ReferencePool.Acquire<Icarus.UnityGameFramework.Runtime.ResourceInitCompleteEventArgs>();
         _eventComponent.Subscribe(eventArgs.Id, _loadAsset);
         ReferencePool.Release(eventArgs);
