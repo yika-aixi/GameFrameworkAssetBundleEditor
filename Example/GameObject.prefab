@@ -161,9 +161,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AssetName: Assets/GameFrameworkAssetBundleEditor/Example/TestAset/Sphere.prefab
-  VersionInfoUrl: http://localhost/UnityProjectHFS/testAB/version.info
+  VersionInfoUrl: http://www.xn--qoqr9hxvue5g.com:10080/Test/version.info
   Info:
-    AssetBundleUrl: http://localhost/UnityProjectHFS/testAB/
+    AssetBundleUrl: http://www.xn--qoqr9hxvue5g.com:10080/Test/
     AppUpdateUrl: www.baidu.com
     MinAppVersion: 0
 --- !u!114 &114934767135122236

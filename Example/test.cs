@@ -4,13 +4,13 @@ using Icarus.GameFramework;
 using Icarus.GameFramework.Event;
 using Icarus.GameFramework.Resource;
 using Icarus.GameFramework.UpdateAssetBundle;
+using Icarus.GameFramework.Version;
 using UnityEngine;
 using Icarus.UnityGameFramework.Runtime;
 
 public class test : MonoBehaviour
 {
     public string AssetName;
-    public string VersionInfoUrl;
     public UpdateInfo Info;
     private EventComponent _eventComponent;
     private BaseComponent _baseComponent;
@@ -37,7 +37,8 @@ public class test : MonoBehaviour
                 return;
             }
 
-            versionCheck.Url = VersionInfoUrl;
+            versionCheck.Url = Info.AssetBundleUrl+"/"+ConstTable.VersionFileName;
+            Debug.Log(versionCheck.Url);
             versionCheck.Check((x,y) =>
             {
                 foreach (var info in x)
