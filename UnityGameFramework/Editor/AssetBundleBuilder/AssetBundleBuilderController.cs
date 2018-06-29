@@ -627,19 +627,19 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
 
             Directory.CreateDirectory(OutputPackagePath);
 
-            if (Directory.Exists(OutputFullPath))
-            {
-                Directory.Delete(OutputFullPath, true);
-            }
+//            if (Directory.Exists(OutputFullPath))
+//            {
+//                Directory.Delete(OutputFullPath, true);
+//            }
+//
+//            Directory.CreateDirectory(OutputFullPath);
 
-            Directory.CreateDirectory(OutputFullPath);
-
-            if (Directory.Exists(OutputPackedPath))
-            {
-                Directory.Delete(OutputPackedPath, true);
-            }
-
-            Directory.CreateDirectory(OutputPackedPath);
+//            if (Directory.Exists(OutputPackedPath))
+//            {
+//                Directory.Delete(OutputPackedPath, true);
+//            }
+//
+//            Directory.CreateDirectory(OutputPackedPath);
 
             if (Directory.Exists(BuildReportPath))
             {
@@ -768,13 +768,13 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
             Directory.CreateDirectory(outputPackagePath);
             m_BuildReport.LogInfo("Output package path is '{0}'.", outputPackagePath);
 
-            string outputFullPath = string.Format("{0}{1}/", OutputFullPath, buildTargetUrlName);
-            Directory.CreateDirectory(outputFullPath);
-            m_BuildReport.LogInfo("Output full path is '{0}'.", outputFullPath);
+//            string outputFullPath = string.Format("{0}{1}/", OutputFullPath, buildTargetUrlName);
+//            Directory.CreateDirectory(outputFullPath);
+//            m_BuildReport.LogInfo("Output full path is '{0}'.", outputFullPath);
 
-            string outputPackedPath = string.Format("{0}{1}/", OutputPackedPath, buildTargetUrlName);
-            Directory.CreateDirectory(outputPackedPath);
-            m_BuildReport.LogInfo("Output packed path is '{0}'.", outputPackedPath);
+//            string outputPackedPath = string.Format("{0}{1}/", OutputPackedPath, buildTargetUrlName);
+//            Directory.CreateDirectory(outputPackedPath);
+//            m_BuildReport.LogInfo("Output packed path is '{0}'.", outputPackedPath);
 
             string outputZipPath = string.Format("{0}{1}/", OutputZipPath, buildTargetUrlName);
             Directory.CreateDirectory(outputZipPath);
@@ -826,7 +826,7 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
             if (m_BuildEventHandler != null)
             {
                 m_BuildReport.LogInfo("Execute build event handler 'PreProcessBuild' for '{0}'...", buildTarget.ToString());
-                m_BuildEventHandler.PreProcessBuild(buildTarget, workingPath, outputPackagePath, outputFullPath, outputPackedPath);
+                m_BuildEventHandler.PreProcessBuild(buildTarget, workingPath, outputPackagePath,outputZipPath);
             }
 
             // Build AssetBundles
@@ -855,7 +855,7 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
 
                 m_BuildReport.LogInfo("Start process '{0}' for '{1}'...", assetBundleFullName, buildTarget.ToString());
 
-                ProcessAssetBundle(workingPath, outputPackagePath, outputZipPath, outputPackedPath, zip, buildTarget, buildMap[i].assetBundleName, buildMap[i].assetBundleVariant);
+                ProcessAssetBundle(workingPath, outputPackagePath, outputZipPath, buildTarget, buildMap[i].assetBundleName, buildMap[i].assetBundleVariant);
 
                 m_BuildReport.LogInfo("Process '{0}' for '{1}' complete.", assetBundleFullName, buildTarget.ToString());
             }
@@ -877,7 +877,7 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
             if (m_BuildEventHandler != null)
             {
                 m_BuildReport.LogInfo("Execute build event handler 'PostProcessBuild' for '{0}'...", buildTarget.ToString());
-                m_BuildEventHandler.PostProcessBuild(buildTarget, workingPath, outputPackagePath, outputFullPath, outputPackedPath);
+                m_BuildEventHandler.PostProcessBuild(buildTarget, workingPath, outputPackagePath,outputZipPath);
             }
 
             if (ProcessAssetBundleComplete != null)
@@ -888,7 +888,7 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
             m_BuildReport.LogInfo("Build AssetBundles for '{0}' success.", buildTarget.ToString());
         }
         //todo 修改的函数
-        private void ProcessAssetBundle(string workingPath, string outputPackagePath, string outputFullPath, string outputPackedPath, bool zip, BuildTarget buildTarget, string assetBundleName, string assetBundleVariant)
+        private void ProcessAssetBundle(string workingPath, string outputPackagePath, string outputFullPath, BuildTarget buildTarget, string assetBundleName, string assetBundleVariant)
         {
             string assetBundleFullName = GetAssetBundleFullName(assetBundleName, assetBundleVariant);
             AssetBundleData assetBundleData = m_AssetBundleDatas[assetBundleFullName];
