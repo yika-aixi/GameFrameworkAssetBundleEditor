@@ -1,4 +1,8 @@
 # GameFrameworkAssetBundleEditor
+
+已经可以使用,但可能还有点小问题,我的资源管理器也做完了,我可以开始我的项目了,我将会在项目使用中在进行使用测试及修复问题,不过等我
+把没用的代码删了后再说,啊,终于改完了!
+
 该分支我会将UGF的资源打包及加载那块从一个version文件分解为和ab包对应的vetsion文件,还有一个version文件
 (用来记录当前打包的所有ab的version文件名,StreamingAssets目录用到,目前这样做会有点问题[就是可能你StreamingAssets你删除了某个不要的
 但是因为包名被记录了,去加载时找不到就出错了],我后面会改成外部工具生成)
@@ -28,6 +32,9 @@ DefaultUpdateAssetBundle.UpdateAssetBundle()
 和E大的AssetBundleTool不同的地方有2个地方:
 	1.AssetBundle Editor中的:packed选项变为了标记改资源包是否可选(默认是必须的)
 	2.AssetBundle Builder中:增加了一个CopyStreamingAssets的功能
+	
+如果手动增删改过StreamingAssets目录下的资源,请执行一下"Icarus/Game Framework/AssetBundle Tools/StreamingAssets Version 生成"
+以便更新资源记录文件和当前修改的同步
 
 框架地址:https://github.com/EllanJiang/UnityGameFramework
 
