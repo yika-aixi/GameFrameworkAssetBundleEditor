@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Icarus.GameFramework;
+﻿using Icarus.GameFramework;
 using Icarus.GameFramework.Download;
 using Icarus.GameFramework.UpdateAssetBundle;
 using Icarus.GameFramework.Version;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using UnityEngine;
-using UnityEngine.WSA;
 using Application = UnityEngine.Application;
 
 namespace Icarus.UnityGameFramework.Runtime
@@ -20,8 +19,8 @@ namespace Icarus.UnityGameFramework.Runtime
     {
         public DownloadManager DownloadManager;
         public CoroutineManager Coroutine;
-        
-        public void UpdateAssetBundle(UpdateInfo updateInfo, IEnumerable<AssetBundleInfo> assetBundleifInfos,
+        private string VersionInfoFileName = "version.info";
+        public void UpdateAssetBundle(UpdateInfo updateInfo, IEnumerable<AssetBundleInfo> assetBundleifInfos, VersionInfo localVersionInfo,
             GameFrameworkAction<AssetBundleInfo> anyCompleteHandle,
             GameFrameworkAction allCompleteHandle, GameFrameworkAction<string> errorHandle)
         {
@@ -41,7 +40,12 @@ namespace Icarus.UnityGameFramework.Runtime
                 Application.OpenURL(updateInfo.AppUpdateUrl);
                 return;
             }
-            DownloadManager.AllCompleteHandle = allCompleteHandle.Invoke;
+            DownloadManager.AllCompleteHandle = ()=>
+            {
+                var by = localVersionInfo.JiaMiSerialize();
+                File.WriteAllBytes(Path.Combine(Application.persistentDataPath,VersionInfoFileName),by);
+                allCompleteHandle?.Invoke();
+            };
             List<DownloadUnitInfo> downloadUnitInfos = new List<DownloadUnitInfo>();
             foreach (var assetBundleInfo in assetBundleifInfos)
             {
@@ -49,6 +53,7 @@ namespace Icarus.UnityGameFramework.Runtime
                 {
                     CompleteHandle = x =>
                     {
+                        localVersionInfo.AddOrUpdateAssetBundleInfo(assetBundleInfo);
                         anyCompleteHandle?.Invoke(assetBundleInfo);
                         //解压
                         Utility.ZipUtil.UnzipZip(x,Application.persistentDataPath);

@@ -271,7 +271,7 @@ namespace Icarus.GameFramework.Download
         public void Update()
         {
             _updateDownloadQueue();
-            if (WaitDownloadCount == 0 && !_error)
+            if (CurrentDownloadCount == 0 && WaitDownloadCount == 0 && !_error)
             {
                 AllCompleteHandle?.Invoke();
                 return;
@@ -292,6 +292,7 @@ namespace Icarus.GameFramework.Download
                 _downloadQueue.Remove(download);
                 _startdownload(download);
             }
+            
         }
 
         private void _startdownload(DownloadUnitInfo download)

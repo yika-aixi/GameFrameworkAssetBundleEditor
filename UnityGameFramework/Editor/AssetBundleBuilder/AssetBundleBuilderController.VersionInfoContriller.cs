@@ -18,7 +18,6 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
     internal partial class AssetBundleBuilderController
     {
         private VersionInfo _version;
-        private const string VersionInfoFileName = "version.info";
         void _initVersion(string version)
         {
             _version = new VersionInfo(version);
@@ -53,7 +52,7 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
         void _writeVersionInfoFile(string outputZipPath)
         {
             var by = _version.JiaMiSerialize();
-            File.WriteAllBytes(Path.Combine(outputZipPath,VersionInfoFileName),
+            File.WriteAllBytes(Path.Combine(outputZipPath, ConstTable.VersionFileName),
                 by);
         }
 

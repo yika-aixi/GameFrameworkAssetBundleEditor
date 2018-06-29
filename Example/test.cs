@@ -38,7 +38,7 @@ public class test : MonoBehaviour
             }
 
             versionCheck.Url = VersionInfoUrl;
-            versionCheck.Check(x =>
+            versionCheck.Check((x,y) =>
             {
                 foreach (var info in x)
                 {
@@ -46,7 +46,7 @@ public class test : MonoBehaviour
                 }
 
                 DefaultUpdateAssetBundle update = GameEntry.GetComponent<DefaultUpdateAssetBundle>();
-                update.UpdateAssetBundle(Info, x, y =>
+                update.UpdateAssetBundle(Info, x,y, x1 =>
                 {
                     Debug.Log("更新完成：" + y);
                 }, _loadAsset, ex =>

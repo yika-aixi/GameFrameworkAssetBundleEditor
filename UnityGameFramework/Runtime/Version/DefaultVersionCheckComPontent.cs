@@ -14,10 +14,9 @@ namespace Icarus.UnityGameFramework.Runtime
     public class DefaultVersionCheckComPontent : MonoBehaviour, IVersionCheck
     {
         public string Url { get; set; }
-        private const string VersionInfoFileName = "version.info";
         private GameFrameworkAction<string> _errorHandle;
-        private GameFrameworkAction<IEnumerable<AssetBundleInfo>> _completeHandle;
-        public void Check(GameFrameworkAction<IEnumerable<AssetBundleInfo>> completeHandle, GameFrameworkAction<string> errorHandle)
+        private GameFrameworkAction<IEnumerable<AssetBundleInfo>, VersionInfo> _completeHandle;
+        public void Check(GameFrameworkAction<IEnumerable<AssetBundleInfo>, VersionInfo> completeHandle, GameFrameworkAction<string> errorHandle)
         {
             _completeHandle = completeHandle;
             _errorHandle = errorHandle;
@@ -27,10 +26,9 @@ namespace Icarus.UnityGameFramework.Runtime
         private IEnumerator _check()
         {
             var url = GameFramework.Utility.Path.GetRemotePath(Path.Combine(Application.streamingAssetsPath,
-                VersionInfoFileName));
+                ConstTable.VersionFileName));
             VersionInfo streamInfos;
             VersionInfo persistentInfos;
-            VersionInfo localAllInfo;
             VersionInfo serverInfos;
             VersionInfo version;
             using (WWW www = new WWW(url))
@@ -54,13 +52,12 @@ namespace Icarus.UnityGameFramework.Runtime
                 }
             }
            
-            var versionInfoFilePath = Path.Combine(Application.persistentDataPath, VersionInfoFileName);
+            var versionInfoFilePath = Path.Combine(Application.persistentDataPath, ConstTable.VersionFileName);
             if (File.Exists(versionInfoFilePath))
             {
                 var versionInfoFileBy =
                     File.ReadAllBytes(versionInfoFilePath);
                 version = _jieMi(versionInfoFileBy);
-
                 if (version != null)
                 {
                     persistentInfos = version;
@@ -74,9 +71,8 @@ namespace Icarus.UnityGameFramework.Runtime
             {
                 persistentInfos = new VersionInfo();
             }
-
-            localAllInfo = new VersionInfo(persistentInfos.Version,
-                    persistentInfos.AssetBundleInfos.Union(streamInfos.AssetBundleInfos).ToList());
+            var localAllInfo = new VersionInfo(persistentInfos.Version,
+                persistentInfos.AssetBundleInfos.Union(streamInfos.AssetBundleInfos).ToList());
 
             using (WWW www = new WWW(Url))
             {
@@ -101,7 +97,6 @@ namespace Icarus.UnityGameFramework.Runtime
             {
                 var serverInfo = serverInfos.GetAssetBundleInfo(abInfo.PackFullName);
                 var localInfo = localAllInfo.GetAssetBundleInfo(abInfo.PackFullName);
-
                 if (serverInfo.Optional)
                 {
                     if (localInfo == null)
@@ -122,7 +117,7 @@ namespace Icarus.UnityGameFramework.Runtime
                 result.Add(abInfo);
             }
 
-            _completeHandle?.Invoke(result);
+            _completeHandle?.Invoke(result,persistentInfos);
 
         }
 
