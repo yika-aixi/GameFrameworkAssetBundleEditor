@@ -23,9 +23,10 @@ DefaultVersionCheckComPontent.Check()
 DefaultUpdateAssetBundle.UpdateAssetBundle()
 
 ```
-具体的使用参考`Example\test.cs`
+具体的使用参考[Example\test.cs](https://github.com/yika-aixi/GameFrameworkAssetBundleEditor/blob/%E9%AD%94%E6%94%B9/Example/test.cs)
 
 和E大的AssetBundleTool不同的地方有2个地方以及删除了一些东西:
+
 	1.AssetBundle Editor中的:packed选项变为了标记改资源包是否可选(默认是必须的)
 	2.AssetBundle Builder中:增加了一个CopyStreamingAssets的功能
 	3.删除了zip的压缩相关
