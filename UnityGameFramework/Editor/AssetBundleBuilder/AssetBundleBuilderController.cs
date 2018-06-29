@@ -1110,6 +1110,7 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
                 m_AssetBundleDatas[asset.AssetBundle.FullName.ToLower()].AddAssetData(asset.Guid, assetName, assetBytes.Length, assetHashCode, dependencyAssetNames.ToArray());
             }
 
+
             foreach (AssetBundleData assetBundleData in m_AssetBundleDatas.Values)
             {
                 if (assetBundleData.AssetCount <= 0)
