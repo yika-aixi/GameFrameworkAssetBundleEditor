@@ -83,15 +83,7 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
                 return m_AssetBundleCollection.AssetBundleCount;
             }
         }
-
-        public int AssetCount
-        {
-            get
-            {
-                return m_AssetBundleCollection.AssetCount;
-            }
-        }
-
+        
         public SourceFolder SourceAssetRoot
         {
             get
@@ -371,12 +363,7 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
         {
             return m_AssetBundleCollection.GetAssetBundle(assetBundleName, assetBundleVariant);
         }
-
-        public bool HasAssetBundle(string assetBundleName, string assetBundleVariant)
-        {
-            return m_AssetBundleCollection.HasAssetBundle(assetBundleName, assetBundleVariant);
-        }
-
+        
         public bool AddAssetBundle(string assetBundleName, string assetBundleVariant, AssetBundleLoadType assetBundleLoadType, bool assetBundlePacked)
         {
             return m_AssetBundleCollection.AddAssetBundle(assetBundleName, assetBundleVariant, assetBundleLoadType, assetBundlePacked);
