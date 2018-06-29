@@ -23,6 +23,12 @@ DefaultUpdateAssetBundle.UpdateAssetBundle()
 结束
 
 
+后面删除一些没用的残留代码后就会加入资源组的功能,目前没有资源组
+
+和E大的AssetBundleTool不同的地方有2个地方:
+	1.AssetBundle Editor中的:packed选项变为了标记改资源包是否可选(默认是必须的)
+	2.AssetBundle Builder中:增加了一个CopyStreamingAssets的功能
+
 框架地址:https://github.com/EllanJiang/UnityGameFramework
 
 框架文档:http://gameframework.cn/
