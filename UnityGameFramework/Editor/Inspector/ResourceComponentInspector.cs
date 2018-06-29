@@ -25,8 +25,6 @@ namespace Icarus.UnityGameFramework.Editor
         private SerializedProperty m_ResourceCapacity = null;
         private SerializedProperty m_ResourceExpireTime = null;
         private SerializedProperty m_ResourcePriority = null;
-        private SerializedProperty m_UpdatePrefixUri = null;
-        private SerializedProperty m_UpdateRetryCount = null;
         private SerializedProperty m_InstanceRoot = null;
         private SerializedProperty m_LoadResourceAgentHelperCount = null;
 
@@ -254,8 +252,6 @@ namespace Icarus.UnityGameFramework.Editor
             m_ResourceCapacity = serializedObject.FindProperty("m_ResourceCapacity");
             m_ResourceExpireTime = serializedObject.FindProperty("m_ResourceExpireTime");
             m_ResourcePriority = serializedObject.FindProperty("m_ResourcePriority");
-            m_UpdatePrefixUri = serializedObject.FindProperty("m_UpdatePrefixUri");
-            m_UpdateRetryCount = serializedObject.FindProperty("m_UpdateRetryCount");
             m_InstanceRoot = serializedObject.FindProperty("m_InstanceRoot");
             m_LoadResourceAgentHelperCount = serializedObject.FindProperty("m_LoadResourceAgentHelperCount");
 
