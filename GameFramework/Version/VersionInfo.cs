@@ -37,6 +37,7 @@ namespace Icarus.GameFramework.Version
         /// <returns></returns>
         public bool HasAssetBundle(string abFilePath)
         {
+            abFilePath = GameFramework.Utility.Path.GetRegularPath(abFilePath);
             return AssetBundleInfos.Any(x => x.PackFullName == abFilePath);
         }
         
@@ -51,7 +52,7 @@ namespace Icarus.GameFramework.Version
             {
                 return null;
             }
-
+            abFilePath = GameFramework.Utility.Path.GetRegularPath(abFilePath);
             return AssetBundleInfos.First(x => x.PackFullName == abFilePath);
         }
 
@@ -65,8 +66,22 @@ namespace Icarus.GameFramework.Version
                 abInfo.Optional = info.Optional;
                 return;
             }
-
             AssetBundleInfos.Add(info);
+        }
+
+        public void Remove(AssetBundleInfo info)
+        {
+            AssetBundleInfos.Remove(info);
+        }
+
+        public void Remove(int index)
+        {
+            AssetBundleInfos.RemoveAt(index);
+        }
+
+        public void Clear()
+        {
+            AssetBundleInfos.Clear();
         }
 
         public byte[] JiaMiSerialize()

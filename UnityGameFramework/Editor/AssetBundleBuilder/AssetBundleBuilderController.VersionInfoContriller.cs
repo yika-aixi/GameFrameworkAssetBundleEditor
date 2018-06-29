@@ -31,11 +31,11 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
         void _addOrUpdateAsssetBundle(string outputPackPath,AssetBundleData abData)
         {
             var packName = GetAssetBundleFullName(abData.Name,abData.Variant);
-            Debug.Log("packName:"+ packName);
+//            Debug.Log("packName:"+ packName);
             packName = packName.Split('\\', '/').Last();
-            Debug.Log("packName:" + packName);
+//            Debug.Log("packName:" + packName);
             packName = GameFramework.Utility.Path.GetResourceNameWithSuffix(packName);
-            Debug.Log("packName:" + packName);
+//            Debug.Log("packName:" + packName);
             var dir = Path.GetDirectoryName(abData.Name);
 
             var info = new AssetBundleInfo()
@@ -45,7 +45,7 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
                 Optional = abData.Optional,
             };
 
-            info.MD5 = _getFileMd5(Path.Combine(outputPackPath, info.PackFullName));
+            info.MD5 = GameFramework.Utility.MD5Util.GetFileMd5(Path.Combine(outputPackPath, info.PackFullName));
 
             _version.AddOrUpdateAssetBundleInfo(info);
         }
@@ -55,19 +55,8 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
             var by = _version.JiaMiSerialize();
             File.WriteAllBytes(Path.Combine(outputZipPath,VersionInfoFileName),
                 by);
-            var info = _version.JieMiDeserialize(by);
-            Debug.Log("!!!!!!!!!!!!!!:" + info.Version);
         }
 
-        string _getFileMd5(string filePath)
-        {
-            Debug.Log("filePath:"+ filePath);
-            var md5 = new MD5Cng();
-            var file = File.Open(filePath,FileMode.Open);
-            var by = md5.ComputeHash(file);
-            file.Close();
-            file.Dispose();
-            return BitConverter.ToString(by);
-        }
+        
     }
 }

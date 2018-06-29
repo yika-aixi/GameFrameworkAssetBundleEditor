@@ -915,7 +915,7 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
             {
                 Directory.CreateDirectory(packageDirectoryName);
             }
-            Debug.Log(packageName);
+
             File.WriteAllBytes(packageName, bytes);
 
             #region Zip
@@ -980,7 +980,6 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
             }
             foreach (AssetBundleData assetBundleData in m_AssetBundleDatas.Values)
             {
-                Debug.Log("assetBundleDataName:"+ assetBundleData.Name);
                 var abName = assetBundleData.Name.Split('/').Last();
                 string AbpackageListPath =
                     Icarus.GameFramework.Utility.Path.GetCombinePath(outputPackagePath,
@@ -995,11 +994,8 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
 
                         byte[] applicableGameVersionBytes = GetXorBytes(Icarus.GameFramework.Utility.Converter.GetBytes(ApplicableGameVersion), encryptBytes);
                         binaryWriter.Write((byte)applicableGameVersionBytes.Length);
-                        Debug.Log("applicableGameVersionBytes.Length:" + applicableGameVersionBytes.Length);
                         binaryWriter.Write(applicableGameVersionBytes);
-                        Debug.Log("InternalResourceVersion:"+ InternalResourceVersion);
                         binaryWriter.Write(InternalResourceVersion);
-
 //                        binaryWriter.Write(m_AssetBundleDatas.Count);
                           //todo 单包所以不写入资源包个数
                         if (m_AssetBundleDatas.Count > ushort.MaxValue)
@@ -1080,10 +1076,8 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
                 #region Zip
 
                 var zipPath = outputPackagePath.Replace(OutputPackagePath, OutputZipPath);
-                Debug.Log("zipPath: " + zipPath);
                 var abFullName = GetAssetBundleFullName(assetBundleData.Name, assetBundleData.Variant);
                 var zipFilePath = Path.Combine(zipPath, abFullName + ".zip");
-                Debug.Log("zipFilePath: " + zipFilePath);
                 Runtime.Utility.ZipUtil.UpdateZipAdd(zipFilePath, outputPackagePath,new []
                 {
                     abVersionPath,

@@ -20,10 +20,13 @@ GameObject:
   m_Component:
   - component: {fileID: 4027604371641998}
   - component: {fileID: 114507665798876038}
-  - component: {fileID: 114695020317095540}
+  - component: {fileID: 114819981388787000}
   - component: {fileID: 114561011174882740}
   - component: {fileID: 114749139794575394}
   - component: {fileID: 114634364747614022}
+  - component: {fileID: 114106450160121574}
+  - component: {fileID: 114119122414651270}
+  - component: {fileID: 114934767135122236}
   - component: {fileID: 114820236797778534}
   m_Layer: 0
   m_Name: GameObject
@@ -45,6 +48,28 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114106450160121574
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1255507732598636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3dbe373a54874404d9d1e3eda03a799d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114119122414651270
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1255507732598636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1704e248ca27e894e9015a363756f707, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114507665798876038
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -81,7 +106,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_MinLoadAssetRandomDelaySeconds: 0
   m_MaxLoadAssetRandomDelaySeconds: 1
---- !u!114 &114695020317095540
+--- !u!114 &114749139794575394
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1255507732598636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db9eb89420434d24d9955ea3c8ad7cc8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114819981388787000
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -113,17 +149,6 @@ MonoBehaviour:
   m_CustomLoadResourceAgentHelper: {fileID: 0}
   m_LoadResourceAgentHelperCount: 3
   _baseComponent: {fileID: 0}
---- !u!114 &114749139794575394
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1255507732598636}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db9eb89420434d24d9955ea3c8ad7cc8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114820236797778534
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -136,3 +161,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AssetName: Assets/GameFrameworkAssetBundleEditor/Example/TestAset/Sphere.prefab
+  VersionInfoUrl: http://localhost/UnityProjectHFS/testAB/version.info
+  Info:
+    AssetBundleUrl: http://localhost/UnityProjectHFS/testAB/
+    AppUpdateUrl: www.baidu.com
+    MinAppVersion: 0
+--- !u!114 &114934767135122236
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1255507732598636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f3fdcb69597e314ab1ff1e70fa4d0eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Coroutine: {fileID: 114119122414651270}

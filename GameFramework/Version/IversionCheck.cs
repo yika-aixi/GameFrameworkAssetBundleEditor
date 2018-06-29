@@ -13,6 +13,6 @@ namespace Icarus.GameFramework.Version
         /// 开始检查
         /// </summary>
         /// <returns>所有需要更新的包</returns>
-        IEnumerable<AssetBundleInfo> Check();
+        void Check(GameFrameworkAction<IEnumerable<AssetBundleInfo>> completeHandle,GameFrameworkAction<string> errorHandle);
     }
 }

@@ -473,6 +473,8 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
             string buildTargetUrlName = m_Controller.GetBuildTargetName(target);
             string outputPackagePath = string.Format("{0}{1}/", m_Controller.OutputPackagePath, buildTargetUrlName);
             var files = Directory.GetFiles(outputPackagePath,"*",SearchOption.AllDirectories);
+            string outputZipPath = string.Format("{0}{1}/", m_Controller.OutputZipPath, buildTargetUrlName);
+            var VersionInfofile = Directory.GetFiles(outputZipPath, "version.info", SearchOption.AllDirectories);
             var version = string.Format("{0}_{1}", m_Controller.ApplicableGameVersion.Replace('.', '_'), m_Controller.InternalResourceVersion);
             if (!Directory.Exists(Application.streamingAssetsPath))
             {
@@ -481,7 +483,6 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
             foreach (var file in files)
             {
                 var newPath = file.Replace(outputPackagePath, Application.streamingAssetsPath+Path.DirectorySeparatorChar);
-                UnityEngine.Debug.Log(newPath);
                 var dir = Path.GetDirectoryName(newPath);
                 if (!Directory.Exists(dir))
                 {
@@ -495,7 +496,17 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
 
                 File.Copy(file, newPath);
             }
+            foreach (var infoFile in VersionInfofile)
+            {
+                var newPath = infoFile.Replace(outputZipPath, Application.streamingAssetsPath + Path.DirectorySeparatorChar);
+                if (File.Exists(newPath))
+                {
+                    File.Delete(newPath);
+                }
+                File.Copy(infoFile, newPath);
+            }
             AssetDatabase.Refresh();
+            StreamingAssetsVersionCreate.Create();
             Debug.Log("Copy Complete. Copy Version:"+ version);
         }
 

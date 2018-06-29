@@ -3,12 +3,15 @@ using System.ComponentModel;
 using Icarus.GameFramework;
 using Icarus.GameFramework.Event;
 using Icarus.GameFramework.Resource;
+using Icarus.GameFramework.UpdateAssetBundle;
 using UnityEngine;
 using Icarus.UnityGameFramework.Runtime;
 
 public class test : MonoBehaviour
 {
     public string AssetName;
+    public string VersionInfoUrl;
+    public UpdateInfo Info;
     private EventComponent _eventComponent;
     private BaseComponent _baseComponent;
     private ResourceComponent _resourceComponent;
@@ -26,16 +29,46 @@ public class test : MonoBehaviour
         }
         if (!_baseComponent.EditorResourceMode)
         {
-            _resourceComponent.SetResourceMode(ResourceMode.Package);
-            var eventArgs = ReferencePool.Acquire<Icarus.UnityGameFramework.Runtime.ResourceInitCompleteEventArgs>();
-            _eventComponent.Subscribe(eventArgs.Id, _loadAsset);
-            ReferencePool.Release(eventArgs);
-            _resourceComponent.InitResources();
+            //进行资源版本检测
+            var versionCheck = GameEntry.GetComponent<DefaultVersionCheckComPontent>();
+            if (!versionCheck)
+            {
+                Debug.LogError("Default VersionCheck ComPontent is invalid.");
+                return;
+            }
+
+            versionCheck.Url = VersionInfoUrl;
+            versionCheck.Check(x =>
+            {
+                foreach (var info in x)
+                {
+                    Debug.Log("需要更新的资源:"+info);
+                }
+
+                DefaultUpdateAssetBundle update = GameEntry.GetComponent<DefaultUpdateAssetBundle>();
+                update.UpdateAssetBundle(Info, x, y =>
+                {
+                    Debug.Log("更新完成：" + y);
+                }, _loadAsset, ex =>
+                {
+                    Debug.Log("更新出错："+ex);
+                });
+            }, Debug.LogError);
+            
         }
         else
         {
             _load();
         }
+    }
+
+    void _loadAsset()
+    {
+        _resourceComponent.SetResourceMode(ResourceMode.Package);
+        var eventArgs = ReferencePool.Acquire<Icarus.UnityGameFramework.Runtime.ResourceInitCompleteEventArgs>();
+        _eventComponent.Subscribe(eventArgs.Id, _loadAsset);
+        ReferencePool.Release(eventArgs);
+        _resourceComponent.InitResources();
     }
 
     private void _loadAsset(object sender, GameEventArgs e)
