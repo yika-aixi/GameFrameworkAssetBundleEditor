@@ -20,16 +20,11 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
     internal sealed partial class AssetBundleBuilderController
     {
         private const string VersionListFileName = "version";
-        private const string ResourceListFileName = "list";
         private const string RecordName = "GameResourceVersion";
         private const string NoneOptionName = "<None>";
         private static readonly char[] PackageListHeader = new char[] { 'E', 'L', 'P' };
-        private static readonly char[] VersionListHeader = new char[] { 'E', 'L', 'V' };
-        private static readonly char[] ReadOnlyListHeader = new char[] { 'E', 'L', 'R' };
         private static readonly int AssetsSubstringLength = "Assets/".Length;
         private const byte PackageListVersion = 0;
-        private const byte VersionListVersion = 0;
-        private const byte ReadOnlyListVersion = 0;
         private const int QuickEncryptLength = 220;
 
         private readonly string m_ConfigurationPath;
@@ -99,7 +94,6 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
             m_BuildEventHandler = null;
 
             WindowsSelected = MacOSXSelected = IOSSelected = AndroidSelected = WindowsStoreSelected = true;
-            ZipSelected = true;
             RecordScatteredDependencyAssetsSelected = false;
             DeterministicAssetBundleSelected = ChunkBasedCompressionSelected = true;
             UncompressedAssetBundleSelected = DisableWriteTypeTreeSelected = ForceRebuildAssetBundleSelected = IgnoreTypeTreeChangesSelected = AppendHashToAssetBundleNameSelected = false;
@@ -186,13 +180,7 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
             get;
             set;
         }
-
-        public bool ZipSelected
-        {
-            get;
-            set;
-        }
-
+        
         public bool RecordScatteredDependencyAssetsSelected
         {
             get;
@@ -302,33 +290,7 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
                 return string.Format("{0}/Package/{1}_{2}/", OutputDirectory, ApplicableGameVersion.Replace('.', '_'), InternalResourceVersion.ToString());
             }
         }
-
-        public string OutputFullPath
-        {
-            get
-            {
-                if (!IsValidOutputDirectory)
-                {
-                    return string.Empty;
-                }
-
-                return string.Format("{0}/Full/{1}_{2}/", OutputDirectory, ApplicableGameVersion.Replace('.', '_'), InternalResourceVersion.ToString());
-            }
-        }
-
-        public string OutputPackedPath
-        {
-            get
-            {
-                if (!IsValidOutputDirectory)
-                {
-                    return string.Empty;
-                }
-
-                return string.Format("{0}/Optional/{1}_{2}/", OutputDirectory, ApplicableGameVersion.Replace('.', '_'), InternalResourceVersion.ToString());
-            }
-        }
-
+      
         public string OutputZipPath
         {
             get
@@ -412,9 +374,6 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
                             break;
                         case "WindowsStoreSelected":
                             WindowsStoreSelected = bool.Parse(xmlNode.InnerText);
-                            break;
-                        case "ZipSelected":
-                            ZipSelected = bool.Parse(xmlNode.InnerText);
                             break;
                         case "RecordScatteredDependencyAssetsSelected":
                             RecordScatteredDependencyAssetsSelected = bool.Parse(xmlNode.InnerText);
@@ -513,9 +472,6 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
                 xmlSettings.AppendChild(xmlElement);
                 xmlElement = xmlDocument.CreateElement("WindowsStoreSelected");
                 xmlElement.InnerText = WindowsStoreSelected.ToString();
-                xmlSettings.AppendChild(xmlElement);
-                xmlElement = xmlDocument.CreateElement("ZipSelected");
-                xmlElement.InnerText = ZipSelected.ToString();
                 xmlSettings.AppendChild(xmlElement);
                 xmlElement = xmlDocument.CreateElement("RecordScatteredDependencyAssetsSelected");
                 xmlElement.InnerText = RecordScatteredDependencyAssetsSelected.ToString();
@@ -627,20 +583,6 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
 
             Directory.CreateDirectory(OutputPackagePath);
 
-//            if (Directory.Exists(OutputFullPath))
-//            {
-//                Directory.Delete(OutputFullPath, true);
-//            }
-//
-//            Directory.CreateDirectory(OutputFullPath);
-
-//            if (Directory.Exists(OutputPackedPath))
-//            {
-//                Directory.Delete(OutputPackedPath, true);
-//            }
-//
-//            Directory.CreateDirectory(OutputPackedPath);
-
             if (Directory.Exists(BuildReportPath))
             {
                 Directory.Delete(BuildReportPath, true);
@@ -657,7 +599,7 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
 
             BuildAssetBundleOptions buildAssetBundleOptions = GetBuildAssetBundleOptions();
             m_BuildReport.Initialize(BuildReportPath, ProductName, CompanyName, GameIdentifier, ApplicableGameVersion, InternalResourceVersion, UnityVersion,
-                WindowsSelected, MacOSXSelected, IOSSelected, AndroidSelected, WindowsStoreSelected, ZipSelected, RecordScatteredDependencyAssetsSelected, (int)buildAssetBundleOptions, m_AssetBundleDatas);
+                WindowsSelected, MacOSXSelected, IOSSelected, AndroidSelected, WindowsStoreSelected, RecordScatteredDependencyAssetsSelected, (int)buildAssetBundleOptions, m_AssetBundleDatas);
             
             try
             {
@@ -668,7 +610,11 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
                 if (m_BuildEventHandler != null)
                 {
                     m_BuildReport.LogInfo("Execute build event handler 'PreProcessBuildAll'...");
-                    m_BuildEventHandler.PreProcessBuildAll(ProductName, CompanyName, GameIdentifier, ApplicableGameVersion, InternalResourceVersion, UnityVersion, buildAssetBundleOptions, ZipSelected, OutputDirectory, WorkingPath, OutputPackagePath, OutputFullPath, OutputPackedPath, BuildReportPath);
+                    m_BuildEventHandler.PreProcessBuildAll(
+                        ProductName, CompanyName, GameIdentifier, ApplicableGameVersion, 
+                        InternalResourceVersion, UnityVersion, buildAssetBundleOptions, 
+                        OutputDirectory, WorkingPath, OutputPackagePath, 
+                        OutputZipPath, BuildReportPath);
                 }
 
                 m_BuildReport.LogInfo("Start prepare AssetBundle collection...");
@@ -700,7 +646,7 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
 
                 if (WindowsSelected)
                 {
-                    BuildAssetBundles(buildMap, buildAssetBundleOptions, ZipSelected, BuildTarget.StandaloneWindows);
+                    BuildAssetBundles(buildMap, buildAssetBundleOptions, BuildTarget.StandaloneWindows);
                 }
 
                 if (MacOSXSelected)
@@ -710,22 +656,22 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
 #else
                     BuildTarget buildTarget = BuildTarget.StandaloneOSXUniversal;
 #endif
-                    BuildAssetBundles(buildMap, buildAssetBundleOptions, ZipSelected, buildTarget);
+                    BuildAssetBundles(buildMap, buildAssetBundleOptions,buildTarget);
                 }
 
                 if (IOSSelected)
                 {
-                    BuildAssetBundles(buildMap, buildAssetBundleOptions, ZipSelected, BuildTarget.iOS);
+                    BuildAssetBundles(buildMap, buildAssetBundleOptions, BuildTarget.iOS);
                 }
 
                 if (AndroidSelected)
                 {
-                    BuildAssetBundles(buildMap, buildAssetBundleOptions, ZipSelected, BuildTarget.Android);
+                    BuildAssetBundles(buildMap, buildAssetBundleOptions, BuildTarget.Android);
                 }
 
                 if (WindowsStoreSelected)
                 {
-                    BuildAssetBundles(buildMap, buildAssetBundleOptions, ZipSelected, BuildTarget.WSAPlayer);
+                    BuildAssetBundles(buildMap, buildAssetBundleOptions, BuildTarget.WSAPlayer);
                 }
 
                 ProcessRecord(OutputDirectory);
@@ -733,7 +679,10 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
                 if (m_BuildEventHandler != null)
                 {
                     m_BuildReport.LogInfo("Execute build event handler 'PostProcessBuildAll'...");
-                    m_BuildEventHandler.PostProcessBuildAll(ProductName, CompanyName, GameIdentifier, ApplicableGameVersion, InternalResourceVersion, UnityVersion, buildAssetBundleOptions, ZipSelected, OutputDirectory, WorkingPath, OutputPackagePath, OutputFullPath, OutputPackedPath, BuildReportPath);
+                    m_BuildEventHandler.PostProcessBuildAll(ProductName, CompanyName, GameIdentifier, 
+                        ApplicableGameVersion, InternalResourceVersion, UnityVersion, 
+                        buildAssetBundleOptions, OutputDirectory, WorkingPath,
+                        OutputPackagePath, OutputZipPath, BuildReportPath);
                 }
 
                 m_BuildReport.LogInfo("Build AssetBundles for selected build targets complete.");
@@ -755,7 +704,7 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
             }
         }
 
-        private void BuildAssetBundles(AssetBundleBuild[] buildMap, BuildAssetBundleOptions buildOptions, bool zip, BuildTarget buildTarget)
+        private void BuildAssetBundles(AssetBundleBuild[] buildMap, BuildAssetBundleOptions buildOptions, BuildTarget buildTarget)
         {
             m_BuildReport.LogInfo("Start build AssetBundles for '{0}'...", buildTarget.ToString());
 
@@ -767,14 +716,6 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
             string outputPackagePath = string.Format("{0}{1}/", OutputPackagePath, buildTargetUrlName);
             Directory.CreateDirectory(outputPackagePath);
             m_BuildReport.LogInfo("Output package path is '{0}'.", outputPackagePath);
-
-//            string outputFullPath = string.Format("{0}{1}/", OutputFullPath, buildTargetUrlName);
-//            Directory.CreateDirectory(outputFullPath);
-//            m_BuildReport.LogInfo("Output full path is '{0}'.", outputFullPath);
-
-//            string outputPackedPath = string.Format("{0}{1}/", OutputPackedPath, buildTargetUrlName);
-//            Directory.CreateDirectory(outputPackedPath);
-//            m_BuildReport.LogInfo("Output packed path is '{0}'.", outputPackedPath);
 
             string outputZipPath = string.Format("{0}{1}/", OutputZipPath, buildTargetUrlName);
             Directory.CreateDirectory(outputZipPath);
@@ -866,14 +807,6 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
             ProcessPackageList(outputPackagePath, buildTarget);
             m_BuildReport.LogInfo("Process package list for '{0}' complete.", buildTarget.ToString());
 
-//            VersionListData versionListData = ProcessVersionList(outputFullPath, buildTarget);
-//            m_BuildReport.LogInfo("Process version list for '{0}' complete.", buildTarget.ToString());
-
-//            ProcessReadOnlyList(outputPackedPath, buildTarget);
-//            m_BuildReport.LogInfo("Process readonly list for '{0}' complete.", buildTarget.ToString());
-
-//            m_VersionListDatas.Add(buildTarget, versionListData);
-
             if (m_BuildEventHandler != null)
             {
                 m_BuildReport.LogInfo("Execute build event handler 'PostProcessBuild' for '{0}'...", buildTarget.ToString());
@@ -926,45 +859,9 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
             _addOrUpdateAsssetBundle(outputPackagePath,assetBundleData);
 
             #endregion
-            // Optional AssetBundle
-//            if (assetBundleData.Optional)
-//            {
-//                //todo 执行版本文件生成时的另外一条线路,这个ab包时可选的
-////                string packedName = Icarus.GameFramework.Utility.Path.GetResourceNameWithSuffix(Icarus.GameFramework.Utility.Path.GetCombinePath(outputPackedPath, assetBundleFullName));
-////                string packedDirectoryName = Path.GetDirectoryName(packedName);
-////                if (!Directory.Exists(packedDirectoryName))
-////                {
-////                    Directory.CreateDirectory(packedDirectoryName);
-////                }
-////
-////                File.Copy(packageName, packedName);
-//            }
-//            else
-//            {
-//                //todo 执行版本文件生成时的另外一条线路,这个ab包时可选的
-//            }
-
-            // Compress AssetBundle
-//            string fullName = Icarus.GameFramework.Utility.Path.GetResourceNameWithCrc32AndSuffix(Icarus.GameFramework.Utility.Path.GetCombinePath(outputFullPath, assetBundleFullName), hashCode);
-//            string fullDirectoryName = Path.GetDirectoryName(fullName);
-//            if (!Directory.Exists(fullDirectoryName))
-//            {
-//                Directory.CreateDirectory(fullDirectoryName);
-//            }
 
             int zipLength = length;
             int zipHashCode = hashCode;
-//            if (zip)
-//            {
-//                byte[] zipBytes = Icarus.GameFramework.Utility.Zip.Compress(bytes);
-//                zipLength = zipBytes.Length;
-//                zipHashCode = Icarus.GameFramework.Utility.Converter.GetInt32(Icarus.GameFramework.Utility.Verifier.GetCrc32(zipBytes));
-//                File.WriteAllBytes(fullName, zipBytes);
-//            }
-//            else
-//            {
-//                File.WriteAllBytes(fullName, bytes);
-//            }
 
             assetBundleData.AddCode(buildTarget, length, hashCode, zipLength, zipHashCode);
         }
@@ -996,8 +893,6 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
                         binaryWriter.Write((byte)applicableGameVersionBytes.Length);
                         binaryWriter.Write(applicableGameVersionBytes);
                         binaryWriter.Write(InternalResourceVersion);
-//                        binaryWriter.Write(m_AssetBundleDatas.Count);
-                          //todo 单包所以不写入资源包个数
                         if (m_AssetBundleDatas.Count > ushort.MaxValue)
                         {
                             throw new GameFrameworkException("Package list can only contains 65535 resources in version 0.");
@@ -1085,184 +980,6 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
                 #endregion
             }
         }
-
-        private VersionListData ProcessVersionList(string outputFullPath, BuildTarget buildTarget)
-        {
-            byte[] encryptBytes = new byte[4];
-            Icarus.GameFramework.Utility.Random.GetRandomBytes(encryptBytes);
-
-            string versionListPath = Icarus.GameFramework.Utility.Path.GetCombinePath(outputFullPath, VersionListFileName);
-            using (FileStream fileStream = new FileStream(versionListPath, FileMode.CreateNew, FileAccess.Write))
-            {
-                using (BinaryWriter binaryWriter = new BinaryWriter(fileStream))
-                {
-                    binaryWriter.Write(VersionListHeader);
-                    binaryWriter.Write(VersionListVersion);
-                    binaryWriter.Write(encryptBytes);
-
-                    byte[] applicableGameVersionBytes = GetXorBytes(Icarus.GameFramework.Utility.Converter.GetBytes(ApplicableGameVersion), encryptBytes);
-                    binaryWriter.Write((byte)applicableGameVersionBytes.Length);
-                    binaryWriter.Write(applicableGameVersionBytes);
-                    binaryWriter.Write(InternalResourceVersion);
-
-                    binaryWriter.Write(m_AssetBundleDatas.Count);
-                    if (m_AssetBundleDatas.Count > ushort.MaxValue)
-                    {
-                        throw new GameFrameworkException("Version list can only contains 65535 resources in version 0.");
-                    }
-
-                    foreach (AssetBundleData assetBundleData in m_AssetBundleDatas.Values)
-                    {
-                        byte[] nameBytes = GetXorBytes(Icarus.GameFramework.Utility.Converter.GetBytes(assetBundleData.Name), encryptBytes);
-                        if (nameBytes.Length > byte.MaxValue)
-                        {
-                            throw new GameFrameworkException(string.Format("AssetBundle name '{0}' is too long.", assetBundleData.Name));
-                        }
-
-                        binaryWriter.Write((byte)nameBytes.Length);
-                        binaryWriter.Write(nameBytes);
-
-                        if (assetBundleData.Variant == null)
-                        {
-                            binaryWriter.Write((byte)0);
-                        }
-                        else
-                        {
-                            byte[] variantBytes = GetXorBytes(Icarus.GameFramework.Utility.Converter.GetBytes(assetBundleData.Variant), encryptBytes);
-                            if (variantBytes.Length > byte.MaxValue)
-                            {
-                                throw new GameFrameworkException(string.Format("AssetBundle variant '{0}' is too long.", assetBundleData.Variant));
-                            }
-
-                            binaryWriter.Write((byte)variantBytes.Length);
-                            binaryWriter.Write(variantBytes);
-                        }
-
-                        binaryWriter.Write((byte)assetBundleData.LoadType);
-                        AssetBundleCode assetBundleCode = assetBundleData.GetCode(buildTarget);
-                        binaryWriter.Write(assetBundleCode.Length);
-                        binaryWriter.Write(assetBundleCode.HashCode);
-                        binaryWriter.Write(assetBundleCode.ZipLength);
-                        binaryWriter.Write(assetBundleCode.ZipHashCode);
-
-                        string[] assetNames = assetBundleData.GetAssetNames();
-                        binaryWriter.Write(assetNames.Length);
-                        foreach (string assetName in assetNames)
-                        {
-                            byte[] assetNameBytes = GetXorBytes(Icarus.GameFramework.Utility.Converter.GetBytes(assetName), Icarus.GameFramework.Utility.Converter.GetBytes(assetBundleCode.HashCode));
-                            if (assetNameBytes.Length > byte.MaxValue)
-                            {
-                                throw new GameFrameworkException(string.Format("Asset name '{0}' is too long.", assetName));
-                            }
-
-                            binaryWriter.Write((byte)assetNameBytes.Length);
-                            binaryWriter.Write(assetNameBytes);
-
-                            AssetData assetData = assetBundleData.GetAssetData(assetName);
-                            string[] dependencyAssetNames = assetData.GetDependencyAssetNames();
-                            binaryWriter.Write(dependencyAssetNames.Length);
-                            foreach (string dependencyAssetName in dependencyAssetNames)
-                            {
-                                byte[] dependencyAssetNameBytes = GetXorBytes(Icarus.GameFramework.Utility.Converter.GetBytes(dependencyAssetName), Icarus.GameFramework.Utility.Converter.GetBytes(assetBundleCode.HashCode));
-                                if (dependencyAssetNameBytes.Length > byte.MaxValue)
-                                {
-                                    throw new GameFrameworkException(string.Format("Dependency asset name '{0}' is too long.", dependencyAssetName));
-                                }
-
-                                binaryWriter.Write((byte)dependencyAssetNameBytes.Length);
-                                binaryWriter.Write(dependencyAssetNameBytes);
-                            }
-                        }
-                    }
-
-                    // TODO: Resource group.
-                    binaryWriter.Write(0);
-
-                    binaryWriter.Close();
-                }
-            }
-
-            byte[] bytes = File.ReadAllBytes(versionListPath);
-            int length = bytes.Length;
-            byte[] hashBytes = Icarus.GameFramework.Utility.Verifier.GetCrc32(bytes);
-            int hashCode = Icarus.GameFramework.Utility.Converter.GetInt32(hashBytes);
-            bytes = Icarus.GameFramework.Utility.Zip.Compress(bytes);
-            int zipLength = bytes.Length;
-            File.WriteAllBytes(versionListPath, bytes);
-            hashBytes = Icarus.GameFramework.Utility.Verifier.GetCrc32(bytes);
-            int zipHashCode = Icarus.GameFramework.Utility.Converter.GetInt32(hashBytes);
-            string versionListPathWithCrc32AndSuffix = Icarus.GameFramework.Utility.Path.GetResourceNameWithCrc32AndSuffix(versionListPath, hashCode);
-            File.Move(versionListPath, versionListPathWithCrc32AndSuffix);
-
-            return new VersionListData(versionListPathWithCrc32AndSuffix, length, hashCode, zipLength, zipHashCode);
-        }
-
-        private void ProcessReadOnlyList(string outputPackedPath, BuildTarget buildTarget)
-        {
-            byte[] encryptBytes = new byte[4];
-            Icarus.GameFramework.Utility.Random.GetRandomBytes(encryptBytes);
-
-            List<AssetBundleData> packedAssetBundleDatas = new List<AssetBundleData>();
-            foreach (AssetBundleData assetBundleData in m_AssetBundleDatas.Values)
-            {
-                if (!assetBundleData.Optional)
-                {
-                    continue;
-                }
-
-                packedAssetBundleDatas.Add(assetBundleData);
-            }
-
-            string readOnlyListPath = Icarus.GameFramework.Utility.Path.GetCombinePath(outputPackedPath, ResourceListFileName);
-            using (FileStream fileStream = new FileStream(readOnlyListPath, FileMode.CreateNew, FileAccess.Write))
-            {
-                using (BinaryWriter binaryWriter = new BinaryWriter(fileStream))
-                {
-                    binaryWriter.Write(ReadOnlyListHeader);
-                    binaryWriter.Write(ReadOnlyListVersion);
-                    binaryWriter.Write(encryptBytes);
-
-                    binaryWriter.Write(packedAssetBundleDatas.Count);
-                    foreach (AssetBundleData assetBundleData in packedAssetBundleDatas)
-                    {
-                        byte[] nameBytes = GetXorBytes(Icarus.GameFramework.Utility.Converter.GetBytes(assetBundleData.Name), encryptBytes);
-                        if (nameBytes.Length > byte.MaxValue)
-                        {
-                            throw new GameFrameworkException(string.Format("AssetBundle name '{0}' is too long.", assetBundleData.Name));
-                        }
-
-                        binaryWriter.Write((byte)nameBytes.Length);
-                        binaryWriter.Write(nameBytes);
-
-                        if (assetBundleData.Variant == null)
-                        {
-                            binaryWriter.Write((byte)0);
-                        }
-                        else
-                        {
-                            byte[] variantBytes = GetXorBytes(Icarus.GameFramework.Utility.Converter.GetBytes(assetBundleData.Variant), encryptBytes);
-                            if (variantBytes.Length > byte.MaxValue)
-                            {
-                                throw new GameFrameworkException(string.Format("AssetBundle variant '{0}' is too long.", assetBundleData.Variant));
-                            }
-
-                            binaryWriter.Write((byte)variantBytes.Length);
-                            binaryWriter.Write(variantBytes);
-                        }
-
-                        binaryWriter.Write((byte)assetBundleData.LoadType);
-                        AssetBundleCode assetBundleCode = assetBundleData.GetCode(buildTarget);
-                        binaryWriter.Write(assetBundleCode.Length);
-                        binaryWriter.Write(assetBundleCode.HashCode);
-                    }
-
-                    binaryWriter.Close();
-                }
-            }
-
-            File.Move(readOnlyListPath, Icarus.GameFramework.Utility.Path.GetResourceNameWithSuffix(readOnlyListPath));
-        }
-
         private void ProcessRecord(string outputRecordPath)
         {
             string recordPath = Icarus.GameFramework.Utility.Path.GetCombinePath(outputRecordPath, string.Format("{0}_{1}.xml", RecordName, ApplicableGameVersion.Replace('.', '_')));

@@ -6,12 +6,8 @@
 //------------------------------------------------------------
 
 using Icarus.GameFramework.Version;
-using System;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using UnityEngine;
 
 namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
 {
@@ -30,11 +26,8 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
         void _addOrUpdateAsssetBundle(string outputPackPath,AssetBundleData abData)
         {
             var packName = GetAssetBundleFullName(abData.Name,abData.Variant);
-//            Debug.Log("packName:"+ packName);
             packName = packName.Split('\\', '/').Last();
-//            Debug.Log("packName:" + packName);
             packName = GameFramework.Utility.Path.GetResourceNameWithSuffix(packName);
-//            Debug.Log("packName:" + packName);
             var dir = Path.GetDirectoryName(abData.Name);
 
             var info = new AssetBundleInfo()

@@ -24,16 +24,15 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
         /// <param name="internalResourceVersion">内部资源版本。</param>
         /// <param name="unityVersion">Unity 版本。</param>
         /// <param name="buildOptions">生成选项。</param>
-        /// <param name="zip">是否压缩。</param>
         /// <param name="outputDirectory">生成目录。</param>
         /// <param name="workingPath">生成时的工作路径。</param>
-        /// <param name="outputPackagePath">为单机模式生成的文件存放于此路径。若游戏是单机游戏，生成结束后将此目录中对应平台的文件拷贝至 StreamingAssets 后打包 App 即可。</param>
-        /// <param name="outputFullPath">为可更新模式生成的所有文件存放于此路径。若游戏是网络游戏，生成结束后应将此目录上传至 Web 服务器，供玩家下载用。</param>
-        /// <param name="outputPackedPath">为可更新模式生成的文件存放于此路径。若游戏是网络游戏，生成结束后将此目录中对应平台的文件拷贝至 StreamingAssets 后打包 App 即可。</param>
+        /// <param name="outputPackagePath">资源包生成路径</param>
+        /// <param name="outputZipPath">更新包生成路径</param>
         /// <param name="buildReportPath">生成报告路径。</param>
         void PreProcessBuildAll(string productName, string companyName, string gameIdentifier,
-            string applicableGameVersion, int internalResourceVersion, string unityVersion, BuildAssetBundleOptions buildOptions, bool zip,
-            string outputDirectory, string workingPath, string outputPackagePath, string outputFullPath, string outputPackedPath, string buildReportPath);
+            string applicableGameVersion, int internalResourceVersion, string unityVersion, 
+            BuildAssetBundleOptions buildOptions,
+            string outputDirectory, string workingPath, string outputPackagePath, string outputZipPath, string buildReportPath);
 
         /// <summary>
         /// 所有生成结束后的后处理事件。
@@ -45,16 +44,14 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
         /// <param name="internalResourceVersion">内部资源版本。</param>
         /// <param name="unityVersion">Unity 版本。</param>
         /// <param name="buildOptions">生成选项。</param>
-        /// <param name="zip">是否压缩。</param>
         /// <param name="outputDirectory">生成目录。</param>
         /// <param name="workingPath">生成时的工作路径。</param>
         /// <param name="outputPackagePath">为单机模式生成的文件存放于此路径。若游戏是单机游戏，生成结束后将此目录中对应平台的文件拷贝至 StreamingAssets 后打包 App 即可。</param>
-        /// <param name="outputFullPath">为可更新模式生成的所有文件存放于此路径。若游戏是网络游戏，生成结束后应将此目录上传至 Web 服务器，供玩家下载用。</param>
-        /// <param name="outputPackedPath">为可更新模式生成的文件存放于此路径。若游戏是网络游戏，生成结束后将此目录中对应平台的文件拷贝至 StreamingAssets 后打包 App 即可。</param>
+        /// <param name="outputZipPath">为可更新模式生成的文件存放于此路径。若游戏是网络游戏，生成结束后将此目录中对应平台的文件拷贝至 StreamingAssets 后打包 App 即可。</param>
         /// <param name="buildReportPath">生成报告路径。</param>
         void PostProcessBuildAll(string productName, string companyName, string gameIdentifier,
-            string applicableGameVersion, int internalResourceVersion, string unityVersion, BuildAssetBundleOptions buildOptions, bool zip,
-            string outputDirectory, string workingPath, string outputPackagePath, string outputFullPath, string outputPackedPath, string buildReportPath);
+            string applicableGameVersion, int internalResourceVersion, string unityVersion, BuildAssetBundleOptions buildOptions,
+            string outputDirectory, string workingPath, string outputPackagePath, string outputZipPath, string buildReportPath);
 
         /// <summary>
         /// 生成某个平台开始前的预处理事件。

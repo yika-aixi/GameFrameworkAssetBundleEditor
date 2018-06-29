@@ -34,14 +34,13 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
             private bool m_IOSSelected = false;
             private bool m_AndroidSelected = false;
             private bool m_WindowsStoreSelected = false;
-            private bool m_ZipSelected = false;
             private bool m_RecordScatteredDependencyAssetsSelected = false;
             private int m_BuildAssetBundleOptions = 0;
             private StringBuilder m_LogBuilder = null;
             private SortedDictionary<string, AssetBundleData> m_AssetBundleDatas = null;
 
             public void Initialize(string buildReportPath, string productName, string companyName, string gameIdentifier, string applicableGameVersion, int internalResourceVersion, string unityVersion,
-                bool windowsSelected, bool macOSXSelected, bool iOSSelected, bool androidSelected, bool windowsStoreSelected, bool zipSelected, bool recordScatteredDependencyAssetsSelected, int buildAssetBundleOptions, SortedDictionary<string, AssetBundleData> assetBundleDatas)
+                bool windowsSelected, bool macOSXSelected, bool iOSSelected, bool androidSelected, bool windowsStoreSelected, bool recordScatteredDependencyAssetsSelected, int buildAssetBundleOptions, SortedDictionary<string, AssetBundleData> assetBundleDatas)
             {
                 if (string.IsNullOrEmpty(buildReportPath))
                 {
@@ -61,7 +60,6 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
                 m_IOSSelected = iOSSelected;
                 m_AndroidSelected = androidSelected;
                 m_WindowsStoreSelected = windowsStoreSelected;
-                m_ZipSelected = zipSelected;
                 m_RecordScatteredDependencyAssetsSelected = recordScatteredDependencyAssetsSelected;
                 m_BuildAssetBundleOptions = buildAssetBundleOptions;
                 m_LogBuilder = new StringBuilder();
@@ -132,9 +130,6 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
                 xmlSummary.AppendChild(xmlElement);
                 xmlElement = xmlDocument.CreateElement("WindowsStoreSelected");
                 xmlElement.InnerText = m_WindowsStoreSelected.ToString();
-                xmlSummary.AppendChild(xmlElement);
-                xmlElement = xmlDocument.CreateElement("ZipSelected");
-                xmlElement.InnerText = m_ZipSelected.ToString();
                 xmlSummary.AppendChild(xmlElement);
                 xmlElement = xmlDocument.CreateElement("RecordScatteredDependencyAssetsSelected");
                 xmlElement.InnerText = m_RecordScatteredDependencyAssetsSelected.ToString();

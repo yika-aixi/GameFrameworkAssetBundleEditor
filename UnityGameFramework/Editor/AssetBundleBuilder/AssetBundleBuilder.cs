@@ -123,7 +123,6 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
                         EditorGUILayout.EndVertical();
                         EditorGUILayout.BeginVertical();
                         {
-                            m_Controller.ZipSelected = EditorGUILayout.ToggleLeft("Zip All AssetBundles", m_Controller.ZipSelected);
                             m_Controller.RecordScatteredDependencyAssetsSelected = EditorGUILayout.ToggleLeft("Record Scattered Dependency Assets", m_Controller.RecordScatteredDependencyAssetsSelected);
                         }
                         EditorGUILayout.EndVertical();
@@ -258,14 +257,8 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
                     EditorGUILayout.EndHorizontal();
                     EditorGUILayout.BeginHorizontal();
                     {
-                        EditorGUILayout.LabelField("Output Full Path", GUILayout.Width(160f));
-                        GUILayout.Label(m_Controller.OutputFullPath);
-                    }
-                    EditorGUILayout.EndHorizontal();
-                    EditorGUILayout.BeginHorizontal();
-                    {
-                        EditorGUILayout.LabelField("Output Packed Path", GUILayout.Width(160f));
-                        GUILayout.Label(m_Controller.OutputPackedPath);
+                        EditorGUILayout.LabelField("Output Zip Path", GUILayout.Width(160f));
+                        GUILayout.Label(m_Controller.OutputZipPath);
                     }
                     EditorGUILayout.EndHorizontal();
                     EditorGUILayout.BeginHorizontal();
@@ -312,41 +305,20 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
 
         private void GetCompressMessage(out string message, out MessageType messageType)
         {
-            if (m_Controller.ZipSelected)
+            if (m_Controller.UncompressedAssetBundleSelected)
             {
-                if (m_Controller.UncompressedAssetBundleSelected)
-                {
-                    message = "Compresses AssetBundles with ZIP only. It uses more storage but it's faster when loading the AssetBundles.";
-                    messageType = MessageType.Info;
-                }
-                else if (m_Controller.ChunkBasedCompressionSelected)
-                {
-                    message = "Compresses AssetBundles with both chunk-based compression and ZIP. Recommended when you use 'AssetBundle.LoadFromFile'.";
-                    messageType = MessageType.Info;
-                }
-                else
-                {
-                    message = "Compresses AssetBundles with both LZMA and ZIP. Not recommended.";
-                    messageType = MessageType.Warning;
-                }
+                message = "Compresses AssetBundles with ZIP only. It uses more storage but it's faster when loading the AssetBundles.";
+                messageType = MessageType.Info;
+            }
+            else if (m_Controller.ChunkBasedCompressionSelected)
+            {
+                message = "Compresses AssetBundles with both chunk-based compression and ZIP. Recommended when you use 'AssetBundle.LoadFromFile'.";
+                messageType = MessageType.Info;
             }
             else
             {
-                if (m_Controller.UncompressedAssetBundleSelected)
-                {
-                    message = "Doesn't compress AssetBundles at all. Not recommended.";
-                    messageType = MessageType.Warning;
-                }
-                else if (m_Controller.ChunkBasedCompressionSelected)
-                {
-                    message = "Compresses AssetBundles with chunk-based compression only. Recommended when you use 'AssetBundle.LoadFromFile'.";
-                    messageType = MessageType.Info;
-                }
-                else
-                {
-                    message = "Compresses AssetBundles with LZMA only. Recommended when you use 'AssetBundle.LoadFromMemory'.";
-                    messageType = MessageType.Info;
-                }
+                message = "Compresses AssetBundles with both LZMA and ZIP. Not recommended.";
+                messageType = MessageType.Warning;
             }
         }
 
@@ -366,29 +338,7 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
                 message += string.Format("{0} will be overwritten.", m_Controller.OutputPackagePath);
                 messageType = MessageType.Warning;
             }
-
-            if (Directory.Exists(m_Controller.OutputFullPath))
-            {
-                if (message.Length > 0)
-                {
-                    message += " ";
-                }
-
-                message += string.Format("{0} will be overwritten.", m_Controller.OutputFullPath);
-                messageType = MessageType.Warning;
-            }
-
-            if (Directory.Exists(m_Controller.OutputPackedPath))
-            {
-                if (message.Length > 0)
-                {
-                    message += " ";
-                }
-
-                message += string.Format("{0} will be overwritten.", m_Controller.OutputPackedPath);
-                messageType = MessageType.Warning;
-            }
-
+            
             if (messageType == MessageType.Warning)
             {
                 return;
@@ -472,7 +422,7 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
         {
             string buildTargetUrlName = m_Controller.GetBuildTargetName(target);
             string outputPackagePath = string.Format("{0}{1}/", m_Controller.OutputPackagePath, buildTargetUrlName);
-            var files = Directory.GetFiles(outputPackagePath,"*",SearchOption.AllDirectories);
+            var files = Directory.GetFiles(outputPackagePath, "*", SearchOption.AllDirectories);
             string outputZipPath = string.Format("{0}{1}/", m_Controller.OutputZipPath, buildTargetUrlName);
             var VersionInfofile = Directory.GetFiles(outputZipPath, "version.info", SearchOption.AllDirectories);
             var version = string.Format("{0}_{1}", m_Controller.ApplicableGameVersion.Replace('.', '_'), m_Controller.InternalResourceVersion);
@@ -482,7 +432,7 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
             }
             foreach (var file in files)
             {
-                var newPath = file.Replace(outputPackagePath, Application.streamingAssetsPath+Path.DirectorySeparatorChar);
+                var newPath = file.Replace(outputPackagePath, Application.streamingAssetsPath + Path.DirectorySeparatorChar);
                 var dir = Path.GetDirectoryName(newPath);
                 if (!Directory.Exists(dir))
                 {
@@ -507,7 +457,7 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
             }
             AssetDatabase.Refresh();
             StreamingAssetsVersionCreate.Create();
-            Debug.Log("Copy Complete. Copy Version:"+ version);
+            Debug.Log("Copy Complete. Copy Version:" + version);
         }
 
         private void OnBuildAssetBundlesError(string errorMessage)
