@@ -296,15 +296,17 @@ namespace Icarus.GameFramework.Resource
                     List<string> scatteredDependencyAssetNames = new List<string>();
                     foreach (string dependencyAssetName in dependencyAssetNamesCollectionItem.Value)
                     {
-                        AssetInfo? assetInfo = m_ResourceManager.GetAssetInfo(dependencyAssetName);
-                        if (assetInfo.HasValue)
-                        {
-                            dependencyAssetNames.Add(dependencyAssetName);
-                        }
-                        else
-                        {
-                            scatteredDependencyAssetNames.Add(dependencyAssetName);
-                        }
+                        //todo 因为吧version拆分了,所以一开始并找不到所有依赖,这里就直接加入依赖就好了
+                        dependencyAssetNames.Add(dependencyAssetName);
+                        //                        AssetInfo? assetInfo = m_ResourceManager.GetAssetInfo(dependencyAssetName);
+                        //                        if (assetInfo.HasValue)
+                        //                        {
+                        //                            dependencyAssetNames.Add(dependencyAssetName);
+                        //                        }
+                        //                        else
+                        //                        {
+                        //                            scatteredDependencyAssetNames.Add(dependencyAssetName);
+                        //                        }
                     }
 
                     if (m_ResourceManager.m_AssetDependencyInfos.ContainsKey(dependencyAssetNamesCollectionItem.Key))
