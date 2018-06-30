@@ -15,12 +15,13 @@ namespace Icarus.UnityGameFramework.Runtime
     /// 使用UnityWebRequeDownload来更新
     /// </summary>
     [AddComponentMenu("Game Framework/Default Download")]
-    public class DefaultUpdateAssetBundle:MonoBehaviour,IUpdateAssetBundle
+    public class DefaultUpdateAssetBundleComponent:MonoBehaviour,IUpdateAssetBundle
     {
         public DownloadManager DownloadManager;
         public CoroutineManager Coroutine;
         private string VersionInfoFileName = "version.info";
-        public void UpdateAssetBundle(UpdateInfo updateInfo, IEnumerable<AssetBundleInfo> assetBundleifInfos, VersionInfo localVersionInfo,
+        public void UpdateAssetBundle(UpdateInfo updateInfo, IEnumerable<AssetBundleInfo> assetBundleifInfos, 
+            VersionInfo persistentInfos,
             GameFrameworkAction<DownloadProgressInfo, string> progressHandle = null,
             GameFrameworkAction<AssetBundleInfo> anyCompleteHandle = null,
             GameFrameworkAction allCompleteHandle = null,
@@ -44,7 +45,7 @@ namespace Icarus.UnityGameFramework.Runtime
             }
             DownloadManager.AllCompleteHandle = ()=>
             {
-                var by = localVersionInfo.JiaMiSerialize();
+                var by = persistentInfos.JiaMiSerialize();
                 File.WriteAllBytes(Path.Combine(Application.persistentDataPath,VersionInfoFileName),by);
                 allCompleteHandle?.Invoke();
             };
@@ -55,7 +56,7 @@ namespace Icarus.UnityGameFramework.Runtime
                 {
                     CompleteHandle = x =>
                     {
-                        localVersionInfo.AddOrUpdateAssetBundleInfo(assetBundleInfo);
+                        persistentInfos.AddOrUpdateAssetBundleInfo(assetBundleInfo);
                         anyCompleteHandle?.Invoke(assetBundleInfo);
                         //解压
                         Utility.ZipUtil.UnzipZip(x,Application.persistentDataPath);

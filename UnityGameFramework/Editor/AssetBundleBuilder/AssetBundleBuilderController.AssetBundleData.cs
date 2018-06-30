@@ -20,8 +20,10 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
             private readonly bool m_Optional;
             private readonly List<AssetData> m_AssetDatas;
             private readonly List<AssetBundleCode> m_Codes;
+            private readonly string _groupTag;
 
-            public AssetBundleData(string name, string variant, AssetBundleLoadType loadType, bool optional)
+            public AssetBundleData(string name, string variant, AssetBundleLoadType loadType, 
+                bool optional,string groupTag)
             {
                 m_Name = name;
                 m_Variant = variant;
@@ -29,6 +31,7 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
                 m_Optional = optional;
                 m_AssetDatas = new List<AssetData>();
                 m_Codes = new List<AssetBundleCode>();
+                _groupTag = groupTag;
             }
 
             public string Name
@@ -60,6 +63,14 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
                 get
                 {
                     return m_Optional;
+                }
+            }
+
+            public string GroupTag
+            {
+                get
+                {
+                    return _groupTag;
                 }
             }
 

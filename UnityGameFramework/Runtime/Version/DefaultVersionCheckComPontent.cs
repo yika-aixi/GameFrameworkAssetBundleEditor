@@ -14,13 +14,46 @@ namespace Icarus.UnityGameFramework.Runtime
     public class DefaultVersionCheckComPontent : MonoBehaviour, IVersionCheck
     {
         public string Url { get; set; }
+        public VersionInfo ServerVersionInfo { get; private set; }
+        public VersionInfo LocalVersionInfo { get; private set; }
+        public VersionInfo PersistentInfos { get; private set; }
         private GameFrameworkAction<string> _errorHandle;
-        private GameFrameworkAction<IEnumerable<AssetBundleInfo>, VersionInfo> _completeHandle;
-        public void Check(GameFrameworkAction<IEnumerable<AssetBundleInfo>, VersionInfo> completeHandle, GameFrameworkAction<string> errorHandle)
+        private GameFrameworkAction<IEnumerable<AssetBundleInfo>> _completeHandle;
+        public void Check(GameFrameworkAction<IEnumerable<AssetBundleInfo>> completeHandle, GameFrameworkAction<string> errorHandle)
         {
+            _isInitCheck = false;
             _completeHandle = completeHandle;
             _errorHandle = errorHandle;
             StartCoroutine(_check());
+        }
+
+        private bool _isInitCheck = false;
+
+        ///<inheritdoc cref="IVersionCheck"/>
+        ///<exception cref="GameFrameworkException">Check 函数还未执行过或还未执行完成 </exception>
+        /// <returns></returns>
+        public IEnumerable<AssetBundleInfo> GetGroupVersion(string tag)
+        {
+            if (!_isInitCheck)
+            {
+                throw new GameFrameworkException("没有执行Check 函数或还未执行完成~");
+            }
+
+            var serverABs = ServerVersionInfo.GetGroupAssetBundleInfos(tag);
+            var localABs = LocalVersionInfo.GetGroupAssetBundleInfos(tag);
+            return _chckAssetBundleList(serverABs, localABs);
+        }
+
+        public bool IsUpdateGroup(string tag)
+        {
+            if (!_isInitCheck)
+            {
+                throw new GameFrameworkException("没有执行Check 函数或还未执行完成~");
+            }
+
+            var serverABs = ServerVersionInfo.GetGroupAssetBundleInfos(tag);
+            var localABs = LocalVersionInfo.GetGroupAssetBundleInfos(tag);
+            return _existUpdateAssetBundle(serverABs, localABs);
         }
 
         private IEnumerator _check()
@@ -51,7 +84,7 @@ namespace Icarus.UnityGameFramework.Runtime
                     streamInfos = new VersionInfo();
                 }
             }
-           
+
             var versionInfoFilePath = Path.Combine(Application.persistentDataPath, ConstTable.VersionFileName);
             if (File.Exists(versionInfoFilePath))
             {
@@ -91,34 +124,129 @@ namespace Icarus.UnityGameFramework.Runtime
                 }
                 serverInfos = version;
             }
-            
+
+            List<AssetBundleInfo> result = _chckVersion(serverInfos, localAllInfo);
+
+            ServerVersionInfo = serverInfos;
+            LocalVersionInfo = localAllInfo;
+            PersistentInfos = persistentInfos;
+            _isInitCheck = true;
+            _completeHandle?.Invoke(result);
+        }
+
+        private List<AssetBundleInfo> _chckVersion(VersionInfo serverInfos, VersionInfo localAllInfo)
+        {
             List<AssetBundleInfo> result = new List<AssetBundleInfo>();
             foreach (var abInfo in serverInfos.AssetBundleInfos)
             {
                 var serverInfo = serverInfos.GetAssetBundleInfo(abInfo.PackFullName);
                 var localInfo = localAllInfo.GetAssetBundleInfo(abInfo.PackFullName);
-                if (serverInfo.Optional)
-                {
-                    if (localInfo == null)
-                    {
-                        continue;
-                    }
-                }
 
-                if (localInfo != null)
+                if (_isEqual(serverInfo,localInfo))
                 {
-                    if (serverInfo.MD5 == localInfo.MD5)
-                    {
-                        continue;
-                    }
+                    continue;
                 }
 
                 //加入结果列表
                 result.Add(abInfo);
             }
 
-            _completeHandle?.Invoke(result,persistentInfos);
+            return result;
+        }
 
+        AssetBundleInfo _findAssetBundleInfo(IEnumerable<AssetBundleInfo> abs, string abFilePath)
+        {
+            abFilePath = GameFramework.Utility.Path.GetRegularPath(abFilePath);
+            return abs.FirstOrDefault(x => x.PackFullName == abFilePath);
+        }
+
+        private IEnumerable<AssetBundleInfo> _chckAssetBundleList(IEnumerable<AssetBundleInfo> serverABs,
+            IEnumerable<AssetBundleInfo> localABs,bool getGroup = true)
+        {
+            List<AssetBundleInfo> result = new List<AssetBundleInfo>();
+
+            if (serverABs == null)
+            {
+                return result;
+            }
+
+            if (localABs == null)
+            {
+                return serverABs;
+            }
+
+            foreach (var abInfo in serverABs)
+            {
+                var serverInfo = _findAssetBundleInfo(serverABs, abInfo.PackFullName);
+                var localInfo = _findAssetBundleInfo(localABs,abInfo.PackFullName);
+
+                if (_isEqual(serverInfo, localInfo, getGroup))
+                {
+                    continue;
+                }
+
+                //加入结果列表
+                result.Add(abInfo);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 资源组中是否有需要更新的
+        /// </summary>
+        /// <param name="serverABs"></param>
+        /// <param name="localABs"></param>
+        /// <param name="getGroup"></param>
+        /// <returns></returns>
+        private bool _existUpdateAssetBundle(IEnumerable<AssetBundleInfo> serverABs,
+            IEnumerable<AssetBundleInfo> localABs, bool getGroup = true)
+        {
+            if (serverABs == null)
+            {
+                return false;
+            }
+
+            if (localABs == null)
+            {
+                return true;
+            }
+
+            foreach (var abInfo in serverABs)
+            {
+                var serverInfo = _findAssetBundleInfo(serverABs, abInfo.PackFullName);
+                var localInfo = _findAssetBundleInfo(localABs, abInfo.PackFullName);
+
+                if (_isEqual(serverInfo, localInfo, getGroup))
+                {
+                    continue;
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
+        bool _isEqual(AssetBundleInfo serverABInfo, AssetBundleInfo localABInfo, bool getGroup = false)
+        {
+            if (serverABInfo.Optional)
+            {
+                if (localABInfo == null && !getGroup)
+                {
+                    return true;
+                }
+            }
+
+            if (localABInfo != null)
+            {
+                if (serverABInfo.MD5 == localABInfo.MD5)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         VersionInfo _jieMi(byte[] bytes)

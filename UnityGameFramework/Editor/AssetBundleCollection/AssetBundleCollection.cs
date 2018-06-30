@@ -115,8 +115,13 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
                     {
                         bool.TryParse(xmlNode.Attributes.GetNamedItem("Optional").Value, out assetBundlePacked);
                     }
+                    string groupTag = "";
+                    if (xmlNode.Attributes.GetNamedItem("GroupTag") != null)
+                    {
+                        groupTag = xmlNode.Attributes.GetNamedItem("GroupTag").Value;
+                    }
 
-                    if (!AddAssetBundle(assetBundleName, assetBundleVariant, (AssetBundleLoadType)assetBundleLoadType, assetBundlePacked))
+                    if (!AddAssetBundle(assetBundleName, assetBundleVariant, (AssetBundleLoadType)assetBundleLoadType, assetBundlePacked, groupTag))
                     {
                         string assetBundleFullName = assetBundleVariant != null ? string.Format("{0}.{1}", assetBundleName, assetBundleVariant) : assetBundleName;
                         Debug.LogWarning(string.Format("Can not add AssetBundle '{0}'.", assetBundleFullName));
@@ -209,6 +214,9 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
                     xmlAttribute = xmlDocument.CreateAttribute("Optional");
                     xmlAttribute.Value = assetBundle.Optional.ToString();
                     xmlElement.Attributes.SetNamedItem(xmlAttribute);
+                    xmlAttribute = xmlDocument.CreateAttribute("GroupTag");
+                    xmlAttribute.Value = assetBundle.GroupTag;
+                    xmlElement.Attributes.SetNamedItem(xmlAttribute);
                     xmlAssetBundles.AppendChild(xmlElement);
                 }
 
@@ -282,7 +290,7 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
             return m_AssetBundles.ContainsKey(GetAssetBundleFullName(assetBundleName, assetBundleVariant));
         }
 
-        public bool AddAssetBundle(string assetBundleName, string assetBundleVariant, AssetBundleLoadType assetBundleLoadType, bool assetBundlePacked)
+        public bool AddAssetBundle(string assetBundleName, string assetBundleVariant, AssetBundleLoadType assetBundleLoadType, bool assetBundleOptional,string groupTag)
         {
             if (!IsValidAssetBundleName(assetBundleName, assetBundleVariant))
             {
@@ -294,7 +302,7 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
                 return false;
             }
 
-            AssetBundle assetBundle = AssetBundle.Create(assetBundleName, assetBundleVariant, assetBundleLoadType, assetBundlePacked);
+            AssetBundle assetBundle = AssetBundle.Create(assetBundleName, assetBundleVariant, assetBundleLoadType, assetBundleOptional,groupTag);
             m_AssetBundles.Add(assetBundle.FullName, assetBundle);
 
             return true;

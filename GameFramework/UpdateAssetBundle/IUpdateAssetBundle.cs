@@ -11,12 +11,13 @@ namespace Icarus.GameFramework.UpdateAssetBundle
         /// </summary>
         /// <param name="updateInfo">更新信息</param>
         /// <param name="assetBundleifInfos">更新列表</param>
-        /// <param name="localVersionInfo">本地versionInfo</param>
+        /// <param name="persistentInfos">persistent的versionInfo</param>
         /// <param name="progressHandle">更新进度</param>
         /// <param name="anyCompleteHandle">更新好一个</param>
         /// <param name="allCompleteHandle">全部更新完成</param>
         /// <param name="errorHandle">更新出错</param>
-        void UpdateAssetBundle(UpdateInfo updateInfo,IEnumerable<AssetBundleInfo> assetBundleifInfos, VersionInfo localVersionInfo,
+        void UpdateAssetBundle(UpdateInfo updateInfo,IEnumerable<AssetBundleInfo> assetBundleifInfos, 
+            VersionInfo persistentInfos,
             GameFrameworkAction<DownloadProgressInfo, string> progressHandle = null,
             GameFrameworkAction<AssetBundleInfo> anyCompleteHandle = null, 
             GameFrameworkAction allCompleteHandle = null,

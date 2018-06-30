@@ -4,7 +4,7 @@ namespace Icarus.GameFramework.Version
 {
     public class AssetBundleInfo
     {
-        //所属资源组
+        //所属资源组,多组 ',' 分割
         public string GroupTag;
         //资源包名 : xxx.dat 或 xx.xx.dat
         public string PackName;

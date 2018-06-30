@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Linq;
 using Icarus.GameFramework;
 using Icarus.GameFramework.Event;
 using Icarus.GameFramework.Resource;
@@ -7,6 +8,7 @@ using Icarus.GameFramework.UpdateAssetBundle;
 using Icarus.GameFramework.Version;
 using UnityEngine;
 using Icarus.UnityGameFramework.Runtime;
+using UnityEngine.UI;
 
 public class test : MonoBehaviour
 {
@@ -15,47 +17,61 @@ public class test : MonoBehaviour
     private EventComponent _eventComponent;
     private BaseComponent _baseComponent;
     private ResourceComponent _resourceComponent;
+    private SceneComponent _sceneComponent;
 
+    private DefaultVersionCheckComPontent _versionCheck;
+
+    private DefaultUpdateAssetBundleComponent _update;
     // Use this for initialization
     void Start()
     {
         _eventComponent = GameEntry.GetComponent<EventComponent>();
         _baseComponent = GameEntry.GetComponent<BaseComponent>();
         _resourceComponent = GameEntry.GetComponent<ResourceComponent>();
+        _sceneComponent = GameEntry.GetComponent<SceneComponent>();
         if (!_baseComponent)
         {
             Debug.LogError("Base component is invalid.");
             return;
         }
+        if (!_sceneComponent)
+        {
+            Debug.LogError("Scene Component 没有找到!");
+            return;
+        }
+        _eventComponent.Subscribe(ReferencePool.Acquire<LoadSceneSuccessEventArgs>().Id, _loadSceneComplete);
+
         if (!_baseComponent.EditorResourceMode)
         {
             //进行资源版本检测
-            var versionCheck = GameEntry.GetComponent<DefaultVersionCheckComPontent>();
-            if (!versionCheck)
+            _versionCheck = GameEntry.GetComponent<DefaultVersionCheckComPontent>();
+            if (!_versionCheck)
             {
                 Debug.LogError("Default VersionCheck ComPontent is invalid.");
                 return;
             }
 
-            versionCheck.Url = Info.AssetBundleUrl+"/"+ConstTable.VersionFileName;
-            versionCheck.Check((x,y) =>
+            _versionCheck.Url = Info.AssetBundleUrl+"/"+ConstTable.VersionFileName;
+            _versionCheck.Check(x =>
             {
+                _isInit = true;
                 foreach (var info in x)
                 {
-                    Debug.Log("需要更新的资源:"+info);
+                    Debug.Log("需要更新的资源:" + info);
                 }
 
-                DefaultUpdateAssetBundle update = GameEntry.GetComponent<DefaultUpdateAssetBundle>();
-                update.UpdateAssetBundle(Info, x,y, (pro, str) =>
+                _update = GameEntry.GetComponent<DefaultUpdateAssetBundleComponent>();
+                if (!_update)
                 {
-                    Debug.Log($"下载进度：{pro.Progress}，下载速度：{pro.Speed},下载描述：{str}");
-                }, x1 =>
+                    Debug.LogError("Default UpdateAsset Bundle ComPontent is invalid.");
+                    return;
+                }
+                _UpdateAssetbundle(x, ()=>
                 {
-                    Debug.Log("更新完成：" + y);
-                }, _loadAsset, ex =>
-                {
-                    Debug.Log("更新出错："+ex);
+                    _loadAsset();
+                    _checkOutGroup();
                 });
+                
             }, Debug.LogError);
             
         }
@@ -64,6 +80,81 @@ public class test : MonoBehaviour
             _load();
         }
     }
+
+    public Button button;
+    private void _checkOutGroup()
+    {
+        if (_versionCheck.IsUpdateGroup("checkpoint_1"))
+        {
+            button.interactable = false;
+        }
+        else
+        {
+            button.interactable = true;
+        }
+    }
+
+    private bool _isUpadteComplete;
+    private void _UpdateAssetbundle(System.Collections.Generic.IEnumerable<AssetBundleInfo> abs
+    ,Action allCompleteHandle = null)
+    {
+        _update.UpdateAssetBundle(Info, abs, _versionCheck.PersistentInfos, (pro, str) =>
+        {
+            Debug.Log($"下载进度：{pro.Progress}，下载速度：{pro.Speed},下载描述：{str}");
+        }, x1 =>
+        {
+            Debug.Log("更新完成：" + x1);
+        }, ()=>
+        {
+            _isUpadteComplete = true;
+            Debug.Log("全部更新完成!");
+            allCompleteHandle?.Invoke();
+        }, ex =>
+        {
+            Debug.Log("更新出错：" + ex);
+        });
+    }
+
+    public void LoadAsset()
+    {
+        if (!_isUpadteComplete)
+        {
+            Debug.Log("更新还未完成~");
+            return;
+        }
+        _loadAsset();
+    }
+
+    private bool _isInit = false;
+    public void DownloadOrUpdateGroup(string groupTag)
+    {
+        if (!_isInit)
+        {
+            Debug.Log("初始化检查还未完成");
+            return;
+        }
+
+        var list = _versionCheck.GetGroupVersion(groupTag).ToList();
+        Debug.Log($"资源组:{groupTag},资源包个数为:{list.Count}");
+        foreach (var info in list)
+        {
+            Debug.Log($"资源包:\n{info}");
+        }
+
+        _UpdateAssetbundle(list, _checkOutGroup);
+
+    }
+
+    public void LoadScene(string name)
+    {
+        _sceneComponent.LoadScene(name);
+    }
+
+    private void _loadSceneComplete(object sender, GameEventArgs e)
+    {
+        Debug.Log("关卡1加载完成!s");
+    }
+
 
     void _loadAsset()
     {
@@ -81,7 +172,8 @@ public class test : MonoBehaviour
     [ContextMenu("加载资源")]
     void _load()
     {
-        _resourceComponent.LoadAsset(AssetName, new LoadAssetCallbacks(_loadAssetSuccessCallback,  _loadAssetFailureCallback, _loadAssetUpdateCallback));
+        Debug.Log("资源加载完成");
+        //_resourceComponent.LoadAsset(AssetName, new LoadAssetCallbacks(_loadAssetSuccessCallback,  _loadAssetFailureCallback, _loadAssetUpdateCallback));
     }
 
     private void _loadAssetUpdateCallback(string assetname, float progress, object userdata)
@@ -100,7 +192,6 @@ public class test : MonoBehaviour
         Instantiate(gameobject);
         Debug.LogFormat("资源名为:{0},duration:{1}", assetname, duration);
     }
-
     // Update is called once per frame
     void Update()
     {

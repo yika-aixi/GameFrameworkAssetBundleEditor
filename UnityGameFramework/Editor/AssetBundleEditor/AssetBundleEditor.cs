@@ -203,6 +203,10 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
             }
         }
 
+        private float _titleMaxX = 0f;
+        private float _lastTitleMaxX = 0f;
+        private string _groupDefaultTag = "<None Tag>";
+        private string _groupMultTag = "<Mult Tag>";
         private void DrawAssetBundleItem(AssetBundleItem assetBundleItem)
         {
             EditorGUILayout.BeginHorizontal();
@@ -213,8 +217,9 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
                     title = "[可选] " + title;
                 }
 
-                float emptySpace = position.width;
-                if (EditorGUILayout.Toggle(m_SelectedAssetBundle == assetBundleItem.AssetBundle, GUILayout.Width(emptySpace - 12f)))
+                float emptySpace = 200;//position.width;
+                float toogleWidth = emptySpace - 12;
+                if (EditorGUILayout.Toggle(m_SelectedAssetBundle == assetBundleItem.AssetBundle, GUILayout.Width(toogleWidth)))
                 {
                     ChangeSelectedAssetBundle(assetBundleItem.AssetBundle);
                 }
@@ -226,7 +231,54 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
                 GUILayout.Space(-emptySpace + 24f);
                 GUI.DrawTexture(new Rect(32f + 14f * assetBundleItem.Depth, 20f * m_CurrentAssetBundleRowOnDraw + 1f, 16f, 16f), assetBundleItem.Icon);
                 EditorGUILayout.LabelField(string.Empty, GUILayout.Width(26f + 14f * assetBundleItem.Depth), GUILayout.Height(18f));
-                EditorGUILayout.LabelField(title);
+                var titleContent = new GUIContent(title);
+                var size = EditorStyles.label.CalcSize(titleContent);
+                EditorGUILayout.LabelField(titleContent, GUILayout.Width(size.x));
+                {
+                    var lastRect = GUILayoutUtility.GetLastRect();
+                    if (lastRect.xMax > _lastTitleMaxX)
+                    {
+                        if (lastRect.xMax < toogleWidth)
+                        {
+                            _titleMaxX = toogleWidth;
+                        }
+                        else
+                        {
+                            _titleMaxX = toogleWidth + (lastRect.xMax - toogleWidth);
+                        }
+
+                        _lastTitleMaxX = lastRect.xMax;
+                    }
+
+                    var groupTags = assetBundleItem.AssetBundle.GroupTag.Split(',');
+                    List<string> tags = new List<string>();
+                    if (groupTags.Length > 1)
+                    {
+                        tags.Add(_groupMultTag);
+                        tags.AddRange(groupTags);
+
+                    }
+                    else if (string.IsNullOrWhiteSpace(assetBundleItem.AssetBundle.GroupTag))
+                    {
+                        tags.Add(_groupDefaultTag);
+                    }
+                    else
+                    {
+                        tags.AddRange(groupTags);
+                    }
+                    
+                    var showTagsRect = lastRect;
+                    showTagsRect.x = _titleMaxX + 20;
+                    EditorGUI.Popup(showTagsRect, 0, tags.ToArray());
+
+                    var groupRect = showTagsRect;
+                    groupRect.x += 80;
+                    var groupTagContent = new GUIContent(assetBundleItem.AssetBundle.GroupTag);
+                    size = EditorStyles.label.CalcSize(groupTagContent);
+                    size.x += 50;
+                    groupRect.width = size.x;
+                    assetBundleItem.AssetBundle.GroupTag = EditorGUI.TextArea(groupRect, groupTagContent.text);
+                }
             }
             EditorGUILayout.EndHorizontal();
             m_CurrentAssetBundleRowOnDraw++;
@@ -642,7 +694,7 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
             }
 
             string assetBundleFullName = GetAssetBundleFullName(assetBundleName, assetBundleVariant);
-            if (m_Controller.AddAssetBundle(assetBundleName, assetBundleVariant, AssetBundleLoadType.LoadFromFile, false))
+            if (m_Controller.AddAssetBundle(assetBundleName, assetBundleVariant, AssetBundleLoadType.LoadFromFile, false, ""))
             {
                 if (refresh)
                 {

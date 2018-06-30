@@ -35,6 +35,7 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
                 PackName = packName,
                 PackPath = dir,
                 Optional = abData.Optional,
+                GroupTag = abData.GroupTag
             };
 
             info.MD5 = GameFramework.Utility.MD5Util.GetFileMd5(Path.Combine(outputPackPath, info.PackFullName));

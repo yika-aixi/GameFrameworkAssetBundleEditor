@@ -1069,7 +1069,9 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
             AssetBundle[] assetBundles = m_AssetBundleCollection.GetAssetBundles();
             foreach (AssetBundle assetBundle in assetBundles)
             {
-                m_AssetBundleDatas.Add(assetBundle.FullName.ToLower(), new AssetBundleData(assetBundle.Name.ToLower(), (assetBundle.Variant != null ? assetBundle.Variant.ToLower() : null), assetBundle.LoadType, assetBundle.Optional));
+                m_AssetBundleDatas.Add(assetBundle.FullName.ToLower(), new AssetBundleData(assetBundle.Name.ToLower(), 
+                    (assetBundle.Variant != null ? assetBundle.Variant.ToLower() : null), 
+                    assetBundle.LoadType, assetBundle.Optional,assetBundle.GroupTag));
             }
 
             Asset[] assets = m_AssetBundleCollection.GetAssets();

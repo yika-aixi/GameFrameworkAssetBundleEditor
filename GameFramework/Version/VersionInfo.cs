@@ -56,6 +56,17 @@ namespace Icarus.GameFramework.Version
             return AssetBundleInfos.First(x => x.PackFullName == abFilePath);
         }
 
+        /// <summary>
+        /// 添加或更新资源列表
+        /// </summary>
+        /// <param name="infos"></param>
+        public void AddOrUpdateRanageAssetBundleInfo(IEnumerable<AssetBundleInfo> infos)
+        {
+            foreach (var info in infos)
+            {
+                AddOrUpdateAssetBundleInfo(info);
+            }
+        }
         public void AddOrUpdateAssetBundleInfo(AssetBundleInfo info)
         {
             var abInfo = GetAssetBundleInfo(info.PackFullName);
@@ -82,6 +93,48 @@ namespace Icarus.GameFramework.Version
         public void Clear()
         {
             AssetBundleInfos.Clear();
+        }
+
+        /// <summary>
+        /// 获取资源组资源包列表
+        /// </summary>
+        /// <param name="tag">默认为:Empty</param>
+        /// <returns></returns>
+        public List<AssetBundleInfo> GetGroupAssetBundleInfos(string tag = "")
+        {
+            List<AssetBundleInfo> result = new List<AssetBundleInfo>();
+            foreach (var info in AssetBundleInfos)
+            {
+                var tags = info.GroupTag.Split(',');
+                foreach (var t in tags)
+                {
+                    //指定tag 不是空的
+                    if (!string.IsNullOrWhiteSpace(tag))
+                    {
+                        //tag是空的
+                        if (string.IsNullOrWhiteSpace(t))
+                        {
+                            continue;
+                        }
+                        //tag不一样
+                        if (tag != t)
+                        {
+                            continue;
+                        }
+                    }
+                    else //指定tag是空的
+                    {
+                        //tag不是空的
+                        if (!string.IsNullOrWhiteSpace(t))
+                        {
+                            continue;
+                        }
+                    }
+
+                    result.Add(info);
+                }
+            }
+            return result;
         }
 
         public byte[] JiaMiSerialize()

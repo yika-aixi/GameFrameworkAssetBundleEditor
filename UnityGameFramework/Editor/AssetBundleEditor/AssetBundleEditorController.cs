@@ -364,9 +364,9 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
             return m_AssetBundleCollection.GetAssetBundle(assetBundleName, assetBundleVariant);
         }
         
-        public bool AddAssetBundle(string assetBundleName, string assetBundleVariant, AssetBundleLoadType assetBundleLoadType, bool assetBundlePacked)
+        public bool AddAssetBundle(string assetBundleName, string assetBundleVariant, AssetBundleLoadType assetBundleLoadType, bool assetBundleOptional,string groupTag)
         {
-            return m_AssetBundleCollection.AddAssetBundle(assetBundleName, assetBundleVariant, assetBundleLoadType, assetBundlePacked);
+            return m_AssetBundleCollection.AddAssetBundle(assetBundleName, assetBundleVariant, assetBundleLoadType, assetBundleOptional,groupTag);
         }
 
         public bool RenameAssetBundle(string oldAssetBundleName, string oldAssetBundleVariant, string newAssetBundleName, string newAssetBundleVariant)

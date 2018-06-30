@@ -16,7 +16,7 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
     {
         private readonly List<Asset> m_Assets;
 
-        private AssetBundle(string name, string variant, AssetBundleLoadType loadType, bool packed)
+        private AssetBundle(string name, string variant, AssetBundleLoadType loadType, bool optional,string groupTag)
         {
             m_Assets = new List<Asset>();
 
@@ -24,7 +24,8 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
             Variant = variant;
             Type = AssetBundleType.Unknown;
             LoadType = loadType;
-            Optional = packed;
+            Optional = optional;
+            GroupTag = groupTag;
         }
 
         public string Name
@@ -65,9 +66,15 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
             private set;
         }
 
-        public static AssetBundle Create(string name, string variant, AssetBundleLoadType loadType, bool packed)
+        public string GroupTag
         {
-            return new AssetBundle(name, variant, loadType, packed);
+            get;
+            set;
+        }
+
+        public static AssetBundle Create(string name, string variant, AssetBundleLoadType loadType, bool optional,string groupTag)
+        {
+            return new AssetBundle(name, variant, loadType, optional,groupTag);
         }
 
         public Asset[] GetAssets()
