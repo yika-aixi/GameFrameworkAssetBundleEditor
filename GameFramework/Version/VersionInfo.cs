@@ -57,6 +57,15 @@ namespace Icarus.GameFramework.Version
         }
 
         /// <summary>
+        /// 设置资源包列表
+        /// </summary>
+        /// <param name="infos"></param>
+        public void SetAssetBundleInfos(List<AssetBundleInfo> infos)
+        {
+            AssetBundleInfos = infos;
+        }
+
+        /// <summary>
         /// 添加或更新资源列表
         /// </summary>
         /// <param name="infos"></param>

@@ -15,7 +15,25 @@ namespace Icarus.UnityGameFramework.Runtime
     {
         public string Url { get; set; }
         public VersionInfo ServerVersionInfo { get; private set; }
-        public VersionInfo LocalVersionInfo { get; private set; }
+
+        private VersionInfo _localVersionInfo;
+        public VersionInfo LocalVersionInfo
+        {
+            get
+            {
+                if (_localVersionInfo == null)
+                {
+                    _localVersionInfo = new VersionInfo();
+                }
+                _localVersionInfo.SetAssetBundleInfos(
+                    PersistentInfos.AssetBundleInfos.
+                        Union(StreamingVersionInfo.AssetBundleInfos).ToList());
+
+                return _localVersionInfo;
+            }
+        }
+
+        public VersionInfo StreamingVersionInfo { get; private set; }
         public VersionInfo PersistentInfos { get; private set; }
         private GameFrameworkAction<string> _errorHandle;
         private GameFrameworkAction<IEnumerable<AssetBundleInfo>> _completeHandle;
@@ -107,6 +125,9 @@ namespace Icarus.UnityGameFramework.Runtime
             var localAllInfo = new VersionInfo(persistentInfos.Version,
                 persistentInfos.AssetBundleInfos.Union(streamInfos.AssetBundleInfos).ToList());
 
+            PersistentInfos = persistentInfos;
+            StreamingVersionInfo = streamInfos;
+
             using (WWW www = new WWW(Url))
             {
                 yield return www;
@@ -126,10 +147,7 @@ namespace Icarus.UnityGameFramework.Runtime
             }
 
             List<AssetBundleInfo> result = _chckVersion(serverInfos, localAllInfo);
-
             ServerVersionInfo = serverInfos;
-            LocalVersionInfo = localAllInfo;
-            PersistentInfos = persistentInfos;
             _isInitCheck = true;
             _completeHandle?.Invoke(result);
         }

@@ -21,6 +21,10 @@ namespace Icarus.GameFramework.Version
         VersionInfo LocalVersionInfo { get; }
 
         /// <summary>
+        /// streamingAssets目录的version.info信息
+        /// </summary>
+        VersionInfo StreamingVersionInfo { get; }
+        /// <summary>
         /// 持久化目录的version.info
         /// </summary>
         VersionInfo PersistentInfos { get; }
