@@ -1,5 +1,7 @@
 # GameFrameworkAssetBundleEditor
 
+资源组的使用及说明:[Goto](http://www.xn--qoqr9hxvue5g.com:9555/Blog/read/14)
+
 新的version名为:
 
 	ab包名_变体名_~version.dat
