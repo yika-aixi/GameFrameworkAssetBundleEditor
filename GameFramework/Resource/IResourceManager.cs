@@ -224,10 +224,10 @@ namespace Icarus.GameFramework.Resource
         void AddLoadResourceAgentHelper(ILoadResourceAgentHelper loadResourceAgentHelper);
 
         /// <summary>
-        /// 使用单机模式并初始化资源。
+        /// 初始化资源。
         /// </summary>
         void InitResources();
-        
+
         /// <summary>
         /// 检查资源是否存在。
         /// </summary>

@@ -66,11 +66,7 @@ public class test : MonoBehaviour
                     Debug.LogError("Default UpdateAsset Bundle ComPontent is invalid.");
                     return;
                 }
-                _UpdateAssetbundle(x, ()=>
-                {
-                    _loadAsset();
-                    _checkOutGroup();
-                });
+                _UpdateAssetbundle(x, ()=> { _loadAsset(); });
                 
             }, Debug.LogError);
             
@@ -84,7 +80,7 @@ public class test : MonoBehaviour
     public Button button;
     private void _checkOutGroup()
     {
-        if (_versionCheck.IsUpdateGroup("checkpoint_1"))
+        if (_versionCheck.IsUpdateGroup("Checkpoint_1"))
         {
             button.interactable = false;
         }
@@ -141,7 +137,7 @@ public class test : MonoBehaviour
             Debug.Log($"资源包:\n{info}");
         }
 
-        _UpdateAssetbundle(list, _checkOutGroup);
+        _UpdateAssetbundle(list, _loadAsset1);
 
     }
 
@@ -155,6 +151,19 @@ public class test : MonoBehaviour
         Debug.Log("关卡1加载完成!s");
     }
 
+    void _loadAsset1()
+    {
+        var eventArgs = ReferencePool.Acquire<Icarus.UnityGameFramework.Runtime.ResourceInitCompleteEventArgs>();
+        _eventComponent.Subscribe(eventArgs.Id, _checkOutGroup);
+        _resourceComponent.InitResources();
+        ReferencePool.Release(eventArgs);
+
+    }
+
+    private void _checkOutGroup(object sender, GameEventArgs e)
+    {
+        _checkOutGroup();
+    }
 
     void _loadAsset()
     {
@@ -167,6 +176,9 @@ public class test : MonoBehaviour
     private void _loadAsset(object sender, GameEventArgs e)
     {
         _load();
+        var eventArgs = ReferencePool.Acquire<Icarus.UnityGameFramework.Runtime.ResourceInitCompleteEventArgs>();
+//        _eventComponent.Unsubscribe(eventArgs.Id,_loadAsset);
+        ReferencePool.Release(eventArgs);
     }
 
     [ContextMenu("加载资源")]
