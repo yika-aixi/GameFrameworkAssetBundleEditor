@@ -87,6 +87,7 @@ namespace Icarus.GameFramework.Download
                 //todo 读取缓存库
                 if (!_isInit)
                 {
+                    _isInit = true;
                     if (!Utility.FileUtil.IsFileExists(GetCacheLibraryFilePath()))
                     {
                         return;
@@ -97,7 +98,6 @@ namespace Icarus.GameFramework.Download
                         var entity = FileCacheEntity.Deserialization(line);
                         _cacheFileLibraryContent.Add(_getKey(entity.Url,entity.FilePath), entity);
                     }
-                    _isInit = true;
                     _clearCacheLibrary();
                 }
             }
