@@ -45,8 +45,6 @@ namespace Icarus.UnityGameFramework.Runtime
             }
             DownloadManager.AllCompleteHandle = ()=>
             {
-                var by = persistentInfos.JiaMiSerialize();
-                File.WriteAllBytes(Path.Combine(Application.persistentDataPath,VersionInfoFileName),by);
                 allCompleteHandle?.Invoke();
             };
             List<DownloadUnitInfo> downloadUnitInfos = new List<DownloadUnitInfo>();
@@ -57,6 +55,9 @@ namespace Icarus.UnityGameFramework.Runtime
                     CompleteHandle = x =>
                     {
                         persistentInfos.AddOrUpdateAssetBundleInfo(assetBundleInfo);
+                        var by = persistentInfos.JiaMiSerialize();
+                        File.WriteAllBytes(Path.Combine(Application.persistentDataPath, VersionInfoFileName), by);
+
                         anyCompleteHandle?.Invoke(assetBundleInfo);
                         //解压
                         Utility.ZipUtil.UnzipZip(x,Application.persistentDataPath);
