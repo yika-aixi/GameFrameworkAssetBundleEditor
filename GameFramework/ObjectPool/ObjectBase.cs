@@ -90,9 +90,9 @@ namespace Icarus.GameFramework.ObjectPool
         {
             //Unity的话判断是否是图片,是的话就转换为sprite
 #if UNITY || UNITY_5_3_OR_NEWER
-            if (target is UnityEngine.Texture2D)
+            var image = target as UnityEngine.Texture2D;
+            if (image != null)
             {
-                UnityEngine.Texture2D image = target as UnityEngine.Texture2D;
                 return UnityEngine.Sprite.Create(image, new UnityEngine.Rect(0, 0, image.width, image.height),
                     new UnityEngine.Vector2(0.5f, 0.5f));
             }
