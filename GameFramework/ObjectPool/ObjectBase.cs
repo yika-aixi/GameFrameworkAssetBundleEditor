@@ -80,24 +80,10 @@ namespace Icarus.GameFramework.ObjectPool
             }
 
             m_Name = name ?? string.Empty;
-            m_Target = _isTexture2DAndToSprite(target);
+            m_Target = target;
             m_Locked = locked;
             m_Priority = priority;
             m_LastUseTime = DateTime.Now;
-        }
-
-        private static object _isTexture2DAndToSprite(object target)
-        {
-            //Unity的话判断是否是图片,是的话就转换为sprite
-#if UNITY || UNITY_5_3_OR_NEWER
-            var image = target as UnityEngine.Texture2D;
-            if (image != null)
-            {
-                return UnityEngine.Sprite.Create(image, new UnityEngine.Rect(0, 0, image.width, image.height),
-                    new UnityEngine.Vector2(0.5f, 0.5f));
-            }
-#endif
-            return target;
         }
 
         /// <summary>
