@@ -420,6 +420,10 @@ namespace Icarus.UnityGameFramework.Editor.AssetBundleTools
 
         private void _copy(BuildTarget target)
         {
+            if (!m_Controller.IsCopyStreamingAssets)
+            {
+                return;
+            }
             string buildTargetUrlName = m_Controller.GetBuildTargetName(target);
             string outputPackagePath = string.Format("{0}{1}/", m_Controller.OutputPackagePath, buildTargetUrlName);
             var files = Directory.GetFiles(outputPackagePath, "*", SearchOption.AllDirectories);
