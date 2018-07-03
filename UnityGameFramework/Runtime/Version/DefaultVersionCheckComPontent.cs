@@ -38,16 +38,20 @@ namespace Icarus.UnityGameFramework.Runtime
         private GameFrameworkAction<string> _errorHandle;
         private GameFrameworkAction<IEnumerable<AssetBundleInfo>> _completeHandle;
         private GameFrameworkAction<string> _stateUpdateHandle;
+        private bool _strictMode;
         /// <summary>
-        /// 
+        /// 严格模式下将会计算本地资源包md5和远程版本文件对比,
+        /// 否则只会对比本地版本文件里记录的md5
         /// </summary>
+        /// <param name="strictMode">严格模式,默认为:严格</param>
         /// <param name="completeHandle">检查完成,参数:更新列表</param>
         /// <param name="errorHandle">检查失败,参数:失败信息</param>
         /// <param name="stateUpdateHandle">检查状态,参数:当前状态</param>
-        public void Check(GameFrameworkAction<IEnumerable<AssetBundleInfo>> completeHandle = null,
+        public void Check(bool strictMode = true, GameFrameworkAction<IEnumerable<AssetBundleInfo>> completeHandle = null,
             GameFrameworkAction<string> errorHandle = null, GameFrameworkAction<string> stateUpdateHandle = null)
         {
             _isInitCheck = false;
+            _strictMode = strictMode;
             _completeHandle = completeHandle;
             _errorHandle = errorHandle;
             _stateUpdateHandle = stateUpdateHandle;
@@ -308,9 +312,22 @@ namespace Icarus.UnityGameFramework.Runtime
 
             if (localABInfo != null)
             {
-                if (serverABInfo.MD5 == localABInfo.MD5)
+                if (_strictMode)
                 {
-                    return true;
+                    var md5 = GameFramework.Utility.MD5Util.GetFileMd5(
+                        Path.Combine(Application.persistentDataPath,localABInfo.PackFullName));
+
+                    if (serverABInfo.MD5 == md5)
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    if (serverABInfo.MD5 == localABInfo.MD5)
+                    {
+                        return true;
+                    }
                 }
             }
 
