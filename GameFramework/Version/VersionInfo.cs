@@ -65,6 +65,11 @@ namespace Icarus.GameFramework.Version
             AssetBundleInfos = infos;
         }
 
+        public void SetVersion(string version)
+        {
+            Version = version;
+        }
+
         /// <summary>
         /// 添加或更新资源列表
         /// </summary>

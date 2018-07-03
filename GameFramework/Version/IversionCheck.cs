@@ -34,7 +34,7 @@ namespace Icarus.GameFramework.Version
         /// </summary>
         /// <paramref name="completeHandle">参数1：更新列表，参数2：本地版本信息文件</paramref>
         /// <returns>所有需要更新的包</returns>
-        void Check(GameFrameworkAction<IEnumerable<AssetBundleInfo>> completeHandle,GameFrameworkAction<string> errorHandle);
+        void Check(GameFrameworkAction<IEnumerable<AssetBundleInfo>> completeHandle = null,GameFrameworkAction<string> errorHandle = null,GameFrameworkAction<string> stateUpdateHandle = null);
 
         /// <summary>
         /// 获取指定资源组的更新列表

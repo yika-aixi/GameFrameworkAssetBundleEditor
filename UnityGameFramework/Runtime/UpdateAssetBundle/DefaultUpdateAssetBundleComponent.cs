@@ -22,29 +22,33 @@ namespace Icarus.UnityGameFramework.Runtime
         private string VersionInfoFileName = "version.info";
         public void UpdateAssetBundle(UpdateInfo updateInfo, IEnumerable<AssetBundleInfo> assetBundleifInfos, 
             VersionInfo persistentInfos,
+            string version,
             GameFrameworkAction<DownloadProgressInfo, string> progressHandle = null,
             GameFrameworkAction<AssetBundleInfo> anyCompleteHandle = null,
             GameFrameworkAction allCompleteHandle = null,
             GameFrameworkAction<string> errorHandle = null)
         {
-            int version = -1;
+            int appVersion = -1;
 
             try
             {
-                version = int.Parse(Application.version.Split('.').Last());
+                appVersion = int.Parse(Application.version.Split('.').Last());
             }
             catch (Exception e)
             {
                 errorHandle?.Invoke($"请确保 Edit-->Project Settings-->Player --> Other Setting 下的 Version 字段‘.’分割的最后一位是int值，如：0.1.1s.2,‘2’就是我默认的规则");
                 return;
             }
-            if (version < updateInfo.MinAppVersion)
+            if (appVersion < updateInfo.MinAppVersion)
             {
                 Application.OpenURL(updateInfo.AppUpdateUrl);
                 return;
             }
             DownloadManager.AllCompleteHandle = ()=>
             {
+                persistentInfos.SetVersion(version);
+
+                _updateVersionInfoFile(persistentInfos);
                 allCompleteHandle?.Invoke();
             };
             List<DownloadUnitInfo> downloadUnitInfos = new List<DownloadUnitInfo>();
@@ -55,18 +59,18 @@ namespace Icarus.UnityGameFramework.Runtime
                     CompleteHandle = x =>
                     {
                         persistentInfos.AddOrUpdateAssetBundleInfo(assetBundleInfo);
-                        var by = persistentInfos.JiaMiSerialize();
-                        File.WriteAllBytes(Path.Combine(Application.persistentDataPath, VersionInfoFileName), by);
+
+                        _updateVersionInfoFile(persistentInfos);
 
                         anyCompleteHandle?.Invoke(assetBundleInfo);
                         //解压
-                        Utility.ZipUtil.UnzipZip(x,Application.persistentDataPath);
+                        Utility.ZipUtil.UnzipZip(x, Application.persistentDataPath);
                         GameFramework.Utility.FileUtil.DeleteFile(x);
                     },
                     ErrorHandle = errorHandle.Invoke,
                     DownloadProgressHandle = progressHandle.Invoke,
                     FileName = assetBundleInfo.PackName.Replace("dat", "zip"),
-                    SavePath = Path.Combine(Application.persistentDataPath,assetBundleInfo.PackPath),
+                    SavePath = Path.Combine(Application.persistentDataPath, assetBundleInfo.PackPath),
                     Url = updateInfo.AssetBundleUrl+"/"+ assetBundleInfo.PackFullName.Replace("dat","zip"),
                     IsFindCacheLibrary = false, //ab包更新不找缓存
                     DownloadUtil = new UnityWebRequestDownload(Coroutine)
@@ -75,6 +79,12 @@ namespace Icarus.UnityGameFramework.Runtime
             }
 
             DownloadManager.AddRangeDownload(downloadUnitInfos);
+        }
+
+        private void _updateVersionInfoFile(VersionInfo persistentInfos)
+        {
+            var by = persistentInfos.JiaMiSerialize();
+            File.WriteAllBytes(Path.Combine(Application.persistentDataPath, VersionInfoFileName), by);
         }
 
         protected virtual void Awake()

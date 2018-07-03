@@ -37,12 +37,28 @@ namespace Icarus.UnityGameFramework.Runtime
         public VersionInfo PersistentInfos { get; private set; }
         private GameFrameworkAction<string> _errorHandle;
         private GameFrameworkAction<IEnumerable<AssetBundleInfo>> _completeHandle;
-        public void Check(GameFrameworkAction<IEnumerable<AssetBundleInfo>> completeHandle, GameFrameworkAction<string> errorHandle)
+        private GameFrameworkAction<string> _stateUpdateHandle;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="completeHandle">检查完成,参数:更新列表</param>
+        /// <param name="errorHandle">检查失败,参数:失败信息</param>
+        /// <param name="stateUpdateHandle">检查状态,参数:当前状态</param>
+        public void Check(GameFrameworkAction<IEnumerable<AssetBundleInfo>> completeHandle = null,
+            GameFrameworkAction<string> errorHandle = null, GameFrameworkAction<string> stateUpdateHandle = null)
         {
             _isInitCheck = false;
             _completeHandle = completeHandle;
             _errorHandle = errorHandle;
+            _stateUpdateHandle = stateUpdateHandle;
+            _stateUpdate("资源版本,检查开始!");
             StartCoroutine(_check());
+        }
+
+        void _stateUpdate(string str)
+        {
+            //todo 临时写法,后面加入国际化变为国际化
+            _stateUpdateHandle?.Invoke(str);
         }
 
         private bool _isInitCheck = false;
@@ -95,6 +111,7 @@ namespace Icarus.UnityGameFramework.Runtime
                     else
                     {
                         streamInfos = version;
+                        _stateUpdate($"发现App资源版本,版本为:{streamInfos.Version}");
                     }
                 }
                 else
@@ -112,6 +129,7 @@ namespace Icarus.UnityGameFramework.Runtime
                 if (version != null)
                 {
                     persistentInfos = version;
+                    _stateUpdate($"发现本地资源版本,版本为:{persistentInfos.Version}");
                 }
                 else
                 {
@@ -122,17 +140,22 @@ namespace Icarus.UnityGameFramework.Runtime
             {
                 persistentInfos = new VersionInfo();
             }
-            var localAllInfo = new VersionInfo(persistentInfos.Version,
-                persistentInfos.AssetBundleInfos.Union(streamInfos.AssetBundleInfos).ToList());
+            
 
             PersistentInfos = persistentInfos;
             StreamingVersionInfo = streamInfos;
+
+            _persistentAssetBundleCheck();
+
+            var localAllInfo = new VersionInfo(persistentInfos.Version,
+                persistentInfos.AssetBundleInfos.Union(streamInfos.AssetBundleInfos).ToList());
 
             using (WWW www = new WWW(Url))
             {
                 yield return www;
                 if (!string.IsNullOrEmpty(www.error))
                 {
+                    _stateUpdate($"资源版本检查失败!");
                     _errorHandle?.Invoke(www.error);
                     yield break;
                 }
@@ -140,6 +163,7 @@ namespace Icarus.UnityGameFramework.Runtime
                 version = _jieMi(www.bytes);
                 if (version == null)
                 {
+                    _stateUpdate($"资源版本检查失败!");
                     _errorHandle?.Invoke("解析服务器version.info失败.");
                     yield break;
                 }
@@ -149,7 +173,33 @@ namespace Icarus.UnityGameFramework.Runtime
             List<AssetBundleInfo> result = _chckVersion(serverInfos, localAllInfo);
             ServerVersionInfo = serverInfos;
             _isInitCheck = true;
+            _stateUpdate($"资源版本检查完成! 最新版本为:{ServerVersionInfo.Version}");
             _completeHandle?.Invoke(result);
+        }
+
+        private bool _persistentAssetBundleCheck()
+        {
+            _stateUpdate($"本地资源检查中....");
+            List<AssetBundleInfo> missingAssetBundleInfos = new List<AssetBundleInfo>();
+            foreach (var bundleInfo in PersistentInfos.AssetBundleInfos)
+            {
+                if (!File.Exists(Path.Combine(Application.persistentDataPath,bundleInfo.PackFullName)))
+                {
+                    missingAssetBundleInfos.Add(bundleInfo);
+                }
+            }
+
+            if (missingAssetBundleInfos.Count > 0)
+            {
+                _stateUpdate($"发现丢失资源,一共丢失:{missingAssetBundleInfos.Count}");
+            }
+
+            foreach (var missingAssetBundleInfo in missingAssetBundleInfos)
+            {
+                PersistentInfos.Remove(missingAssetBundleInfo);
+            }
+            _stateUpdate($"本地资源检查完成!");
+            return true;
         }
 
         private List<AssetBundleInfo> _chckVersion(VersionInfo serverInfos, VersionInfo localAllInfo)
