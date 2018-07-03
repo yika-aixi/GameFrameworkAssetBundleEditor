@@ -14,6 +14,7 @@ public class test : MonoBehaviour
 {
     public string AssetName;
     public UpdateInfo Info;
+    public bool 严格模式 = true;
     private EventComponent _eventComponent;
     private BaseComponent _baseComponent;
     private ResourceComponent _resourceComponent;
@@ -52,7 +53,7 @@ public class test : MonoBehaviour
             }
 
             _versionCheck.Url = Info.AssetBundleUrl+"/"+ConstTable.VersionFileName;
-            _versionCheck.Check(x =>
+            _versionCheck.Check(严格模式, x =>
             {
                 _isInit = true;
                 foreach (var info in x)
@@ -66,9 +67,9 @@ public class test : MonoBehaviour
                     Debug.LogError("Default UpdateAsset Bundle ComPontent is invalid.");
                     return;
                 }
-                _UpdateAssetbundle(x, ()=> { _loadAsset(); });
+                _UpdateAssetbundle(x, ()=> { _loadAsset1(); });
                 
-            }, Debug.LogError);
+            }, errorHandle: Debug.LogError,stateUpdateHandle: Debug.Log);
             
         }
         else
@@ -80,6 +81,7 @@ public class test : MonoBehaviour
     public Button button;
     private void _checkOutGroup()
     {
+        Debug.Log("资源组检查");
         if (_versionCheck.IsUpdateGroup("Checkpoint_1"))
         {
             button.interactable = false;
@@ -94,7 +96,7 @@ public class test : MonoBehaviour
     private void _UpdateAssetbundle(System.Collections.Generic.IEnumerable<AssetBundleInfo> abs
     ,Action allCompleteHandle = null)
     {
-        _update.UpdateAssetBundle(Info, abs, _versionCheck.PersistentInfos, (pro, str) =>
+        _update.UpdateAssetBundle(Info, abs, _versionCheck.PersistentInfos,_versionCheck.ServerVersionInfo.Version, (pro, str) =>
         {
             Debug.Log($"下载进度：{pro.Progress}，下载速度：{pro.Speed},下载描述：{str}");
         }, x1 =>
