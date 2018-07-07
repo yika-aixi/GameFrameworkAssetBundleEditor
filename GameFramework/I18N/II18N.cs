@@ -31,6 +31,14 @@ namespace Icarus.GameFramework.I18N
         string GetValue(string key);
 
         /// <summary>
+        /// 获取指定语言key的value
+        /// </summary>
+        /// <param name="languageName">语言名字</param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        string GetValue(string languageName,string key);
+
+        /// <summary>
         /// 获取当前支持的语言
         /// </summary>
         /// <returns></returns>

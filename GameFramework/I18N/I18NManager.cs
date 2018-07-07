@@ -22,6 +22,11 @@ namespace Icarus.GameFramework.I18N
 
         public void SetCurrentLanguage(string language)
         {
+            
+            if (string.IsNullOrWhiteSpace(language))
+            {
+                throw new GameFrameworkException($"语言设置失败,尝试将语言设置为 Null Or White Space");
+            }
             CurrentLanguage = language;
             var args = new LanguageChangeEventArgs {Lanaguage = language};
             _languageChange(this, args);
@@ -48,12 +53,17 @@ namespace Icarus.GameFramework.I18N
         /// <returns></returns>
         public string GetValue(string key)
         {
-            if (!LanguageTables.ContainsKey(CurrentLanguage))
+            return GetValue(CurrentLanguage,key);
+        }
+
+        public string GetValue(string languageName, string key)
+        {
+            if (!LanguageTables.ContainsKey(languageName))
             {
                 return string.Empty;
             }
 
-            return LanguageTables[CurrentLanguage].GetValue(key);
+            return LanguageTables[languageName].GetValue(key);
         }
 
         public IEnumerable<string> GetLanguges()

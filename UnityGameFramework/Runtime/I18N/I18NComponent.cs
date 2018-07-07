@@ -16,21 +16,51 @@ namespace Icarus.UnityGameFramework.Runtime
         public I18NManager I18NManager => _manager;
         [SerializeField]
         private string _defaultLanguage;
-        public string DefaultLanguage => _defaultLanguage;
+        public string DefaultLanguage
+        {
+            get { return _defaultLanguage;}
+            set { _defaultLanguage = value; }
+        }
+
+        [SerializeField]
+        private bool _isFindLocal;
         /// <summary>
         /// 查找本地,默认为查找
         /// </summary>
-        public bool IsFindLocal { get; set; } = true;
+        public bool IsFindLocal
+        {
+            get { return _isFindLocal;}
+            set { _isFindLocal = value; }
+        }
 
+        [SerializeField]
+        private string _directoryName = ConstTable.DefaultDirectoryName;
         /// <summary>
         /// 查找目录的名字
         /// </summary>
-        public string DirectoryName { get; set; } = "I18N";
+        public string DirectoryName
+        {
+            get
+            {
+                return _directoryName;
+            }
 
+            set
+            {
+                _directoryName = value;
+            }
+        }
+
+        [SerializeField]
+        private string _suffixName = ConstTable.SuffixName;
         /// <summary>
         /// 文件后缀
         /// </summary>
-        public string SuffixName { get; set; } = ConstTable.SuffixName;
+        public string SuffixName
+        {
+            get { return _suffixName; }
+            set { _suffixName = value; }
+        }
 
         /// <summary>
         /// 嵌入式语言表
@@ -53,14 +83,8 @@ namespace Icarus.UnityGameFramework.Runtime
 
         void Start()
         {
-            foreach (var pair in ConvenienceLanguageTable)
-            {
-                I18NManager.AddLanguageTable(pair.Key, pair.Value);
-            }
-
             if (IsFindLocal)
             {
-                //todo persistentDataPath 目录下的某目录查找
                 var path = GameFramework.Utility.Path.GetCombinePath(Application.persistentDataPath, DirectoryName);
                 var files = Directory.GetFiles(path, $"*.{SuffixName}", SearchOption.AllDirectories);
                 if (files.Length == 0)
@@ -78,23 +102,31 @@ namespace Icarus.UnityGameFramework.Runtime
             foreach (var path in files)
             {
                 var table = File.ReadAllLines(path);
-                Dictionary<string, Dictionary<string, string>> tempTable = new Dictionary<string, Dictionary<string, string>>();
-                tempTable.Add(table[0], new Dictionary<string, string>());
+                Dictionary<string, string> tempTable = new Dictionary<string, string>();
 
                 for (var i = 1; i < table.Length; i++)
                 {
                     var csv = table[i].Split('\t');
-                    tempTable[table[0]].Add(csv[0], csv[1]);
+                    tempTable.Add(csv[0], csv[1]);
                 }
+
+                I18NManager.AddLanguageTable(table[0], tempTable);
             }
         }
 
-
+        /// <summary>
+        /// 增加当语言发生变化时执行的回调
+        /// </summary>
+        /// <param name="handle"></param>
         public void AddLanguageChangeEvent(EventHandler<LanguageChangeEventArgs> handle)
         {
             _manager.LanguageChange += handle;
         }
 
+        /// <summary>
+        /// 移除语言发生变化时执行的回调
+        /// </summary>
+        /// <param name="handle"></param>
         public void RemoveLanguageChangeEvent(EventHandler<LanguageChangeEventArgs> handle)
         {
             _manager.LanguageChange -= handle;
@@ -105,68 +137,41 @@ namespace Icarus.UnityGameFramework.Runtime
             _manager.SetCurrentLanguage(language);
         }
 
+        /// <summary>
+        /// 如果没有在文件中找到就会去快捷表找,如果找不到就返回string.Empty
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public string GetValue(string key)
         {
-            return _manager.GetValue(key);
+            var value = _manager.GetValue(key);
+
+            if (string.IsNullOrEmpty(value))
+            {
+                if (ConvenienceLanguageTable[CurrentLanguage].ContainsKey(key))
+                {
+                    return ConvenienceLanguageTable[CurrentLanguage][key];
+                }
+            }
+
+            return value;
         }
 
+        /// <summary>
+        /// 获取当前支持的语言表
+        /// 文件 并集 快捷表
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<string> GetLanguges()
         {
             var names = _manager.GetLanguges();
-            var keys = ConvenienceLanguageTable.Keys;
-            return names.Union(keys);
+            var convenienceNames = ConvenienceLanguageTable.Keys;
+            return names.Union(convenienceNames);
         }
+
         public string CurrentLanguage => _manager.CurrentLanguage;
-    }
 
-    [Serializable]
-    public class LanguageSerializationEntity
-    {
-        [SerializeField]
-        private string _languageName;
-        [SerializeField]
-        private string _key;
-        [SerializeField]
-        private string _value;
 
-        public string Value
-        {
-            get
-            {
-                return _value;
-            }
-
-            set
-            {
-                _value = value;
-            }
-        }
-
-        public string LanguageName
-        {
-            get
-            {
-                return _languageName;
-            }
-
-            set
-            {
-                _languageName = value;
-            }
-        }
-
-        public string Key
-        {
-            get
-            {
-                return _key;
-            }
-
-            set
-            {
-                _key = value;
-            }
-        }
     }
 
     public partial class I18NComponent : ISerializationCallbackReceiver
@@ -177,13 +182,11 @@ namespace Icarus.UnityGameFramework.Runtime
         private List<string> _keys = new List<string>();
         [SerializeField]
         private List<string> _values = new List<string>();
-//        [SerializeField]
-//        private List<LanguageSerializationEntity> _entity = new List<LanguageSerializationEntity>();
-        
+
         public void OnBeforeSerialize()
         {
             _languageNames.Clear();
-//            _entity.Clear();
+            //            _entity.Clear();
             _keys.Clear();
             _values.Clear();
             _languageNames.AddRange(ConvenienceLanguageTable.Keys);
