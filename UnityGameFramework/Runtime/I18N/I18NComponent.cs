@@ -23,7 +23,7 @@ namespace Icarus.UnityGameFramework.Runtime
         }
 
         [SerializeField]
-        private bool _isFindLocal;
+        private bool _isFindLocal = true;
         /// <summary>
         /// 查找本地,默认为查找
         /// </summary>
