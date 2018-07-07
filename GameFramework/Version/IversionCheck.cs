@@ -9,25 +9,15 @@ namespace Icarus.GameFramework.Version
         /// </summary>
         string Url { get; set; }
 
-
         /// <summary>
         /// 服务器version.info
         /// </summary>
         VersionInfo ServerVersionInfo { get; }
 
         /// <summary>
-        /// persistent目录和streamingAssets目录的version.info并集信息
+        /// 本地的最新版本信息
         /// </summary>
         VersionInfo LocalVersionInfo { get; }
-
-        /// <summary>
-        /// streamingAssets目录的version.info信息
-        /// </summary>
-        VersionInfo StreamingVersionInfo { get; }
-        /// <summary>
-        /// 持久化目录的version.info
-        /// </summary>
-        VersionInfo PersistentInfos { get; }
 
         /// <summary>
         /// 开始检查
