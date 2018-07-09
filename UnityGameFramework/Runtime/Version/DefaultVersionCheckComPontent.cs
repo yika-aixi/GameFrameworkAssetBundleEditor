@@ -10,7 +10,7 @@ using UnityEngine;
 namespace Icarus.UnityGameFramework.Runtime
 {
     [DisallowMultipleComponent]
-    [AddComponentMenu("Game Framework/Default VersionCheck")]
+    [AddComponentMenu("Icarus/Game Framework/Default VersionCheck")]
     public class DefaultVersionCheckComPontent : MonoBehaviour, IVersionCheck
     {
         public string Url { get; set; }

@@ -16,7 +16,7 @@ namespace Icarus.UnityGameFramework.Runtime
     /// 对象池组件。
     /// </summary>
     [DisallowMultipleComponent]
-    [AddComponentMenu("Game Framework/Object Pool")]
+    [AddComponentMenu("Icarus/Game Framework/Object Pool")]
     public sealed class ObjectPoolComponent : MonoBehaviour
     {
         private IObjectPoolManager m_ObjectPoolManager = null;

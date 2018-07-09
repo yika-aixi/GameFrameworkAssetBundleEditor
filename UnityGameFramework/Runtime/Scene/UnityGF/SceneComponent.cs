@@ -18,7 +18,7 @@ namespace Icarus.UnityGameFramework.Runtime
     /// 场景组件。
     /// </summary>
     [DisallowMultipleComponent]
-    [AddComponentMenu("Game Framework/Scene")]
+    [AddComponentMenu("Icarus/Game Framework/Scene")]
     public sealed class SceneComponent : MonoBehaviour
     {
         private const int DefaultPriority = 0;

@@ -17,7 +17,7 @@ namespace Icarus.UnityGameFramework.Runtime
     /// 资源组件。
     /// </summary>
     [DisallowMultipleComponent]
-    [AddComponentMenu("Game Framework/Resource")]
+    [AddComponentMenu("Icarus/Game Framework/Resource")]
     public sealed partial class ResourceComponent:MonoBehaviour
     {
         private const int DefaultPriority = 0;

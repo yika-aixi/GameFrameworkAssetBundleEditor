@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace Icarus.UnityGameFramework.Runtime
 {
-    [AddComponentMenu("Game Framework/Coroutine Manager")]
+    [AddComponentMenu("Icarus/Game Framework/Coroutine Manager")]
     public class CoroutineManager : MonoBehaviour
     {
         void Awake()

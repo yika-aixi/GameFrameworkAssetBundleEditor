@@ -9,7 +9,7 @@ using UnityEngine;
 namespace Icarus.UnityGameFramework.Runtime
 {
     [DisallowMultipleComponent]
-    [AddComponentMenu("Game Framework/I18N")]
+    [AddComponentMenu("Icarus/Game Framework/I18N")]
     public partial class I18NComponent : MonoBehaviour
     {
         private I18NManager _manager = new I18NManager();
